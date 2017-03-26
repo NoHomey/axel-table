@@ -4,7 +4,8 @@
 class TableCell {
 public:
 	TableCell();
-	TableCell(int value);
+	TableCell(const int value);
+	TableCell(const double value);
 
 	bool isEmpty() const;
 	bool isInteger() const;

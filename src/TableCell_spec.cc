@@ -22,3 +22,13 @@ TEST(TableCell, NewIntegerCell) {
 	EXPECT_FALSE(cell.isString());
 	EXPECT_FALSE(cell.isError());
 }
+
+TEST(TableCell, NewDoubleCell) {
+	IT("should become Double cell when construted with double");
+	TableCell cell = 3.7;
+	EXPECT_FALSE(cell.isEmpty());
+	EXPECT_FALSE(cell.isInteger());
+	EXPECT_TRUE(cell.isDouble());
+	EXPECT_FALSE(cell.isString());
+	EXPECT_FALSE(cell.isError());
+}

@@ -3,8 +3,10 @@
 TableCell::TableCell()
 : cellType{TableCellType::Empty} {}
 
-TableCell::TableCell(int value)
+TableCell::TableCell(const int value)
 : cellType{TableCellType::Integer} {}
+
+TableCell::TableCell(const double value) {}
 
 bool TableCell::isEmpty() const {
 	return cellType == TableCellType::Empty;

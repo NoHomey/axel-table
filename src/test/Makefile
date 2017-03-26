@@ -33,7 +33,7 @@ COMPILE_COMPONENT = $(COMPILER) -c $(USER_DIR)
 
 ownDeps = $(USER_DIR)/$(1).h $(USER_DIR)/$(1).cc
 
-unitDeps = $(ownDeps) $(GTEST_HEADERS)
+unitDeps = $(ownDeps) $(GTEST_HEADERS) $(USER_DIR)/It.h
 
 objDeps = $(1).o $(1)_spec.o
 
@@ -62,9 +62,12 @@ gtest.a : gtest-all.o
 gtest_main.a : gtest-all.o gtest_main.o
 	$(AR_GTEST)
 
+It.o: $(call ownDeps,It)
+	$(COMPILE_COMPONENT)/It.cc
+
 $(eval $(call spec,TableCell))
 
-TableCell_spec : $(call objDeps,TableCell) gtest_main.a
+TableCell_spec : $(call objDeps,TableCell) gtest_main.a It.o
 	$(COMPILER) $(COVER) -lpthread $^ -o $@
 
 test :

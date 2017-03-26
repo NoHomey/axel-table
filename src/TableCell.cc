@@ -1,15 +1,17 @@
 #include "TableCell.h"
 
-TableCell::TableCell() {}
+TableCell::TableCell()
+: cellType{TableCellType::Empty} {}
 
-TableCell::TableCell(int value) {}
+TableCell::TableCell(int value)
+: cellType{TableCellType::Integer} {}
 
 bool TableCell::isEmpty() const {
-	return true;
+	return cellType == TableCellType::Empty;
 }
 
 bool TableCell::isInteger() const {
-	return false;
+	return cellType == TableCellType::Integer;
 }
 
 bool TableCell::isDouble() const {

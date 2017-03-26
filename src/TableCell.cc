@@ -2,6 +2,8 @@
 
 TableCell::TableCell() {}
 
+TableCell::TableCell(int value) {}
+
 bool TableCell::isEmpty() const {
 	return true;
 }

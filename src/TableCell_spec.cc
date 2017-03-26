@@ -12,3 +12,13 @@ TEST(TableCell, NewCell) {
 	EXPECT_FALSE(cell.isString());
 	EXPECT_FALSE(cell.isError());
 }
+
+TEST(TableCell, NewIntegerCell) {
+	IT("should become Integer cell when construted with int");
+	TableCell cell = 9;
+	EXPECT_FALSE(cell.isEmpty());
+	EXPECT_TRUE(cell.isInteger());
+	EXPECT_FALSE(cell.isDouble());
+	EXPECT_FALSE(cell.isString());
+	EXPECT_FALSE(cell.isError());
+}

@@ -6,7 +6,8 @@ TableCell::TableCell()
 TableCell::TableCell(const int value)
 : cellType{TableCellType::Integer} {}
 
-TableCell::TableCell(const double value) {}
+TableCell::TableCell(const double value)
+: cellType{TableCellType::Double} {}
 
 bool TableCell::isEmpty() const {
 	return cellType == TableCellType::Empty;
@@ -17,7 +18,7 @@ bool TableCell::isInteger() const {
 }
 
 bool TableCell::isDouble() const {
-	return false;
+	return cellType == TableCellType::Double;
 }
 
 bool TableCell::isString() const {

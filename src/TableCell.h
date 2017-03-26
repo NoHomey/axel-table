@@ -16,7 +16,8 @@ public:
 protected:
 	enum TableCellType {
 		Empty,
-		Integer
+		Integer,
+		Double
 	};
 
 	TableCellType cellType;

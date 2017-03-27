@@ -32,3 +32,13 @@ TEST(TableCell, NewDoubleCell) {
 	EXPECT_FALSE(cell.isString());
 	EXPECT_FALSE(cell.isError());
 }
+
+TEST(TableCell, NewErrorCell) {
+	IT("should be an ErrorCell");
+	TableCell cell = TableCell::ErrorCell();
+	EXPECT_FALSE(cell.isEmpty());
+	EXPECT_FALSE(cell.isInteger());
+	EXPECT_FALSE(cell.isDouble());
+	EXPECT_FALSE(cell.isString());
+	EXPECT_TRUE(cell.isError());
+}

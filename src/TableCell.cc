@@ -1,5 +1,9 @@
 #include "TableCell.h"
 
+TableCell TableCell::ErrorCell() {
+	return TableCell();
+}
+
 TableCell::TableCell()
 : cellType{TableCellType::Empty} {}
 

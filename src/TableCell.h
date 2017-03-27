@@ -3,6 +3,8 @@
 
 class TableCell {
 public:
+	static TableCell ErrorCell();
+
 	TableCell();
 	TableCell(const int value);
 	TableCell(const double value);

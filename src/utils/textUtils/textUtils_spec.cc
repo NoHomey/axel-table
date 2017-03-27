@@ -17,15 +17,15 @@ TEST(textUtils, isMinus) {
 
 TEST(textUtils, isPlus) {
     IT("should return true if symbol is + and false if not");
-    EXPECT_FALSE(utils::textUtils::isMinus('-'));
-    EXPECT_TRUE(utils::textUtils::isMinus('+'));
-    EXPECT_FALSE(utils::textUtils::isMinus('9'));
-    EXPECT_FALSE(utils::textUtils::isMinus('7'));
-    EXPECT_TRUE(utils::textUtils::isMinus('+'));
-    EXPECT_FALSE(utils::textUtils::isMinus('a'));
-    EXPECT_FALSE(utils::textUtils::isMinus('?'));
-    EXPECT_FALSE(utils::textUtils::isMinus('@'));
-    EXPECT_FALSE(utils::textUtils::isMinus('e'));
+    EXPECT_FALSE(utils::textUtils::isPlus('-'));
+    EXPECT_TRUE(utils::textUtils::isPlus('+'));
+    EXPECT_FALSE(utils::textUtils::isPlus('9'));
+    EXPECT_FALSE(utils::textUtils::isPlus('7'));
+    EXPECT_TRUE(utils::textUtils::isPlus('+'));
+    EXPECT_FALSE(utils::textUtils::isPlus('a'));
+    EXPECT_FALSE(utils::textUtils::isPlus('?'));
+    EXPECT_FALSE(utils::textUtils::isPlus('@'));
+    EXPECT_FALSE(utils::textUtils::isPlus('e'));
 }
 
 TEST(textUtils, isDigit) {

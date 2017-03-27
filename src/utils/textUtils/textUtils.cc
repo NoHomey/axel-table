@@ -13,5 +13,5 @@ bool utils::textUtils::isDigit(const char symbol) noexcept {
 }
 
 unsigned int utils::textUtils::toDigit(const char symbol) noexcept {
-    return 0;
+    return isDigit(symbol) ? (symbol - '0') : symbol;
 }

@@ -30,12 +30,25 @@ TEST(textUtils, isPlus) {
 
 TEST(textUtils, isDigit) {
     IT("should return true if matches /[0-9]/ and false if not");
-    const char* digits = "0123456789";
+    const char digits[11] = "0123456789";
     const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(+-=*^";
     for(int i = 0; i < 10; ++i) {
         EXPECT_TRUE(utils::textUtils::isDigit(digits[i]));
     }
     for(int i = 0; i < 27; ++i) {
         EXPECT_FALSE(utils::textUtils::isDigit(noneDigits[i]));
+    }
+}
+
+TEST(textUtils, toDigit) {
+    IT("should conver digit char to single digit as unsigned int");
+    const char digits[11] = "0123456789";
+    unsigned int expects[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(+-=*^";
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_EQ(utils::textUtils::toDigit(digits[i]), expects[i]);
+    }
+    for(int i = 0; i < 27; ++i) {
+        EXPECT_EQ(utils::textUtils::toDigit(noneDigits[i]), noneDigits[i]);
     }
 }

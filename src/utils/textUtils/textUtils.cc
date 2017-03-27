@@ -11,3 +11,7 @@ bool utils::textUtils::isPlus(const char symbol) noexcept {
 bool utils::textUtils::isDigit(const char symbol) noexcept {
     return (symbol >= '0') && (symbol <= '9');
 }
+
+unsigned int utils::textUtils::toDigit(const char symbol) noexcept {
+    return 0;
+}

@@ -1,7 +1,7 @@
 #include <limits.h>
 #include "gtest/gtest.h"
 #include "TableCell.h"
-#include "It.h"
+#include "../It/It.h"
 
 TEST(TableCell, NewTableCell) {
 	IT("should be empty");

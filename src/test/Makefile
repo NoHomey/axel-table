@@ -31,18 +31,18 @@ LCOV_CURR_DIR = lcov --base-directory . --directory .
 
 COMPILE_COMPONENT = $(COMPILER) -c $(USER_DIR)
 
-ownDeps = $(USER_DIR)/$(1).h $(USER_DIR)/$(1).cc
+ownDeps = $(USER_DIR)/$(1)/$(1).h $(USER_DIR)/$(1)/$(1).cc
 
-unitDeps = $(ownDeps) $(GTEST_HEADERS) $(USER_DIR)/It.h
+unitDeps = $(ownDeps) $(GTEST_HEADERS) $(USER_DIR)/It/It.h
 
 objDeps = $(1).o $(1)_spec.o
 
 define spec
 $(1).o : $(call unitDeps,$(1))
-	$(COMPILE_COMPONENT)/$(1).cc $(COVER)
+	$(COMPILE_COMPONENT)/$(1)/$(1).cc $(COVER)
 
 $(1)_spec.o : $(call unitDeps,$(1))
-	$(COMPILE_COMPONENT)/$(1)_spec.cc
+	$(COMPILE_COMPONENT)/$(1)/$(1)_spec.cc
 endef
 
 define endl
@@ -63,7 +63,7 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(AR_GTEST)
 
 It.o: $(call ownDeps,It)
-	$(COMPILE_COMPONENT)/It.cc
+	$(COMPILE_COMPONENT)/It/It.cc
 
 $(eval $(call spec,TableCell))
 

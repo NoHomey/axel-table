@@ -3,17 +3,17 @@
 
 class TableCell {
 public:
-	static TableCell ErrorCell();
+	static TableCell ErrorCell() noexcept;
 
-	TableCell();
-	TableCell(const int value);
-	TableCell(const double value);
+	TableCell() noexcept;
+	TableCell(const int value) noexcept;
+	TableCell(const double value) noexcept;
 
-	bool isEmpty() const;
-	bool isInteger() const;
-	bool isDouble() const;
-	bool isString() const;
-	bool isError() const;
+	bool isEmpty() const noexcept;
+	bool isInteger() const noexcept;
+	bool isDouble() const noexcept;
+	bool isString() const noexcept;
+	bool isError() const noexcept;
 
 protected:
 	enum TableCellType {

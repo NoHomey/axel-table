@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec
+TESTS = TableCell_spec IntegerParser_spec
 
 all : $(TESTS)
 
@@ -67,7 +67,12 @@ It.o: $(call ownDeps,It)
 
 $(eval $(call spec,TableCell))
 
+$(eval $(call spec,IntegerParser))
+
 TableCell_spec : $(call objDeps,TableCell) gtest_main.a It.o
+	$(COMPILER) $(COVER) -lpthread $^ -o $@
+
+IntegerParser_spec : $(call objDeps,IntegerParser) gtest_main.a It.o
 	$(COMPILER) $(COVER) -lpthread $^ -o $@
 
 test :

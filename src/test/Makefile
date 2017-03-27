@@ -48,7 +48,7 @@ $(1).o : $(call unitDeps,$(1))
 $(1)_spec.o : $(call unitDeps,$(1))
 	$(COMPILE_COMPONENT)/$(1)/$(1)_spec.cc
 
-$(1)_spec : $(call objDeps,$(1)) gtest_main.a It.o
+$(1)_spec : $(call objDeps,$(1)) gtest_main.a It.o $(2)
 	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
 endef
 
@@ -85,7 +85,7 @@ It.o: $(call ownDeps,It)
 
 $(eval $(call spec,TableCell))
 
-$(eval $(call spec,IntegerParser))
+$(eval $(call spec,IntegerParser,textUtils.o))
 
 $(eval $(call specInDir,utils,textUtils))	
 

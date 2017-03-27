@@ -1,4 +1,5 @@
 #include "IntegerParser.h"
+#include "../utils/textUtils/textUtils.h"
 #include <cstdio>
 
 IntegerParser::IntegerParser(const char* token) noexcept
@@ -9,13 +10,16 @@ int IntegerParser::parse() const noexcept {
 }
 
 bool IntegerParser::matchesType() const noexcept {
-    if(!((token[0] == '+') || (token[0] == '-') || ((token[0] >= '0') && (token[0] <= '9')))) {
+    using namespace utils::textUtils;
+    
+    const bool matchFirstSymbol = isMinus(token[0]) || isPlus(token[0]) || isDigit(token[0]);
+    if(!matchFirstSymbol) {
         return false;
     }
 
     int i = 1;
     while(token[i] != '\0') {
-        if((token[i] < '0') || (token[i] > '9')) {
+        if(!isDigit(token[i])) {
             return false;
         }
         ++i;

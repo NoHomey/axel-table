@@ -16,7 +16,9 @@ TableCell::TableCell(const int value) noexcept
 }
 
 TableCell::TableCell(const double value) noexcept
-: cellType{TableCellType::Double}, cellValue{nullptr} {}
+: cellType{TableCellType::Double}, cellValue{nullptr} {
+	cellValue.doubleValue = value;
+}
 
 bool TableCell::isEmpty() const noexcept {
 	return cellType == TableCellType::Empty;
@@ -41,6 +43,9 @@ bool TableCell::isError() const noexcept {
 int TableCell::toInteger() const noexcept {
 	if(isInteger()) {
 		return cellValue.integerValue;
+	}
+	if(isDouble()) {
+		return cellValue.doubleValue;
 	}
 	
 	return 0;

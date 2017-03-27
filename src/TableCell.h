@@ -28,6 +28,7 @@ protected:
 	union TableCellValue {
 		void* noValue;
 		int integerValue;
+		double doubleValue;
 	};
 
 	TableCellType cellType;

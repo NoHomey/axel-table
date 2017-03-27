@@ -59,8 +59,8 @@ TEST(TableCell, toIntegerWhenTableCellisInteger) {
 }
 
 TEST(TableCell, toIntegerWhenTableCellisDouble) {
-	IT("should return value rounded to nearest int with which it was constructed if TableCell isDouble");
-	double values[14] = {9, -1, 4.2, 7.3, 12332.69, 324.82, 24324.003, 24.2, -3424.5, 564.12, 256.99, 1.5679, 0, -42.3};
+	IT("should return the whole part of the double with which it was constructed if TableCell isDouble");
+	double values[14] = {9.383479, -1.34324, 4.2, 7.3, 12332.69, 324.8342, 24324.003, 24.2, -3424.5, 564.12, 256.99, 1.5679, 0, -42.3};
 	int expects[14] = {9, -1, 4, 7, 12332, 324, 24324, 24, -3424, 564, 256, 1, 0, -42};
 	for(size_t i = 0; i < 14; ++i) {
 		TableCell cell1 = values[i];

@@ -35,3 +35,7 @@ bool TableCell::isString() const noexcept {
 bool TableCell::isError() const noexcept {
 	return cellType == TableCellType::Error;
 }
+
+int TableCell::toInteger() const noexcept {
+	return 0;
+}

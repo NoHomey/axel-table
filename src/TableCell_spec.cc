@@ -3,7 +3,7 @@
 #include "TableCell.h"
 #include "It.h"
 
-TEST(TableCell, NewCell) {
+TEST(TableCell, NewTableCell) {
 	IT("should be empty");
 	TableCell cell;
 	EXPECT_TRUE(cell.isEmpty());
@@ -41,4 +41,22 @@ TEST(TableCell, NewErrorCell) {
 	EXPECT_FALSE(cell.isDouble());
 	EXPECT_FALSE(cell.isString());
 	EXPECT_TRUE(cell.isError());
+}
+
+TEST(TableCell, toIntegerWhenTableCellisEmpty) {
+	IT("should return 0 if TableCell isEmpty");
+	TableCell cell;
+	EXPECT_EQ(cell.toInteger(), 0);
+}
+
+TEST(TableCell, toIntegerWhenTableCellisInteger) {
+	IT("should return value with which it was constructed if TableCell isInteger");
+	TableCell cell = 9;
+	EXPECT_EQ(cell.toInteger(), 9);
+}
+
+TEST(TableCell, toIntegerWhenTableCellisError) {
+	IT("should return 0 if TableCell isError");
+	TableCell cell = TableCell::ErrorCell();
+	EXPECT_EQ(cell.toInteger(), 0);
 }

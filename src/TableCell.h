@@ -15,6 +15,8 @@ public:
 	bool isString() const noexcept;
 	bool isError() const noexcept;
 
+	int toInteger() const noexcept;
+
 protected:
 	enum TableCellType {
 		Empty,

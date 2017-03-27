@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec IntegerParser_spec
+TESTS = TableCell_spec IntegerParser_spec textUtils_spec
 
 all : $(TESTS)
 
@@ -33,9 +33,13 @@ COMPILE_COMPONENT = $(COMPILER) -c $(USER_DIR)
 
 ownDeps = $(USER_DIR)/$(1)/$(1).h $(USER_DIR)/$(1)/$(1).cc
 
-unitDeps = $(ownDeps) $(GTEST_HEADERS) $(USER_DIR)/It/It.h
+specDeps = $(GTEST_HEADERS) $(USER_DIR)/It/It.h
+
+unitDeps = $(ownDeps) $(specDeps)
 
 objDeps = $(1).o $(1)_spec.o
+
+dirDeps = $(USER_DIR)/$(1)/$(2)/$(2).h $(USER_DIR)/$(1)/$(2)/$(2).cc $(specDeps)
 
 define spec
 $(1).o : $(call unitDeps,$(1))
@@ -43,6 +47,20 @@ $(1).o : $(call unitDeps,$(1))
 
 $(1)_spec.o : $(call unitDeps,$(1))
 	$(COMPILE_COMPONENT)/$(1)/$(1)_spec.cc
+
+$(1)_spec : $(call objDeps,$(1)) gtest_main.a It.o
+	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
+endef
+
+define specInDir
+$(2).o : $(call dirDeps,$(1),$(2))
+	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2).cc $(COVER)
+
+$(2)_spec.o : $(call dirDeps,$(1),$(2))
+	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2)_spec.cc
+
+$(2)_spec : $(call objDeps,$(2)) gtest_main.a It.o
+	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
 endef
 
 define endl
@@ -69,11 +87,7 @@ $(eval $(call spec,TableCell))
 
 $(eval $(call spec,IntegerParser))
 
-TableCell_spec : $(call objDeps,TableCell) gtest_main.a It.o
-	$(COMPILER) $(COVER) -lpthread $^ -o $@
-
-IntegerParser_spec : $(call objDeps,IntegerParser) gtest_main.a It.o
-	$(COMPILER) $(COVER) -lpthread $^ -o $@
+$(eval $(call specInDir,utils,textUtils))	
 
 test :
 	$(MAKE) clean

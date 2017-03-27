@@ -51,8 +51,11 @@ TEST(TableCell, toIntegerWhenTableCellisEmpty) {
 
 TEST(TableCell, toIntegerWhenTableCellisInteger) {
 	IT("should return value with which it was constructed if TableCell isInteger");
-	TableCell cell = 9;
-	EXPECT_EQ(cell.toInteger(), 9);
+	int values[14] = {9, -1, 4, 7, 12332, 324, 24324, 24, -3424, 564, 256, 1, 0, 42};
+	for(size_t i = 0; i < 14; ++i) {
+		TableCell cell1 = values[i];
+		EXPECT_EQ(cell1.toInteger(), values[i]);
+	}
 }
 
 TEST(TableCell, toIntegerWhenTableCellisError) {

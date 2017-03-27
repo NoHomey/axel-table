@@ -8,13 +8,15 @@ TableCell TableCell::ErrorCell() noexcept {
 }
 
 TableCell::TableCell() noexcept
-: cellType{TableCellType::Empty} {}
+: cellType{TableCellType::Empty}, cellValue{nullptr} {}
 
 TableCell::TableCell(const int value) noexcept
-: cellType{TableCellType::Integer} {}
+: cellType{TableCellType::Integer}, cellValue{nullptr} {
+	cellValue.integerValue = value;
+}
 
 TableCell::TableCell(const double value) noexcept
-: cellType{TableCellType::Double} {}
+: cellType{TableCellType::Double}, cellValue{nullptr} {}
 
 bool TableCell::isEmpty() const noexcept {
 	return cellType == TableCellType::Empty;
@@ -37,5 +39,9 @@ bool TableCell::isError() const noexcept {
 }
 
 int TableCell::toInteger() const noexcept {
+	if(isInteger()) {
+		return cellValue.integerValue;
+	}
+	
 	return 0;
 }

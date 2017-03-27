@@ -25,7 +25,13 @@ protected:
 		Error
 	};
 
+	union TableCellValue {
+		void* noValue;
+		int integerValue;
+	};
+
 	TableCellType cellType;
+	TableCellValue cellValue;
 };
 
 #endif

@@ -19,7 +19,8 @@ protected:
 	enum TableCellType {
 		Empty,
 		Integer,
-		Double
+		Double,
+		Error
 	};
 
 	TableCellType cellType;

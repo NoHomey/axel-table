@@ -1,7 +1,10 @@
 #include "TableCell.h"
 
 TableCell TableCell::ErrorCell() {
-	return TableCell();
+	TableCell cell;
+	cell.cellType = TableCellType::Error;
+
+	return cell;
 }
 
 TableCell::TableCell()
@@ -30,5 +33,5 @@ bool TableCell::isString() const {
 }
 
 bool TableCell::isError() const {
-	return false;
+	return cellType == TableCellType::Error;
 }

@@ -1,5 +1,4 @@
-#ifndef TableCell_H
-#define TableCell_H
+#pragma once
 
 class TableCell {
 public:
@@ -34,5 +33,3 @@ protected:
 	TableCellType cellType;
 	TableCellValue cellValue;
 };
-
-#endif

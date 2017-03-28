@@ -18,6 +18,8 @@ public:
 
     bool isEmpty() const noexcept;
 
+    bool hasContent() const noexcept;
+
     size_t length() const noexcept;
 
     const char* cString() const noexcept;

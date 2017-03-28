@@ -23,6 +23,10 @@ bool StringObject::isEmpty() const noexcept {
     return string[0] == '\0';
 }
 
+bool StringObject::hasContent() const noexcept {
+    return false;
+}
+
 size_t StringObject::length() const noexcept {
     if(isNull()) {
         return 0;

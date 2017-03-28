@@ -52,7 +52,7 @@ char StringObject::operator[](const size_t index) const noexcept {
 }
 
 bool StringObject::operator==(const StringObject& other) const noexcept {
-    if((isNull() || isEmpty()) && (other.isNull() || other.isEmpty())) {
+    if(!(hasContent() || other.hasContent())) {
         return true;
     }
     size_t index = 0;

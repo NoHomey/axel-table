@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec IntegerParser_spec textUtils_spec
+TESTS = TableCell_spec IntegerParser_spec textUtils_spec StringObject_spec
 
 all : $(TESTS)
 
@@ -86,6 +86,8 @@ It.o: $(call ownDeps,It)
 $(eval $(call spec,TableCell))
 
 $(eval $(call spec,IntegerParser,textUtils.o))
+
+$(eval $(call spec,StringObject))
 
 $(eval $(call specInDir,utils,textUtils))	
 

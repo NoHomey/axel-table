@@ -26,3 +26,7 @@ size_t StringObject::length() const noexcept {
 const char* StringObject::cString() const noexcept {
     return string;
 }
+
+const char StringObject::operator[](const size_t index) const noexcept {
+    return '\0';
+}

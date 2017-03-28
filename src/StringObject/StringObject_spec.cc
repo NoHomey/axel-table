@@ -29,3 +29,18 @@ TEST(String, cString) {
     StringObject str2 = data;
     EXPECT_EQ(str2.cString(), data);
 }
+
+TEST(String, indexOperator) {
+    IT("should return char at the given position or \0 if index is out of range");
+    StringObject str;
+    EXPECT_EQ(str[0], '\0');
+    EXPECT_EQ(str[9], '\0');
+
+    const char* data = "1234.56789";
+    StringObject str2 = data;
+    for(size_t i = 0; data[i] != '\0'; ++i) {
+        EXPECT_EQ(str2[i], data[i]);
+    }
+    EXPECT_EQ(str2[10], '\0');
+    EXPECT_EQ(str2[100], '\0');
+}

@@ -35,3 +35,6 @@ googlemock
 #gcov
 *.gcda
 *.gcno
+*.info
+*_spec
+coverage

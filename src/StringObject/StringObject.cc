@@ -52,8 +52,13 @@ char StringObject::operator[](const size_t index) const noexcept {
 }
 
 bool StringObject::operator==(const StringObject& other) const noexcept {
-    if(!(hasContent() || other.hasContent())) {
-        return true;
+    const bool thisContent = hasContent();
+    if(thisContent == other.hasContent()) {
+        if(!thisContent) {
+            return true;
+        }
+    } else {
+        return false;
     }
     size_t index = 0;
     while(true) {
@@ -71,5 +76,20 @@ bool StringObject::operator!=(const StringObject& other) const noexcept {
 }
 
 bool StringObject::operator<(const StringObject& other) const noexcept {
-    return false;
+    const bool thisContent = hasContent();
+    const bool otherContent = other.hasContent();
+    if(thisContent != otherContent) {
+        return (!thisContent) && otherContent;
+    } else if(!thisContent) {
+        return false;
+    }
+    size_t index = 0;
+    while(true) {
+        if(string[index] != other.string[index]) {
+            return string[index] < other.string[index];
+        } else if(string[index] == '\0') {
+            return false;
+        }
+        ++index;
+    }
 }

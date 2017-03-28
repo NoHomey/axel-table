@@ -42,6 +42,7 @@ TEST(StringObject, hasContent) {
     StringObject str;
     EXPECT_FALSE(str.hasContent());
     EXPECT_FALSE(StringObject().hasContent());
+    EXPECT_FALSE(StringObject("").hasContent());
     EXPECT_TRUE(StringObject("0").hasContent());
 
     StringObject str2 = "1234.56789";
@@ -107,7 +108,9 @@ TEST(String, equalityOperators) {
     EXPECT_EQ(StringObject("text"), StringObject("text"));
     EXPECT_EQ(StringObject("Verry verry long text :)"), StringObject("Verry verry long text :)"));
     EXPECT_EQ(StringObject(""), StringObject());
+    EXPECT_NE(StringObject("text"), StringObject("txt"));
     EXPECT_NE(StringObject(""), StringObject("0"));
+    EXPECT_NE(StringObject(), StringObject("0"));
     EXPECT_NE(StringObject("12345"), StringObject("123.45"));
     EXPECT_NE(StringObject("txt"), StringObject("text"));
     EXPECT_NE(StringObject("-235435"), StringObject("+235435"));
@@ -117,8 +120,8 @@ TEST(String, lessThanOperator) {
     IT("should compare two StringObjects lexicographically");
     EXPECT_FALSE(StringObject() < StringObject(""));
     EXPECT_FALSE(StringObject("") < StringObject());
-    EXPECT_FALSE(StringObject() < StringObject("0"));
-    EXPECT_TRUE(StringObject("0") < StringObject(""));
+    EXPECT_FALSE(StringObject("0") < StringObject(""));
+    EXPECT_TRUE(StringObject() < StringObject("0"));
     EXPECT_TRUE(StringObject("abcd") < StringObject("abcde"));
     EXPECT_TRUE(StringObject("12234.56") < StringObject("12234.560"));
     EXPECT_TRUE(StringObject("99912") < StringObject("99921"));

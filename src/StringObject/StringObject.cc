@@ -48,13 +48,8 @@ char StringObject::operator[](const size_t index) const noexcept {
 }
 
 bool StringObject::operator==(const StringObject& other) const noexcept {
-    const bool isThisNull = isNull();
-    const bool isOtherNull = other.isNull();
-    if(isThisNull) {
-        return isOtherNull || (other.string[0] == '\0');
-    }
-    if(isOtherNull) {
-        return isThisNull || (string[0] == '\0');
+    if((isNull() || isEmpty()) && (other.isNull() || other.isEmpty())) {
+        return true;
     }
     size_t index = 0;
     while(true) {

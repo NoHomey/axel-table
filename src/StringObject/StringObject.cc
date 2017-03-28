@@ -16,7 +16,7 @@ bool StringObject::isNull() const noexcept {
 }
 
 size_t StringObject::length() const noexcept {
-    if(string == nullptr) {
+    if(isNull()) {
         return 0;
     }
     size_t size = 0;
@@ -32,7 +32,7 @@ const char* StringObject::cString() const noexcept {
 }
 
 char StringObject::operator[](const size_t index) const noexcept {
-    if(string == nullptr) {
+    if(isNull()) {
         return '\0';
     }
 
@@ -40,11 +40,13 @@ char StringObject::operator[](const size_t index) const noexcept {
 }
 
 bool StringObject::operator==(const StringObject& other) const noexcept {
-    if(string == nullptr) {
-        return (other.string == nullptr) || (other.string[0] == '\0');
+    const bool isThisNull = isNull();
+    const bool isOtherNull = other.isNull();
+    if(isThisNull) {
+        return isOtherNull || (other.string[0] == '\0');
     }
-    if(other.string == nullptr) {
-        return (string == nullptr) || (string[0] == '\0');
+    if(isOtherNull) {
+        return isThisNull || (string[0] == '\0');
     }
     size_t index = 0;
     while(true) {

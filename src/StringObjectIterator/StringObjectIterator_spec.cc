@@ -3,7 +3,8 @@
 #include "../It/It.h"
 
 TEST(StringObjectIterator, ConstructorAndGetters) {
-    StringObject str = "text";
+    IT("creates new StringObjectIterator, which position is set to begin of StringObject::cString");
+    StringObject str = {"text"};
     StringObjectIterator it = {str};
     EXPECT_EQ(it.getIterated(), str);
     EXPECT_EQ(it.getPosition(), str.cString());

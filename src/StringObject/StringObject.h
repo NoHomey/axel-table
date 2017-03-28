@@ -10,7 +10,7 @@ public:
 
     virtual ~StringObject() noexcept;
 
-    StringObject(const StringObject& other) noexcept;
+    StringObject(const StringObject& other) = delete;
 
     StringObject& operator=(const StringObject& other) = delete;
 

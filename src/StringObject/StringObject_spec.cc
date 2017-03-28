@@ -8,13 +8,13 @@ TEST(StringObject, isNull) {
     EXPECT_TRUE(str.isNull());
     EXPECT_TRUE(StringObject().isNull());
 
-    StringObject str2 = "1234.56789";
+    StringObject str2 = {"1234.56789"};
     EXPECT_FALSE(str2.isNull());
 
-    StringObject str3 = "";
+    StringObject str3 = {""};
     EXPECT_FALSE(str3.isNull());
 
-    StringObject str4 = "This is a \"StringObject\"!";
+    StringObject str4 = {"This is a \"StringObject\"!"};
     EXPECT_FALSE(str4.isNull());
 }
 
@@ -25,15 +25,15 @@ TEST(StringObject, isEmpty) {
     EXPECT_FALSE(StringObject().isEmpty());
     EXPECT_FALSE(StringObject("0").isEmpty());
 
-    StringObject str2 = "1234.56789";
+    StringObject str2 = {"1234.56789"};
     EXPECT_FALSE(str2.isEmpty());
 
-    StringObject str3 = "";
+    StringObject str3 = {""};
     EXPECT_TRUE(str3.isEmpty());
     EXPECT_TRUE(StringObject("\0").isEmpty());
     EXPECT_TRUE(StringObject("\0sfdsda").isEmpty());
 
-    StringObject str4 = "This is a \"StringObject\"!";
+    StringObject str4 = {"This is a \"StringObject\"!"};
     EXPECT_FALSE(str4.isEmpty());
 }
 
@@ -45,15 +45,15 @@ TEST(StringObject, hasContent) {
     EXPECT_FALSE(StringObject("").hasContent());
     EXPECT_TRUE(StringObject("0").hasContent());
 
-    StringObject str2 = "1234.56789";
+    StringObject str2 = {"1234.56789"};
     EXPECT_TRUE(str2.hasContent());
 
-    StringObject str3 = "";
+    StringObject str3 = {""};
     EXPECT_FALSE(str3.hasContent());
     EXPECT_FALSE(StringObject("\0").hasContent());
     EXPECT_FALSE(StringObject("\0sfdsda").hasContent());
 
-    StringObject str4 = "This is a \"StringObject\"!";
+    StringObject str4 = {"This is a \"StringObject\"!"};
     EXPECT_TRUE(str4.hasContent());
 }
 
@@ -62,16 +62,16 @@ TEST(StringObject, length) {
     StringObject str;
     EXPECT_EQ(str.length(), 0);
 
-    StringObject str2 = "1234.56789";
+    StringObject str2 = {"1234.56789"};
     EXPECT_EQ(str2.length(), 10);
 
-    StringObject str3 = "";
+    StringObject str3 = {""};
     EXPECT_EQ(str3.length(), 0);
 
-    StringObject str4 = "This is a \"StringObject\"!";
+    StringObject str4 = {"This is a \"StringObject\"!"};
     EXPECT_EQ(str4.length(), 25);
 
-    StringObject str5 = "549589358935";
+    StringObject str5 = {"549589358935"};
     EXPECT_EQ(str5.length(), 12);
 }
 
@@ -81,17 +81,8 @@ TEST(StringObject, cString) {
     EXPECT_EQ(str.cString(), nullptr);
 
     const char* data = "1234.56789";
-    StringObject str2 = data;
+    StringObject str2 = {data};
     EXPECT_EQ(str2.cString(), data);
-}
-
-TEST(StringObject, CopyConstructor) {
-    IT("should perform shallow copy");
-    const char* data = "1234.56789";
-    StringObject str = data;
-    StringObject cpy = str;
-    EXPECT_EQ(str.cString(), cpy.cString());
-    EXPECT_EQ(cpy.cString(), data);
 }
 
 TEST(StringObject, indexOperator) {
@@ -101,7 +92,7 @@ TEST(StringObject, indexOperator) {
     EXPECT_EQ(str[9], '\0');
 
     const char* data = "1234.56789";
-    StringObject str2 = data;
+    StringObject str2 = {data};
     for(size_t i = 0; data[i] != '\0'; ++i) {
         EXPECT_EQ(str2[i], data[i]);
     }
@@ -111,6 +102,8 @@ TEST(StringObject, indexOperator) {
 
 TEST(StringObject, equalityOperators) {
     IT("should compare dose two strings have equal value");
+    StringObject str = {"some text"};
+    EXPECT_EQ(str, str);
     EXPECT_EQ(StringObject("1234.56789"), StringObject("1234.56789"));
     EXPECT_EQ(StringObject(), StringObject());
     EXPECT_EQ(StringObject(""), StringObject(""));
@@ -123,10 +116,13 @@ TEST(StringObject, equalityOperators) {
     EXPECT_NE(StringObject("12345"), StringObject("123.45"));
     EXPECT_NE(StringObject("txt"), StringObject("text"));
     EXPECT_NE(StringObject("-235435"), StringObject("+235435"));
+    EXPECT_FALSE(str != str);
 }
 
 TEST(StringObject, lessThanOperator) {
     IT("should compare two StringObjects lexicographically,  check is right bigger");
+    StringObject str = {"some text"};
+    EXPECT_FALSE(str < str);
     EXPECT_FALSE(StringObject() < StringObject(""));
     EXPECT_FALSE(StringObject("") < StringObject());
     EXPECT_FALSE(StringObject("0") < StringObject(""));
@@ -145,6 +141,8 @@ TEST(StringObject, lessThanOperator) {
 
 TEST(StringObject, greaterThanOperator) {
     IT("should compare two StringObjects lexicographically, check is left bigger");
+    StringObject str = {"some text"};
+    EXPECT_FALSE(str > str);
     EXPECT_FALSE(StringObject() > StringObject(""));
     EXPECT_FALSE(StringObject("") > StringObject());
     EXPECT_FALSE(StringObject() > StringObject("0"));

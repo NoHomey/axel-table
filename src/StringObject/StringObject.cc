@@ -5,9 +5,6 @@ StringObject::StringObject() noexcept
 
 StringObject::~StringObject() noexcept { }
 
-StringObject::StringObject(const StringObject& other) noexcept
-: string{other.string} {}
-
 StringObject::StringObject(const char* cstring) noexcept
 : string{const_cast<char*>(cstring)} {}
 
@@ -52,6 +49,9 @@ char StringObject::operator[](const size_t index) const noexcept {
 }
 
 bool StringObject::operator==(const StringObject& other) const noexcept {
+    if(this == &other) {
+        return true;
+    }
     const bool thisContent = hasContent();
     if(thisContent == other.hasContent()) {
         if(!thisContent) {
@@ -76,6 +76,9 @@ bool StringObject::operator!=(const StringObject& other) const noexcept {
 }
 
 bool StringObject::operator<(const StringObject& other) const noexcept {
+    if(this == &other) {
+        return false;
+    }
     const bool thisContent = hasContent();
     const bool otherContent = other.hasContent();
     if(thisContent != otherContent) {

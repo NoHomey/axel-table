@@ -16,7 +16,7 @@ TEST(IntegerParser, matchesType) {
     const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
-        IntegerParser parser = match[i];
+        IntegerParser parser = {match[i]};
         EXPECT_TRUE(parser.matchesType());
     }
 
@@ -34,7 +34,7 @@ TEST(IntegerParser, matchesType) {
     const char* noMatch[] = {token10, token11, token12, token13, token14, token15, token16, token17, token18, token19, token20};
 
     for(size_t i = 0; i < 10; ++i) {
-        IntegerParser parser = noMatch[i];
+        IntegerParser parser = {noMatch[i]};
         EXPECT_FALSE(parser.matchesType());
     }
 }

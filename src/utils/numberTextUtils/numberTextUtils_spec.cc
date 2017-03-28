@@ -1,0 +1,66 @@
+#include "numberTextUtils.h"
+#include "gtest/gtest.h"
+#include "../../It/It.h"
+
+TEST(numberTextUtils, isMinus) {
+    IT("should return true if symbol is - and false if not");
+    EXPECT_TRUE(utils::numberTextUtils::isMinus('-'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('+'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('9'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('7'));
+    EXPECT_TRUE(utils::numberTextUtils::isMinus('-'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('a'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('?'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('@'));
+    EXPECT_FALSE(utils::numberTextUtils::isMinus('e'));
+}
+
+TEST(numberTextUtils, isPlus) {
+    IT("should return true if symbol is + and false if not");
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('-'));
+    EXPECT_TRUE(utils::numberTextUtils::isPlus('+'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('9'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('7'));
+    EXPECT_TRUE(utils::numberTextUtils::isPlus('+'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('a'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('?'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('@'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlus('e'));
+}
+
+TEST(numberTextUtils, isDigit) {
+    IT("should return true if matches /[0-9]/ and false if not");
+    const char digits[11] = "0123456789";
+    const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(+-=*^";
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_TRUE(utils::numberTextUtils::isDigit(digits[i]));
+    }
+    for(int i = 0; i < 27; ++i) {
+        EXPECT_FALSE(utils::numberTextUtils::isDigit(noneDigits[i]));
+    }
+}
+
+TEST(numberTextUtils, matchesNumberFirstSymbol) {
+    IT("should return true if matches /\-|\+|[0-9]/ and false if not");
+    const char digits[13] = "0123456789-+";
+    const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(&'=*^";
+    for(int i = 0; i < 12; ++i) {
+        EXPECT_TRUE(utils::numberTextUtils::matchesNumberFirstSymbol(digits[i]));
+    }
+    for(int i = 0; i < 27; ++i) {
+        EXPECT_FALSE(utils::numberTextUtils::matchesNumberFirstSymbol(noneDigits[i]));
+    }
+}
+
+TEST(numberTextUtils, toDigit) {
+    IT("should conver digit char to single digit as unsigned int");
+    const char digits[11] = "0123456789";
+    unsigned int expects[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(+-=*^";
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_EQ(utils::numberTextUtils::toDigit(digits[i]), expects[i]);
+    }
+    for(int i = 0; i < 27; ++i) {
+        EXPECT_EQ(utils::numberTextUtils::toDigit(noneDigits[i]), noneDigits[i]);
+    }
+}

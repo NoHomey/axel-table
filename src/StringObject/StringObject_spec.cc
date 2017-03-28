@@ -9,12 +9,12 @@ TEST(StringObject, length) {
     StringObject str2 = "1234.56789";
     EXPECT_EQ(str2.length(), 10);
 
-    StringObject str3 = StringObject("");
+    StringObject str3 = "";
     EXPECT_EQ(str3.length(), 0);
 
-    StringObject str4 = StringObject("This is a \"String\"");
+    StringObject str4 = "This is a \"String\"!";
     EXPECT_EQ(str4.length(), 19);
 
-    StringObject str5 = StringObject("549589358935");
+    StringObject str5 = "549589358935";
     EXPECT_EQ(str5.length(), 12);
 }

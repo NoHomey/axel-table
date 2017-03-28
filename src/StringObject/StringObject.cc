@@ -12,5 +12,13 @@ StringObject::StringObject(const char* cstring) noexcept
 : string{const_cast<char*>(cstring)} {}
 
 size_t StringObject::length() const noexcept {
-    return 0;
+    if(string == nullptr) {
+        return 0;
+    }
+    size_t size = 0;
+    while(string[size] != '\0') {
+        ++size;
+    }
+
+    return size;
 }

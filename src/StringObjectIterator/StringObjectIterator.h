@@ -10,19 +10,19 @@ public:
 
     StringObjectIterator& operator=(const StringObjectIterator& other) = delete;
 
-    /*void iterate(const StringObject& string) noexcept;
+    void next() noexcept;
+
+    /*void prev() noexcept;
+
+    void iterate(const StringObject& string) noexcept;
 
     void reset() noexcept;
 
-    void next() noexcept;
-
-    void prev() noexcept;
-
     char current() const noexcept;
 
-    bool endReached() const noexcept;
+    bool endReached() const noexcept;*/
 
-    bool isMoved() const noexcept;*/
+    bool isMoved() const noexcept;
 
     const StringObject& getIterated() const noexcept;
 

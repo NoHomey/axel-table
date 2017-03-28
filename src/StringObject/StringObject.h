@@ -32,7 +32,7 @@ public:
 
     bool operator<(const StringObject& other) const noexcept;
 
-    //bool operator>(const StringObject& other) const noexcept;
+    bool operator>(const StringObject& other) const noexcept;
 
 protected:
     char* string;

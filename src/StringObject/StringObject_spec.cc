@@ -14,7 +14,7 @@ TEST(StringObject, isNull) {
     StringObject str3 = "";
     EXPECT_FALSE(str3.isNull());
 
-    StringObject str4 = "This is a \"String\"!";
+    StringObject str4 = "This is a \"StringObject\"!";
     EXPECT_FALSE(str4.isNull());
 }
 
@@ -33,7 +33,7 @@ TEST(StringObject, isEmpty) {
     EXPECT_TRUE(StringObject("\0").isEmpty());
     EXPECT_TRUE(StringObject("\0sfdsda").isEmpty());
 
-    StringObject str4 = "This is a \"String\"!";
+    StringObject str4 = "This is a \"StringObject\"!";
     EXPECT_FALSE(str4.isEmpty());
 }
 
@@ -53,7 +53,7 @@ TEST(StringObject, hasContent) {
     EXPECT_FALSE(StringObject("\0").hasContent());
     EXPECT_FALSE(StringObject("\0sfdsda").hasContent());
 
-    StringObject str4 = "This is a \"String\"!";
+    StringObject str4 = "This is a \"StringObject\"!";
     EXPECT_TRUE(str4.hasContent());
 }
 
@@ -68,14 +68,14 @@ TEST(StringObject, length) {
     StringObject str3 = "";
     EXPECT_EQ(str3.length(), 0);
 
-    StringObject str4 = "This is a \"String\"!";
-    EXPECT_EQ(str4.length(), 19);
+    StringObject str4 = "This is a \"StringObject\"!";
+    EXPECT_EQ(str4.length(), 25);
 
     StringObject str5 = "549589358935";
     EXPECT_EQ(str5.length(), 12);
 }
 
-TEST(String, cString) {
+TEST(StringObject, cString) {
     IT("should return a non-modifiable standard C character array version of the string");
     StringObject str;
     EXPECT_EQ(str.cString(), nullptr);
@@ -85,7 +85,16 @@ TEST(String, cString) {
     EXPECT_EQ(str2.cString(), data);
 }
 
-TEST(String, indexOperator) {
+TEST(StringObject, CopyConstructor) {
+    IT("should perform shallow copy");
+    const char* data = "1234.56789";
+    StringObject str = data;
+    StringObject cpy = str;
+    EXPECT_EQ(str.cString(), cpy.cString());
+    EXPECT_EQ(cpy.cString(), data);
+}
+
+TEST(StringObject, indexOperator) {
     IT("should return char at the given position or \0 if index is out of range");
     StringObject str;
     EXPECT_EQ(str[0], '\0');
@@ -100,7 +109,7 @@ TEST(String, indexOperator) {
     EXPECT_EQ(str2[100], '\0');
 }
 
-TEST(String, equalityOperators) {
+TEST(StringObject, equalityOperators) {
     IT("should compare dose two strings have equal value");
     EXPECT_EQ(StringObject("1234.56789"), StringObject("1234.56789"));
     EXPECT_EQ(StringObject(), StringObject());
@@ -116,20 +125,38 @@ TEST(String, equalityOperators) {
     EXPECT_NE(StringObject("-235435"), StringObject("+235435"));
 }
 
-TEST(String, lessThanOperator) {
-    IT("should compare two StringObjects lexicographically");
+TEST(StringObject, lessThanOperator) {
+    IT("should compare two StringObjects lexicographically,  check is right bigger");
     EXPECT_FALSE(StringObject() < StringObject(""));
     EXPECT_FALSE(StringObject("") < StringObject());
     EXPECT_FALSE(StringObject("0") < StringObject(""));
+    EXPECT_FALSE(StringObject("abcdz") < StringObject("abcde"));
+    EXPECT_FALSE(StringObject("12934.56") < StringObject("12234.560"));
+    EXPECT_FALSE(StringObject("999512") < StringObject("99921"));
+    EXPECT_FALSE(StringObject("1.23") < StringObject("1.23"));
+    EXPECT_FALSE(StringObject("tyxt") < StringObject("txt"));
     EXPECT_TRUE(StringObject() < StringObject("0"));
     EXPECT_TRUE(StringObject("abcd") < StringObject("abcde"));
     EXPECT_TRUE(StringObject("12234.56") < StringObject("12234.560"));
     EXPECT_TRUE(StringObject("99912") < StringObject("99921"));
     EXPECT_TRUE(StringObject("0.23") < StringObject("1.23"));
     EXPECT_TRUE(StringObject("text") < StringObject("txt"));
-    EXPECT_FALSE(StringObject("abcdz") < StringObject("abcde"));
-    EXPECT_FALSE(StringObject("12934.56") < StringObject("12234.560"));
-    EXPECT_FALSE(StringObject("999512") < StringObject("99921"));
-    EXPECT_FALSE(StringObject("1.23") < StringObject("1.23"));
-    EXPECT_FALSE(StringObject("tyxt") < StringObject("txt"));
+}
+
+TEST(StringObject, greaterThanOperator) {
+    IT("should compare two StringObjects lexicographically, check is left bigger");
+    EXPECT_FALSE(StringObject() > StringObject(""));
+    EXPECT_FALSE(StringObject("") > StringObject());
+    EXPECT_FALSE(StringObject() > StringObject("0"));
+    EXPECT_FALSE(StringObject("abcd") > StringObject("abcde"));
+    EXPECT_FALSE(StringObject("12234.56") > StringObject("12234.560"));
+    EXPECT_FALSE(StringObject("99912") > StringObject("99921"));
+    EXPECT_FALSE(StringObject("0.23") > StringObject("1.23"));
+    EXPECT_FALSE(StringObject("1.23") > StringObject("1.23"));
+    EXPECT_FALSE(StringObject("text") > StringObject("txt"));
+    EXPECT_TRUE(StringObject("0") > StringObject(""));
+    EXPECT_TRUE(StringObject("abcdz") > StringObject("abcde"));
+    EXPECT_TRUE(StringObject("12934.56") > StringObject("12234.560"));
+    EXPECT_TRUE(StringObject("999512") > StringObject("99921"));
+    EXPECT_TRUE(StringObject("tyxt") > StringObject("txt"));
 }

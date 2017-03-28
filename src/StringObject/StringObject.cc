@@ -93,3 +93,7 @@ bool StringObject::operator<(const StringObject& other) const noexcept {
         ++index;
     }
 }
+
+bool StringObject::operator>(const StringObject& other) const noexcept {
+    return other < *this;
+}

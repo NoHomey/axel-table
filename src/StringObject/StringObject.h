@@ -16,9 +16,9 @@ public:
 
     size_t length() const noexcept;
 
-    /*const char& operator[](const size_t index) const;
-
     const char* cString() const noexcept;
+
+    /* const char& operator[](const size_t index) const;
 
     bool operator==(const StringObject& other) const noexcept;
 

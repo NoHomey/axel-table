@@ -22,3 +22,7 @@ size_t StringObject::length() const noexcept {
 
     return size;
 }
+
+const char* StringObject::cString() const noexcept {
+    return string;
+}

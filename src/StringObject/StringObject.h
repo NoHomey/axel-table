@@ -16,6 +16,8 @@ public:
 
     bool isNull() const noexcept;
 
+    bool isEmpty() const noexcept;
+
     size_t length() const noexcept;
 
     const char* cString() const noexcept;

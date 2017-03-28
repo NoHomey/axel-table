@@ -15,6 +15,10 @@ bool StringObject::isNull() const noexcept {
     return string == nullptr;
 }
 
+bool StringObject::isEmpty() const noexcept {
+    return false;
+}
+
 size_t StringObject::length() const noexcept {
     if(isNull()) {
         return 0;

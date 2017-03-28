@@ -18,6 +18,25 @@ TEST(StringObject, isNull) {
     EXPECT_FALSE(str4.isNull());
 }
 
+TEST(StringObject, isEmpty) {
+    IT("should return true if string is a empty string");
+    StringObject str;
+    EXPECT_FALSE(str.isEmpty());
+    EXPECT_FALSE(StringObject().isEmpty());
+    EXPECT_FALSE(StringObject("0").isEmpty());
+
+    StringObject str2 = "1234.56789";
+    EXPECT_FALSE(str2.isEmpty());
+
+    StringObject str3 = "";
+    EXPECT_TRUE(str3.isEmpty());
+    EXPECT_TRUE(StringObject("\0").isEmpty());
+    EXPECT_TRUE(StringObject("\0sfdsda").isEmpty());
+
+    StringObject str4 = "This is a \"String\"!";
+    EXPECT_FALSE(str4.isEmpty());
+}
+
 TEST(StringObject, length) {
     IT("should return the number of chars before \\0");
     StringObject str;

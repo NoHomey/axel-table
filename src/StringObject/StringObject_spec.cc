@@ -2,6 +2,22 @@
 #include "gtest/gtest.h"
 #include "../It/It.h"
 
+TEST(StringObject, isNull) {
+    IT("should return true if string internally is nullptr");
+    StringObject str;
+    EXPECT_TRUE(str.isNull());
+    EXPECT_TRUE(StringObject().isNull());
+
+    StringObject str2 = "1234.56789";
+    EXPECT_FALSE(str.isNull());
+
+    StringObject str3 = "";
+    EXPECT_FALSE(str.isNull());
+
+    StringObject str4 = "This is a \"String\"!";
+    EXPECT_FALSE(str.isNull());
+}
+
 TEST(StringObject, length) {
     IT("should return the number of chars before \\0");
     StringObject str;

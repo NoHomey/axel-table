@@ -14,6 +14,8 @@ public:
 
     StringObject& operator=(const StringObject& other) = delete;
 
+    bool isNull() const noexcept;
+
     size_t length() const noexcept;
 
     const char* cString() const noexcept;

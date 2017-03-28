@@ -69,3 +69,7 @@ bool StringObject::operator==(const StringObject& other) const noexcept {
 bool StringObject::operator!=(const StringObject& other) const noexcept {
     return !(*this == other);
 }
+
+bool StringObject::operator<(const StringObject& other) const noexcept {
+    return false;
+}

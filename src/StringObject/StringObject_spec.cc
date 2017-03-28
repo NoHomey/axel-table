@@ -112,3 +112,21 @@ TEST(String, equalityOperators) {
     EXPECT_NE(StringObject("txt"), StringObject("text"));
     EXPECT_NE(StringObject("-235435"), StringObject("+235435"));
 }
+
+TEST(String, lessThanOperator) {
+    IT("should compare two StringObjects lexicographically");
+    EXPECT_FALSE(StringObject() < StringObject(""));
+    EXPECT_FALSE(StringObject("") < StringObject());
+    EXPECT_FALSE(StringObject() < StringObject("0"));
+    EXPECT_TRUE(StringObject("0") < StringObject(""));
+    EXPECT_TRUE(StringObject("abcd") < StringObject("abcde"));
+    EXPECT_TRUE(StringObject("12234.56") < StringObject("12234.560"));
+    EXPECT_TRUE(StringObject("99912") < StringObject("99921"));
+    EXPECT_TRUE(StringObject("0.23") < StringObject("1.23"));
+    EXPECT_TRUE(StringObject("text") < StringObject("txt"));
+    EXPECT_FALSE(StringObject("abcdz") < StringObject("abcde"));
+    EXPECT_FALSE(StringObject("12934.56") < StringObject("12234.560"));
+    EXPECT_FALSE(StringObject("999512") < StringObject("99921"));
+    EXPECT_FALSE(StringObject("1.23") < StringObject("1.23"));
+    EXPECT_FALSE(StringObject("tyxt") < StringObject("txt"));
+}

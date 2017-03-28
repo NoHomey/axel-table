@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec StringObject_spec
+TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec StringObject_spec StringObjectIterator_spec
 
 all : $(TESTS)
 
@@ -59,7 +59,7 @@ $(2).o : $(call dirDeps,$(1),$(2))
 $(2)_spec.o : $(call dirDeps,$(1),$(2))
 	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2)_spec.cc
 
-$(2)_spec : $(call objDeps,$(2)) gtest_main.a It.o
+$(2)_spec : $(call objDeps,$(2)) gtest_main.a It.o $(3)
 	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
 endef
 
@@ -88,6 +88,8 @@ $(eval $(call spec,TableCell))
 $(eval $(call spec,IntegerParser,numberTextUtils.o StringObject.o))
 
 $(eval $(call spec,StringObject))
+
+$(eval $(call spec,StringObjectIterator,StringObject.o))
 
 $(eval $(call specInDir,utils,numberTextUtils))	
 

@@ -1,6 +1,5 @@
 #include "IntegerParser.h"
 #include "../utils/numberTextUtils/numberTextUtils.h"
-#include <cstdio>
 
 IntegerParser::IntegerParser(const StringObject& string) noexcept
 : token{const_cast<StringObject&>(string)} {}

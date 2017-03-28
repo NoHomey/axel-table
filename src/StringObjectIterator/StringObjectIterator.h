@@ -18,9 +18,9 @@ public:
 
     void reset() noexcept;
 
-    char current() const noexcept;
+    char current() const noexcept;*/
 
-    bool endReached() const noexcept;*/
+    bool isEndReached() const noexcept;
 
     bool isMoved() const noexcept;
 

@@ -18,7 +18,7 @@ public:
 
     const char* cString() const noexcept;
 
-    const char operator[](const size_t index) const noexcept;
+    char operator[](const size_t index) const noexcept;
 
     /*bool operator==(const StringObject& other) const noexcept;
 

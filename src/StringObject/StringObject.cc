@@ -27,6 +27,10 @@ const char* StringObject::cString() const noexcept {
     return string;
 }
 
-const char StringObject::operator[](const size_t index) const noexcept {
-    return '\0';
+char StringObject::operator[](const size_t index) const noexcept {
+    if(string == nullptr) {
+        return '\0';
+    }
+
+    return index < length() ? string[index] : '\0';
 }

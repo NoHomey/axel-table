@@ -9,13 +9,13 @@ TEST(StringObject, isNull) {
     EXPECT_TRUE(StringObject().isNull());
 
     StringObject str2 = "1234.56789";
-    EXPECT_FALSE(str.isNull());
+    EXPECT_FALSE(str2.isNull());
 
     StringObject str3 = "";
-    EXPECT_FALSE(str.isNull());
+    EXPECT_FALSE(str3.isNull());
 
     StringObject str4 = "This is a \"String\"!";
-    EXPECT_FALSE(str.isNull());
+    EXPECT_FALSE(str4.isNull());
 }
 
 TEST(StringObject, length) {

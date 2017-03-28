@@ -12,7 +12,7 @@ StringObject::StringObject(const char* cstring) noexcept
 : string{const_cast<char*>(cstring)} {}
 
 bool StringObject::isNull() const noexcept {
-    return false;
+    return string == nullptr;
 }
 
 size_t StringObject::length() const noexcept {

@@ -44,3 +44,17 @@ TEST(String, indexOperator) {
     EXPECT_EQ(str2[10], '\0');
     EXPECT_EQ(str2[100], '\0');
 }
+
+TEST(String, equalityOperators) {
+    IT("should compare dose two strings have equal value");
+    EXPECT_EQ(StringObject("1234.56789"), StringObject("1234.56789"));
+    EXPECT_EQ(StringObject(), StringObject());
+    EXPECT_EQ(StringObject(""), StringObject(""));
+    EXPECT_EQ(StringObject("text"), StringObject("text"));
+    EXPECT_EQ(StringObject("Verry verry long text :)"), StringObject("Verry verry long text :)"));
+    EXPECT_EQ(StringObject(""), StringObject());
+    EXPECT_NE(StringObject(""), StringObject("0"));
+    EXPECT_NE(StringObject("12345"), StringObject("123.45"));
+    EXPECT_NE(StringObject("txt"), StringObject("text"));
+    EXPECT_NE(StringObject("-235435"), StringObject("+235435"));
+}

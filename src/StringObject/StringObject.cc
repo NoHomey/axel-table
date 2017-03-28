@@ -34,3 +34,11 @@ char StringObject::operator[](const size_t index) const noexcept {
 
     return index < length() ? string[index] : '\0';
 }
+
+bool StringObject::operator==(const StringObject& other) const noexcept {
+    return false;
+}
+
+bool StringObject::operator!=(const StringObject& other) const noexcept {
+    return false;
+}

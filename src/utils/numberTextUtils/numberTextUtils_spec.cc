@@ -28,6 +28,22 @@ TEST(numberTextUtils, isPlus) {
     EXPECT_FALSE(utils::numberTextUtils::isPlus('e'));
 }
 
+TEST(numberTextUtils, isPlusMinus) {
+    IT("should return true if symbol is + or - and false if not");
+    EXPECT_TRUE(utils::numberTextUtils::isPlusMinus('-'));
+    EXPECT_TRUE(utils::numberTextUtils::isPlusMinus('+'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('9'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('7'));
+    EXPECT_TRUE(utils::numberTextUtils::isPlusMinus('+'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('a'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('?'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('@'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('e'));
+    EXPECT_TRUE(utils::numberTextUtils::isPlusMinus('-'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('3'));
+    EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('*'));
+}
+
 TEST(numberTextUtils, isDigit) {
     IT("should return true if matches /[0-9]/ and false if not");
     const char digits[11] = "0123456789";
@@ -41,7 +57,7 @@ TEST(numberTextUtils, isDigit) {
 }
 
 TEST(numberTextUtils, matchesNumberFirstSymbol) {
-    IT("should return true if matches /\-|\+|[0-9]/ and false if not");
+    IT("should return true if matches /\\-|\\+|[0-9]/ and false if not");
     const char digits[13] = "0123456789-+";
     const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(&'=*^";
     for(int i = 0; i < 12; ++i) {

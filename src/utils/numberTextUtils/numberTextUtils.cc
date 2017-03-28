@@ -8,12 +8,16 @@ bool utils::numberTextUtils::isPlus(const char symbol) noexcept {
     return symbol == '+';
 }
 
+bool utils::numberTextUtils::isPlusMinus(const char symbol) noexcept {
+    return isPlus(symbol) || isMinus(symbol);
+}
+
 bool utils::numberTextUtils::isDigit(const char symbol) noexcept {
     return (symbol >= '0') && (symbol <= '9');
 }
 
 bool utils::numberTextUtils::matchesNumberFirstSymbol(const char symbol) noexcept {
-    return isMinus(symbol) || isPlus(symbol) || isDigit(symbol);
+    return isPlusMinus(symbol) || isDigit(symbol);
 }
 
 unsigned int utils::numberTextUtils::toDigit(const char symbol) noexcept {

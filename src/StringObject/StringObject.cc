@@ -24,7 +24,7 @@ bool StringObject::isEmpty() const noexcept {
 }
 
 bool StringObject::hasContent() const noexcept {
-    return false;
+    return !(isNull() || isEmpty());
 }
 
 size_t StringObject::length() const noexcept {

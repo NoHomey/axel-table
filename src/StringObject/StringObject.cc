@@ -16,7 +16,11 @@ bool StringObject::isNull() const noexcept {
 }
 
 bool StringObject::isEmpty() const noexcept {
-    return false;
+    if(isNull()) {
+        return false;
+    }
+
+    return string[0] == '\0';
 }
 
 size_t StringObject::length() const noexcept {

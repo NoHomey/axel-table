@@ -13,7 +13,7 @@ GTEST_INCLUDE = $(GTEST_DIR)/include
 
 CPPFLAGS += -isystem $(GTEST_INCLUDE)
 
-CXXFLAGS += -g -std=c++11 -Wall -Wextra -pthread
+CXXFLAGS += -g -std=c++11 -Wall -Wextra -Wpedantic -pthread -O -O0
 
 COVER = --coverage
 

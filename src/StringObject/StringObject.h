@@ -1,39 +1,9 @@
-#pragma once
+#ifndef _BASIC_STRING_CONST_CHAR_STRING_OBJECT_H
 
-#include <cstddef>
+#define  _BASIC_STRING_CONST_CHAR_STRING_OBJECT_H
 
-class StringObject {
-public:
-    StringObject() noexcept;
+#include "../String/BasicString.h"
 
-    StringObject(const char* cstring) noexcept;
+using StringObject = BasicString<const char*>;
 
-    virtual ~StringObject() noexcept;
-
-    StringObject(const StringObject& other) = delete;
-
-    StringObject& operator=(const StringObject& other) = delete;
-
-    bool isNull() const noexcept;
-
-    bool isEmpty() const noexcept;
-
-    bool hasContent() const noexcept;
-
-    size_t length() const noexcept;
-
-    const char* cString() const noexcept;
-
-    char operator[](const size_t index) const noexcept;
-
-    bool operator==(const StringObject& other) const noexcept;
-
-    bool operator!=(const StringObject& other) const noexcept;
-
-    bool operator<(const StringObject& other) const noexcept;
-
-    bool operator>(const StringObject& other) const noexcept;
-
-protected:
-    char* string;
-};
+#endif

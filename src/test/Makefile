@@ -83,13 +83,20 @@ gtest_main.a : gtest-all.o gtest_main.o
 It.o: $(call ownDeps,It)
 	$(COMPILE_COMPONENT)/It/It.cc
 
+BasicString.o : $(USER_DIR)/String/String.h $(USER_DIR)/String/BasicString.h $(USER_DIR)/String/BasicString.cc $(specDeps)
+	$(COMPILE_COMPONENT)/String/BasicString.cc $(COVER)
+
+StringObject_spec.o : $(USER_DIR)/String/String.h $(USER_DIR)/String/BasicString.h $(USER_DIR)/String/BasicString.cc $(specDeps)
+	$(COMPILE_COMPONENT)/StringObject/StringObject_spec.cc
+
+StringObject_spec : $(USER_DIR)/StringObject/StringObject.h gtest_main.a It.o BasicString.o StringObject_spec.o
+	$(COMPILER) $(COVER) -lpthread $^ -o $@
+
 $(eval $(call spec,TableCell))
 
-$(eval $(call spec,IntegerParser,numberTextUtils.o StringObject.o))
+$(eval $(call spec,IntegerParser,numberTextUtils.o BasicString.o))
 
-$(eval $(call spec,StringObject))
-
-$(eval $(call spec,StringObjectIterator,StringObject.o))
+$(eval $(call spec,StringObjectIterator,BasicString.o))
 
 $(eval $(call specInDir,utils,numberTextUtils))	
 

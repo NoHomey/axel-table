@@ -88,6 +88,7 @@ TEST(StringObject, cString) {
 TEST(StringObject, indexOperator) {
     IT("should return char at the given position or \0 if index is out of range");
     StringObject str;
+    EXPECT_TRUE(str.isNull());
     EXPECT_EQ(str[0], '\0');
     EXPECT_EQ(str[9], '\0');
 

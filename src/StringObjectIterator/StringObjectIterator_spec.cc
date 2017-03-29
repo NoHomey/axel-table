@@ -46,7 +46,8 @@ TEST(StringObjectIterator, nextWhenNull) {
 
 TEST(StringObjectIterator, isMoved) {
     IT("checks if iterator has been moved forward from it's logical begining");
-    StringObjectIterator it = {"txt"};
+    StringObject str = {"txt"};
+    StringObjectIterator it = {str};
     EXPECT_FALSE(it.isMoved());
     it.next();
     EXPECT_TRUE(it.isMoved());
@@ -62,7 +63,8 @@ TEST(StringObjectIterator, isMoved) {
 
 TEST(StringObjectIterator, isMovedWhenNull) {
     IT("if StringObject isNull, isMove will return false");
-    StringObjectIterator it = {{}};
+    StringObject str;
+    StringObjectIterator it = {str};
     for(int i = 0; i < 23; ++i) {
         EXPECT_FALSE(it.isMoved());
     }
@@ -70,7 +72,8 @@ TEST(StringObjectIterator, isMovedWhenNull) {
 
 TEST(StringObjectIterator, isEndReachedWhenNull) {
     IT("if StringObject isNull caling isEndReached() should return true and isMoved false");
-    StringObjectIterator it = {{}};
+    StringObject str;
+    StringObjectIterator it = {str};
     for(int i = 0; i < 10; ++i) {
         it.next();
         it.next();
@@ -93,4 +96,27 @@ TEST(StringObjectIterator, isEndReached) {
         it.next();
         EXPECT_TRUE(it.isEndReached());
     }
+}
+
+TEST(StringObjectIterator, nextWhenEndIsReached) {
+    IT("should have no effect if isEndReached");
+    StringObject str = {"text"};
+    StringObjectIterator it = {str};
+    EXPECT_EQ(it.getPosition(), str.cString());
+    it.next();
+    EXPECT_NE(it.getPosition(), str.cString());
+    EXPECT_EQ(it.getPosition(), str.cString() + 1);
+    it.next();
+    EXPECT_EQ(it.getPosition(), str.cString() + 2);
+    it.next();
+    EXPECT_EQ(it.getPosition(), str.cString() + 3);
+    it.next();
+    EXPECT_EQ(it.getPosition(), str.cString() + 4);
+    EXPECT_TRUE(it.isEndReached());
+    it.next();
+    it.next();
+    it.next();
+    it.next();
+    EXPECT_EQ(it.getPosition(), str.cString() + 4);
+    EXPECT_TRUE(it.isEndReached());
 }

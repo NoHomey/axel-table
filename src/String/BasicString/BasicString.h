@@ -1,13 +1,13 @@
 #pragma once
 
-#include "String.h"
+#include "../ImmutableString.h"
 
 template<typename CString>
-class BasicString: public String {
+class BasicString: public ImmutableString {
 public:
     BasicString() noexcept;
 
-    BasicString(const char* cstring) noexcept;
+    BasicString(CString cstring) noexcept;
 
     virtual ~BasicString() noexcept;
     
@@ -27,13 +27,13 @@ public:
 
     char operator[](const size_t index) const noexcept final;
 
-    bool operator==(const String& other) const noexcept final;
+    bool operator==(const ImmutableString& other) const noexcept final;
 
-    bool operator!=(const String& other) const noexcept final;
+    bool operator!=(const ImmutableString& other) const noexcept final;
 
-    bool operator<(const String& other) const noexcept final;
+    bool operator<(const ImmutableString& other) const noexcept final;
 
-    bool operator>(const String& other) const noexcept final;
+    bool operator>(const ImmutableString& other) const noexcept final;
 
 protected:
     CString string;

@@ -1,6 +1,6 @@
 #include "StringObject.h"
 #include "gtest/gtest.h"
-#include "../It/It.h"
+#include "../../It/It.h"
 
 TEST(StringObject, isNull) {
     IT("should return true if string internally is nullptr");

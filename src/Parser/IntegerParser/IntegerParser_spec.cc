@@ -1,6 +1,6 @@
 #include "IntegerParser.h"
 #include "gtest/gtest.h"
-#include "../It/It.h"
+#include "../../It/It.h"
 
 TEST(IntegerParser, matchesType) {
     IT("should match tokens by emulating regexp matcher /\\+?\\-?\\d+/");

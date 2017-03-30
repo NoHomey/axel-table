@@ -2,18 +2,14 @@
 
 template<typename CString>
 BasicString<CString>::BasicString() noexcept
-: String{}, string{nullptr} {}
+: ImmutableString{}, string{nullptr} {}
 
 template<typename CString>
 BasicString<CString>::~BasicString() noexcept { }
 
-template<>
-BasicString<const char*>::BasicString(const char* cstring) noexcept
-: String{}, string{cstring} {}
-
-template<>
-BasicString<char*>::BasicString(const char*) noexcept
-: String{}, string{nullptr} {}
+template<typename CString>
+BasicString<CString>::BasicString(CString cstring) noexcept
+: ImmutableString{}, string{cstring} {}
 
 template<typename CString>
 bool BasicString<CString>::isNull() const noexcept {
@@ -62,7 +58,7 @@ char BasicString<CString>::operator[](const size_t index) const noexcept {
 }
 
 template<typename CString>
-bool BasicString<CString>::operator==(const String& other) const noexcept {
+bool BasicString<CString>::operator==(const ImmutableString& other) const noexcept {
     if(this == &other) {
         return true;
     }
@@ -87,12 +83,12 @@ bool BasicString<CString>::operator==(const String& other) const noexcept {
 }
 
 template<typename CString>
-bool BasicString<CString>::operator!=(const String& other) const noexcept {
+bool BasicString<CString>::operator!=(const ImmutableString& other) const noexcept {
     return !(*this == other);
 }
 
 template<typename CString>
-bool BasicString<CString>::operator<(const String& other) const noexcept {
+bool BasicString<CString>::operator<(const ImmutableString& other) const noexcept {
     if(this == &other) {
         return false;
     }
@@ -116,7 +112,7 @@ bool BasicString<CString>::operator<(const String& other) const noexcept {
 }
 
 template<typename CString>
-bool BasicString<CString>::operator>(const String& other) const noexcept {
+bool BasicString<CString>::operator>(const ImmutableString& other) const noexcept {
     return other < *this;
 }
 

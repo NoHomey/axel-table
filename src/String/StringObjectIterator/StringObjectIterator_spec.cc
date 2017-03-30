@@ -1,6 +1,6 @@
 #include "StringObjectIterator.h"
 #include "gtest/gtest.h"
-#include "../It/It.h"
+#include "../../It/It.h"
 
 TEST(StringObjectIterator, ConstructorAndGetters) {
     IT("creates new StringObjectIterator, which position is set to begin of StringObject::cString");

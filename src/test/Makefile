@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec StringObject_spec StringObjectIterator_spec
+TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec StringObject_spec
 
 all : $(TESTS)
 
@@ -95,8 +95,6 @@ StringObject_spec : $(USER_DIR)/String/StringObject/StringObject.h gtest_main.a 
 $(eval $(call spec,TableCell))
 
 $(eval $(call specInDir,Parser,IntegerParser,numberTextUtils.o BasicString.o))
-
-$(eval $(call specInDir,String,StringObjectIterator,BasicString.o))
 
 $(eval $(call specInDir,utils,numberTextUtils))	
 

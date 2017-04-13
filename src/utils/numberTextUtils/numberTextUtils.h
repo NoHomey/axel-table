@@ -8,6 +8,8 @@ namespace utils {
 
         bool isPlusMinus(const char symbol) noexcept;
 
+        bool isZero(const char symbol) noexcept;
+
         bool isDigit(const char symbol) noexcept;
 
         bool matchesNumberBeginning(const char first, const char second) noexcept;

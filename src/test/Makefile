@@ -94,7 +94,7 @@ StringObject_spec : $(USER_DIR)/String/StringObject/StringObject.h gtest_main.a 
 
 $(eval $(call spec,TableCell))
 
-$(eval $(call specInDir,Parser,IntegerParser,numberTextUtils.o BasicString.o))
+$(eval $(call specInDir,Parser,IntegerParser,numberTextUtils.o BasicString.o ValidationException.o))
 
 $(eval $(call specInDir,Parser,ValidationException))
 

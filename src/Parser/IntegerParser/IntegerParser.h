@@ -18,5 +18,7 @@ public:
     void validate() const final;
 
 private:
+    static const StringObject ABS_MAX_VALUE;
+    static const size_t ABS_MAX_VALUE_LENGTH;
     const StringObject& token;
 };

@@ -44,6 +44,17 @@ TEST(numberTextUtils, isPlusMinus) {
     EXPECT_FALSE(utils::numberTextUtils::isPlusMinus('*'));
 }
 
+TEST(numberTextUtils, isZero) {
+    IT("should return true if symbol is 0 and false if not");
+    const char* notZero = "a7d8f1s2i3d4k5d6fk!?@#$)(+-=*^9";
+
+    for(int i = 0; i < 28; ++i) {
+        EXPECT_FALSE(utils::numberTextUtils::isZero(notZero[i]));
+    }
+
+    EXPECT_TRUE(utils::numberTextUtils::isZero('0'));
+}
+
 TEST(numberTextUtils, isDigit) {
     IT("should return true if matches /[0-9]/ and false if not");
     const char digits[11] = "0123456789";

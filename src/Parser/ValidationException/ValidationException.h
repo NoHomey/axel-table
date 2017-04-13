@@ -22,8 +22,28 @@ namespace parse_exception {
         Invalid(const size_t pos, const char sym) noexcept;
     };
 
+    class Empty: public Invalid {
+    public:
+        Empty(const size_t pos, const char sym) noexcept;
+    };
+
+    class InvalidSymbol: public Invalid {
+    public:
+        InvalidSymbol(const size_t pos, const char sym) noexcept;
+    };
+
     class Warning: public ValidationException {
     public:
         Warning(const size_t pos, const char sym) noexcept;
+    };
+
+    class Limit: public Warning {
+    public:
+        Limit(const size_t pos, const char sym) noexcept;
+    };
+
+    class LeadingZero: public Warning {
+    public:
+        LeadingZero(const size_t pos, const char sym) noexcept;
     };
 }

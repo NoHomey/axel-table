@@ -123,16 +123,28 @@ TEST(IntegerParser, validateWhenEmpty) {
 }
 
 TEST(IntegerParser, validateWhenNull) {
-    IT("should throw Empty if input is empty string");
+    IT("should throw Null if input is Null string");
     IntegerParser parser = {nullptr};
     EXPECT_THROW(parser.validate(), parse_exception::Null);
+}
+
+TEST(IntegerParser, validateWhenItIsJustASignSymbol) {
+    IT("should throw NoDigit if input is just a sign symbol");
+    IntegerParser plus = {"+"};
+    EXPECT_THROW(plus.validate(), parse_exception::NoDigit);
+    IntegerParser minus = {"-"};
+    EXPECT_THROW(minus.validate(), parse_exception::NoDigit);
 }
 
 TEST(IntegerParser, parseWhenNotValidated) {
     IT("should call validate and remeber that it was validated");
     StringObject str = {""};
     IntegerParser parser = {str};
+    IntegerParser parser2 = {nullptr};
     EXPECT_FALSE(parser.isValidated());
     EXPECT_THROW(parser.parse(), parse_exception::Empty);
     EXPECT_TRUE(parser.isValidated());
+    EXPECT_FALSE(parser2.isValidated());
+    EXPECT_THROW(parser2.parse(), parse_exception::Null);
+    EXPECT_TRUE(parser2.isValidated());
 }

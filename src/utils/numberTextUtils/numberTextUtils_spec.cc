@@ -67,24 +67,6 @@ TEST(numberTextUtils, isDigit) {
     }
 }
 
-TEST(numberTextUtils, matchesNumberBeginning) {
-    IT("should return true if matches /\\-|\\+|[0-9]/ and false if not");
-    const char digits[11] = "0123456789";
-    const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(&'=*^";
-    for(int i = 0; i < 10; ++i) {
-        EXPECT_TRUE(utils::numberTextUtils::matchesNumberBeginning(digits[i], digits[i + 1]));
-        EXPECT_TRUE(utils::numberTextUtils::matchesNumberBeginning('+', digits[i]));
-        EXPECT_TRUE(utils::numberTextUtils::matchesNumberBeginning('-', digits[i]));
-    }
-    for(int i = 0; i < 29; ++i) {
-        EXPECT_FALSE(utils::numberTextUtils::matchesNumberBeginning('+', noneDigits[i]));
-        EXPECT_FALSE(utils::numberTextUtils::matchesNumberBeginning('-', noneDigits[i]));
-        for(int j = 0; j < 10; ++j) {
-            EXPECT_FALSE(utils::numberTextUtils::matchesNumberBeginning(noneDigits[i], digits[j]));
-        }
-    }
-}
-
 TEST(numberTextUtils, toDigit) {
     IT("should convert digit char to single digit as unsigned int");
     const char digits[11] = "0123456789";

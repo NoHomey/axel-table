@@ -11,8 +11,6 @@ namespace utils {
         bool isZero(const char symbol) noexcept;
 
         bool isDigit(const char symbol) noexcept;
-
-        bool matchesNumberBeginning(const char first, const char second) noexcept;
         
         unsigned int toDigit(const char symbol) noexcept;
     }

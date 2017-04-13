@@ -38,6 +38,16 @@ TEST(Null, reportsNullString) {
     EXPECT_EQ(exception.getSymbol(), '\0');
 }
 
+TEST(NoDigit, reportsSignSignSymbol) {
+    IT("should report {1, '+'/'-'}");
+    parse_exception::NoDigit plus = {'+'};
+    parse_exception::NoDigit minus = {'-'};
+    EXPECT_EQ(plus.getPosition(), 1);
+    EXPECT_EQ(plus.getSymbol(), '+');
+    EXPECT_EQ(minus.getPosition(), 1);
+    EXPECT_EQ(minus.getSymbol(), '-');
+}
+
 TEST(InvalidSymbol, reportsInvlaidSymbolInformation) {
     IT("store invalid details when validating type and it has invalid symbol");
     parse_exception::InvalidSymbol exception = {4, '#'};

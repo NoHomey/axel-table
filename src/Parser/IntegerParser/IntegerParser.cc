@@ -14,11 +14,8 @@ int IntegerParser::parser() const {
 }
 
 bool IntegerParser::matchesType() const noexcept {
-    if(!utils::numberTextUtils::matchesNumberBeginning(token[0], token[1])) {
-        return false;
-    }
-
-    int i = 1;
+    const size_t firstDigit = utils::numberTextUtils::isPlusMinus(token[0]) ? 1 : 0;
+    size_t i = firstDigit;
     while(token[i] != '\0') {
         if(!utils::numberTextUtils::isDigit(token[i])) {
             return false;
@@ -26,7 +23,7 @@ bool IntegerParser::matchesType() const noexcept {
         ++i;
     }
 
-    return true;
+    return i > firstDigit;
 }
 
 void IntegerParser::validator() const {
@@ -36,7 +33,8 @@ void IntegerParser::validator() const {
     if(token.isNull()) {
         throw parse_exception::Null();
     }
-    const size_t firstDigit = utils::numberTextUtils::isPlusMinus(token[0]) ? 1 : 0;
+    const bool isFirstSymbolSignSymbol = utils::numberTextUtils::isPlusMinus(token[0]);
+    const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0;
     const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstDigit;
     size_t index = firstDigit; 
     int isZeroException = -1;
@@ -48,6 +46,9 @@ void IntegerParser::validator() const {
             throw parse_exception::InvalidSymbol(index, token[index]);
         }
         ++index;
+    }
+    if(isFirstSymbolSignSymbol && (index == 1)) {
+        throw parse_exception::NoDigit(token[0]);
     }
     if(isZeroException != -1) {
         throw parse_exception::LeadingZero(index);

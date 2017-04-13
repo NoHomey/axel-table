@@ -24,7 +24,12 @@ namespace parse_exception {
 
     class Empty: public Invalid {
     public:
-        Empty(const size_t pos, const char sym) noexcept;
+        Empty() noexcept;
+    };
+
+    class Null: public Invalid {
+    public:
+        Null() noexcept;
     };
 
     class InvalidSymbol: public Invalid {
@@ -44,6 +49,6 @@ namespace parse_exception {
 
     class LeadingZero: public Warning {
     public:
-        LeadingZero(const size_t pos, const char sym) noexcept;
+        LeadingZero(const size_t pos) noexcept;
     };
 }

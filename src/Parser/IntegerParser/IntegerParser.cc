@@ -31,7 +31,10 @@ bool IntegerParser::matchesType() const noexcept {
 
 void IntegerParser::validator() const {
     if(token.isEmpty()) {
-        throw parse_exception::Empty(0, '\0');
+        throw parse_exception::Empty();
+    }
+    if(token.isNull()) {
+        throw parse_exception::Null();
     }
     const size_t firstDigit = utils::numberTextUtils::isPlusMinus(token[0]) ? 1 : 0;
     const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstDigit;
@@ -47,7 +50,7 @@ void IntegerParser::validator() const {
         ++index;
     }
     if(isZeroException != -1) {
-        throw parse_exception::LeadingZero(index, '0');
+        throw parse_exception::LeadingZero(index);
     }
     if(index >= maxLength) {
         if(ABS_MAX_VALUE < StringObject{token.cString() + firstDigit}) {

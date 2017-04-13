@@ -14,8 +14,11 @@ char parse_exception::ValidationException::getSymbol() const noexcept {
 parse_exception::Invalid::Invalid(const size_t pos, const char sym) noexcept
 : ValidationException{pos, sym} {}
 
-parse_exception::Empty::Empty(const size_t pos, const char sym) noexcept
-: Invalid{pos, sym} {}
+parse_exception::Empty::Empty() noexcept
+: Invalid{0, '\0'} {}
+
+parse_exception::Null::Null() noexcept
+: Invalid{0, '\0'} {}
 
 parse_exception::InvalidSymbol::InvalidSymbol(const size_t pos, const char sym) noexcept
 : Invalid{pos, sym} {}
@@ -26,5 +29,5 @@ parse_exception::Warning::Warning(const size_t pos, const char sym) noexcept
 parse_exception::Limit::Limit(const size_t pos, const char sym) noexcept
 : Warning{pos, sym} {}
 
-parse_exception::LeadingZero::LeadingZero(const size_t pos, const char sym) noexcept
-: Warning{pos, sym} {}
+parse_exception::LeadingZero::LeadingZero(const size_t pos) noexcept
+: Warning{pos, '0'} {}

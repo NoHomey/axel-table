@@ -122,6 +122,12 @@ TEST(IntegerParser, validateWhenEmpty) {
     EXPECT_THROW(parser.validate(), parse_exception::Empty);
 }
 
+TEST(IntegerParser, validateWhenNull) {
+    IT("should throw Empty if input is empty string");
+    IntegerParser parser = {nullptr};
+    EXPECT_THROW(parser.validate(), parse_exception::Null);
+}
+
 TEST(IntegerParser, parseWhenNotValidated) {
     IT("should call validate and remeber that it was validated");
     StringObject str = {""};

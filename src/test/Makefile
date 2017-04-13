@@ -53,7 +53,7 @@ $(1)_spec : $(call objDeps,$(1)) gtest_main.a It.o $(2)
 endef
 
 define specInDir
-$(2).o : $(call dirDeps,$(1),$(2))
+$(2).o : $(call dirDeps,$(1),$(2)) $(3)
 	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2).cc $(COVER)
 
 $(2)_spec.o : $(call dirDeps,$(1),$(2)) $(3)
@@ -94,7 +94,9 @@ StringObject_spec : $(USER_DIR)/String/StringObject/StringObject.h gtest_main.a 
 
 $(eval $(call spec,TableCell))
 
-$(eval $(call specInDir,Parser,IntegerParser,numberTextUtils.o BasicString.o ValidationException.o))
+$(eval $(call specInDir,Parser,TypeParser,BasicString.o))
+
+$(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o))
 
 $(eval $(call specInDir,Parser,ValidationException))
 

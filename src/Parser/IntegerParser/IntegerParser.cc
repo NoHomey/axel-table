@@ -7,7 +7,7 @@ const StringObject IntegerParser::ABS_MAX_VALUE = {"2147483647"};
 const size_t IntegerParser::ABS_MAX_VALUE_LENGTH = 10;
 
 IntegerParser::IntegerParser(const StringObject& string) noexcept
-: token{string} {}
+: TypeParser<int>{string} {}
 
 int IntegerParser::parse() const noexcept {
     return 0;
@@ -29,7 +29,7 @@ bool IntegerParser::matchesType() const noexcept {
     return true;
 }
 
-void IntegerParser::validate() const {
+void IntegerParser::validator() const {
     if(token.isEmpty()) {
         throw parse_exception::Empty(0, '\0');
     }

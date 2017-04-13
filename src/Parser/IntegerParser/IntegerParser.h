@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../TypeParser.h"
-#include "../../String/StringObject/StringObject.h"
+#include "../TypeParser/TypeParser.h"
 
 class IntegerParser: public TypeParser<int> {
 public:
@@ -15,10 +14,10 @@ public:
 
     bool matchesType() const noexcept final;
     
-    void validate() const final;
+protected:
+    void validator() const final;
 
 private:
     static const StringObject ABS_MAX_VALUE;
     static const size_t ABS_MAX_VALUE_LENGTH;
-    const StringObject& token;
 };

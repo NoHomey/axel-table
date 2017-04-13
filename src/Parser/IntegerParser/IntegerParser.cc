@@ -48,7 +48,7 @@ void IntegerParser::validator() const {
         ++index;
     }
     if(isFirstSymbolSignSymbol && (index == 1)) {
-        throw parse_exception::NoDigit(token[0]);
+        throw parse_exception::SingleSign(token[0]);
     }
     if(isZeroException != -1) {
         throw parse_exception::LeadingZero(index);

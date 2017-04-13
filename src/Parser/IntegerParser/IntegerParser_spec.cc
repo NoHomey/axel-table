@@ -129,11 +129,11 @@ TEST(IntegerParser, validateWhenNull) {
 }
 
 TEST(IntegerParser, validateWhenItIsJustASignSymbol) {
-    IT("should throw NoDigit if input is just a sign symbol");
+    IT("should throw SingleSign if input is just a sign symbol");
     IntegerParser plus = {"+"};
-    EXPECT_THROW(plus.validate(), parse_exception::NoDigit);
+    EXPECT_THROW(plus.validate(), parse_exception::SingleSign);
     IntegerParser minus = {"-"};
-    EXPECT_THROW(minus.validate(), parse_exception::NoDigit);
+    EXPECT_THROW(minus.validate(), parse_exception::SingleSign);
 }
 
 TEST(IntegerParser, parseWhenNotValidated) {

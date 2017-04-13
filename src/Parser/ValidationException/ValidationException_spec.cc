@@ -38,10 +38,10 @@ TEST(Null, reportsNullString) {
     EXPECT_EQ(exception.getSymbol(), '\0');
 }
 
-TEST(NoDigit, reportsSignSignSymbol) {
+TEST(SingleSign, reportsSingleSignSymbol) {
     IT("should report {1, '+'/'-'}");
-    parse_exception::NoDigit plus = {'+'};
-    parse_exception::NoDigit minus = {'-'};
+    parse_exception::SingleSign plus = {'+'};
+    parse_exception::SingleSign minus = {'-'};
     EXPECT_EQ(plus.getPosition(), 1);
     EXPECT_EQ(plus.getSymbol(), '+');
     EXPECT_EQ(minus.getPosition(), 1);

@@ -20,7 +20,7 @@ parse_exception::Empty::Empty() noexcept
 parse_exception::Null::Null() noexcept
 : Invalid{0, '\0'} {}
 
-parse_exception::NoDigit::NoDigit(const char sym) noexcept
+parse_exception::SingleSign::SingleSign(const char sym) noexcept
 : Invalid{1, sym} {}
 
 parse_exception::InvalidSymbol::InvalidSymbol(const size_t pos, const char sym) noexcept

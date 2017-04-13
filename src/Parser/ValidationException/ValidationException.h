@@ -37,9 +37,9 @@ namespace parse_exception {
         InvalidSymbol(const size_t pos, const char sym) noexcept;
     };
 
-    class NoDigit: public Invalid {
+    class SingleSign: public Invalid {
     public:
-        NoDigit(const char sym) noexcept;
+        SingleSign(const char sym) noexcept;
     };
 
     class Warning: public ValidationException {

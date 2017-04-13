@@ -121,3 +121,12 @@ TEST(IntegerParser, validateWhenEmpty) {
     IntegerParser parser = {""};
     EXPECT_THROW(parser.validate(), parse_exception::Empty);
 }
+
+TEST(IntegerParser, parseWhenNotValidated) {
+    IT("should call validate and remeber that it was validated");
+    StringObject str = {""};
+    IntegerParser parser = {str};
+    EXPECT_FALSE(parser.isValidated());
+    EXPECT_THROW(parser.parse(), parse_exception::Empty);
+    EXPECT_TRUE(parser.isValidated());
+}

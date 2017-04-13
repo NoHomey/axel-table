@@ -10,12 +10,12 @@ public:
 
     IntegerParser& operator=(const IntegerParser&) = delete;
 
-    int parse() const noexcept final;
-
     bool matchesType() const noexcept final;
     
 protected:
     void validator() const final;
+
+    int parser() const final;
 
 private:
     static const StringObject ABS_MAX_VALUE;

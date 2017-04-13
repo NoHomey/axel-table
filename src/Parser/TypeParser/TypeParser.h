@@ -11,16 +11,18 @@ public:
 
     TypeParser& operator=(const TypeParser&) = delete;
 
-    virtual Type parse() const noexcept = 0;
-
     virtual bool matchesType() const noexcept = 0;
     
     void validate();
+
+    Type parse();
 
     bool isValidated() const noexcept;
 
 protected:
     virtual void validator() const = 0;
+
+    virtual Type parser() const = 0; 
 
     const StringObject& token;
 

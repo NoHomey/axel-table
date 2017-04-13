@@ -9,7 +9,7 @@ const size_t IntegerParser::ABS_MAX_VALUE_LENGTH = 10;
 IntegerParser::IntegerParser(const StringObject& string) noexcept
 : TypeParser<int>{string} {}
 
-int IntegerParser::parse() const noexcept {
+int IntegerParser::parser() const {
     return 0;
 }
 

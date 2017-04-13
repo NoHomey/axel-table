@@ -10,3 +10,9 @@ size_t parse_exception::ValidationException::getPosition() const noexcept {
 char parse_exception::ValidationException::getSymbol() const noexcept {
     return symbol;
 }
+
+parse_exception::InValid::InValid(const size_t pos, const char sym) noexcept
+: ValidationException{pos, sym} {}
+
+parse_exception::Warnning::Warnning(const size_t pos, const char sym) noexcept
+: ValidationException{pos, sym} {}

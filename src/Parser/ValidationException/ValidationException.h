@@ -21,7 +21,7 @@ namespace parse_exception {
         const char symbol;
     };
 
-    /*class InValid: public ValidationException {
+    class InValid: public ValidationException {
     public:
         InValid(const size_t pos, const char sym) noexcept;
 
@@ -37,5 +37,5 @@ namespace parse_exception {
         Warnning(const Warnning&) = delete;
 
         Warnning& operator=(const Warnning&) = delete;
-    };*/
+    };
 }

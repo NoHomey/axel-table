@@ -31,9 +31,13 @@ TEST(IntegerParser, matchesType) {
     const char* token18 = "";
     const char* token19 = "\n\t\\s";
     const char* token20 = "/\\+?\\-?\\d+/";
-    const char* noMatch[] = {token10, token11, token12, token13, token14, token15, token16, token17, token18, token19, token20};
+    const char* token21 = "+";
+    const char* token22 = "-";
+    const char* token23 = "";
+    const char* noMatch[] = {token10, token11, token12, token13, token14, token15, token16,
+                            token17, token18, token19, token20, token21, token22, token23};
 
-    for(size_t i = 0; i < 10; ++i) {
+    for(size_t i = 0; i < 14; ++i) {
         IntegerParser parser = {noMatch[i]};
         EXPECT_FALSE(parser.matchesType());
     }

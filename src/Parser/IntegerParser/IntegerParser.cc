@@ -1,15 +1,16 @@
 #include "IntegerParser.h"
 #include "../../utils/numberTextUtils/numberTextUtils.h"
+#include <iostream>
 
 IntegerParser::IntegerParser(const StringObject& string) noexcept
-: token{const_cast<StringObject&>(string)} {}
+: token{string} {}
 
 int IntegerParser::parse() const noexcept {
     return 0;
 }
 
 bool IntegerParser::matchesType() const noexcept {
-if(!utils::numberTextUtils::matchesNumberFirstSymbol(token[0])) {
+    if(!utils::numberTextUtils::matchesNumberBeginning(token[0], token[1])) {
         return false;
     }
 

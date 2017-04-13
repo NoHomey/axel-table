@@ -11,9 +11,9 @@ public:
 
     virtual ~BasicString() noexcept;
     
-    BasicString(const BasicString& other) = delete;
+    BasicString(const BasicString&) = delete;
 
-    BasicString& operator=(const BasicString& other) = delete;
+    BasicString& operator=(const BasicString&) = delete;
 
     bool isNull() const noexcept final;
 

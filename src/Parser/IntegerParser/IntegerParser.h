@@ -7,6 +7,10 @@ class IntegerParser: public TypeParser<int> {
 public:
     IntegerParser(const StringObject& string) noexcept;
 
+    IntegerParser(const IntegerParser&) = delete;
+
+    IntegerParser& operator=(const IntegerParser&) = delete;
+
     int parse() const noexcept final;
 
     bool matchesType() const noexcept final;
@@ -14,5 +18,5 @@ public:
     bool isValid() const noexcept final;
 
 private:
-    StringObject& token;
+    const StringObject& token;
 };

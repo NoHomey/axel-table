@@ -16,8 +16,12 @@ bool utils::numberTextUtils::isDigit(const char symbol) noexcept {
     return (symbol >= '0') && (symbol <= '9');
 }
 
-bool utils::numberTextUtils::matchesNumberFirstSymbol(const char symbol) noexcept {
-    return isPlusMinus(symbol) || isDigit(symbol);
+bool utils::numberTextUtils::matchesNumberBeginning(const char first, const char second) noexcept {
+    if(isDigit(first)) {
+        return true;
+    }
+
+    return isPlusMinus(first) && isDigit(second);
 }
 
 unsigned int utils::numberTextUtils::toDigit(const char symbol) noexcept {

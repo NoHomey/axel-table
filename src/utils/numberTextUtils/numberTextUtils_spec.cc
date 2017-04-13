@@ -56,20 +56,26 @@ TEST(numberTextUtils, isDigit) {
     }
 }
 
-TEST(numberTextUtils, matchesNumberFirstSymbol) {
+TEST(numberTextUtils, matchesNumberBeginning) {
     IT("should return true if matches /\\-|\\+|[0-9]/ and false if not");
-    const char digits[13] = "0123456789-+";
+    const char digits[11] = "0123456789";
     const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(&'=*^";
-    for(int i = 0; i < 12; ++i) {
-        EXPECT_TRUE(utils::numberTextUtils::matchesNumberFirstSymbol(digits[i]));
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_TRUE(utils::numberTextUtils::matchesNumberBeginning(digits[i], digits[i + 1]));
+        EXPECT_TRUE(utils::numberTextUtils::matchesNumberBeginning('+', digits[i]));
+        EXPECT_TRUE(utils::numberTextUtils::matchesNumberBeginning('-', digits[i]));
     }
-    for(int i = 0; i < 27; ++i) {
-        EXPECT_FALSE(utils::numberTextUtils::matchesNumberFirstSymbol(noneDigits[i]));
+    for(int i = 0; i < 29; ++i) {
+        EXPECT_FALSE(utils::numberTextUtils::matchesNumberBeginning('+', noneDigits[i]));
+        EXPECT_FALSE(utils::numberTextUtils::matchesNumberBeginning('-', noneDigits[i]));
+        for(int j = 0; j < 10; ++j) {
+            EXPECT_FALSE(utils::numberTextUtils::matchesNumberBeginning(noneDigits[i], digits[j]));
+        }
     }
 }
 
 TEST(numberTextUtils, toDigit) {
-    IT("should conver digit char to single digit as unsigned int");
+    IT("should convert digit char to single digit as unsigned int");
     const char digits[11] = "0123456789";
     unsigned int expects[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     const char* noneDigits = "afdsfjsfikdfksdjfk!?@#$)(+-=*^";

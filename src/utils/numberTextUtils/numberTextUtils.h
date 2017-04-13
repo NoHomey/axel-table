@@ -10,7 +10,7 @@ namespace utils {
 
         bool isDigit(const char symbol) noexcept;
 
-        bool matchesNumberFirstSymbol(const char symbol) noexcept;
+        bool matchesNumberBeginning(const char first, const char second) noexcept;
         
         unsigned int toDigit(const char symbol) noexcept;
     }

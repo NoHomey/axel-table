@@ -8,9 +8,9 @@ public:
 
     virtual ~ImmutableString() noexcept = default;
 
-    ImmutableString(const ImmutableString& other) = delete;
+    ImmutableString(const ImmutableString&) = delete;
 
-    ImmutableString& operator=(const ImmutableString& other) = delete;
+    ImmutableString& operator=(const ImmutableString&) = delete;
 
     virtual bool isNull() const noexcept = 0;
 

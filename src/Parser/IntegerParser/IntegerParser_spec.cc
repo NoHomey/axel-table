@@ -1,6 +1,7 @@
 #include "IntegerParser.h"
 #include "gtest/gtest.h"
 #include "../../It/It.h"
+#include "../ValidationException/ValidationException.h"
 
 TEST(IntegerParser, matchesType) {
     IT("should match tokens by emulating regexp matcher /\\+?\\-?\\d+/");
@@ -40,5 +41,62 @@ TEST(IntegerParser, matchesType) {
     for(size_t i = 0; i < 14; ++i) {
         IntegerParser parser = {noMatch[i]};
         EXPECT_FALSE(parser.matchesType());
+    }
+}
+
+TEST(IntegerParser, validateWhenValid) {
+    IT("should not throw any exception");
+    const char* token1 = "+1234";
+    const char* token2 = "-1234";
+    const char* token3 = "1234";
+    const char* token4 = "+43535";
+    const char* token5 = "-42";
+    const char* token6 = "0";
+    const char* token7 = "+0";
+    const char* token8 = "-0";
+    const char* token9 = "1394578";
+    const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
+    
+    for(size_t i = 0; i < 9; ++i) {
+        IntegerParser parser = {match[i]};
+        EXPECT_NO_THROW(parser.validate());
+    }
+}
+
+TEST(IntegerParser, validateWhenWarningIsThrown) {
+    IT("should throw Warning when input is not in the range[-2^31 + 1, 2^31 - 1] or it's not zero and starts with zero'");
+    const char* token1 = "+01234";
+    const char* token2 = "-001234";
+    const char* token3 = "01234";
+    const char* token4 = "2147483648";
+    const char* token5 = "+2147483648";
+    const char* token6 = "0000001";
+    const char* token7 = "+0000002";
+    const char* token8 = "-000001";
+    const char* token9 = "–2147483648";
+    const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
+    
+    for(size_t i = 0; i < 9; ++i) {
+        IntegerParser parser = {match[i]};
+        EXPECT_THROW(parser.validate(), parse_exception::Warning);
+    }
+}
+
+TEST(IntegerParser, validateWhenInValid) {
+    IT("should Invalid if input is invalid");
+    const char* token1 = "+1234.";
+    const char* token2 = "-123.4";
+    const char* token3 = "1234.0";
+    const char* token4 = "+43535a";
+    const char* token5 = "-4^2";
+    const char* token6 = "@0";
+    const char* token7 = "+)0";
+    const char* token8 = "-0(";
+    const char* token9 = "";
+    const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
+    
+    for(size_t i = 0; i < 9; ++i) {
+        IntegerParser parser = {match[i]};
+        EXPECT_THROW(parser.validate(), parse_exception::Invalid);
     }
 }

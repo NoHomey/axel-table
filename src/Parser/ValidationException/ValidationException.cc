@@ -11,8 +11,8 @@ char parse_exception::ValidationException::getSymbol() const noexcept {
     return symbol;
 }
 
-parse_exception::InValid::InValid(const size_t pos, const char sym) noexcept
+parse_exception::Invalid::Invalid(const size_t pos, const char sym) noexcept
 : ValidationException{pos, sym} {}
 
-parse_exception::Warnning::Warnning(const size_t pos, const char sym) noexcept
+parse_exception::Warning::Warning(const size_t pos, const char sym) noexcept
 : ValidationException{pos, sym} {}

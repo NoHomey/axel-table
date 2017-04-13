@@ -45,7 +45,7 @@ define spec
 $(1).o : $(call unitDeps,$(1))
 	$(COMPILE_COMPONENT)/$(1)/$(1).cc $(COVER)
 
-$(1)_spec.o : $(call unitDeps,$(1))
+$(1)_spec.o : $(call unitDeps,$(1)) $(2)
 	$(COMPILE_COMPONENT)/$(1)/$(1)_spec.cc
 
 $(1)_spec : $(call objDeps,$(1)) gtest_main.a It.o $(2)
@@ -56,7 +56,7 @@ define specInDir
 $(2).o : $(call dirDeps,$(1),$(2))
 	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2).cc $(COVER)
 
-$(2)_spec.o : $(call dirDeps,$(1),$(2))
+$(2)_spec.o : $(call dirDeps,$(1),$(2)) $(3)
 	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2)_spec.cc
 
 $(2)_spec : $(call objDeps,$(2)) gtest_main.a It.o $(3)

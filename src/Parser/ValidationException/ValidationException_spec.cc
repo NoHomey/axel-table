@@ -13,24 +13,24 @@ TEST(ValidationException, reportsTypeValidationException) {
     EXPECT_EQ(exception2.getSymbol(), '*');
 }
 
-TEST(InValid, reportsTypeValidationInValidity) {
+TEST(Invalid, reportsTypeValidationInValidity) {
     IT("store invalid details when validating type and it's invalid");
-    parse_exception::InValid exception = {4, 'i'};
+    parse_exception::Invalid exception = {4, 'i'};
     EXPECT_EQ(exception.getPosition(), 4);
     EXPECT_EQ(exception.getSymbol(), 'i');
 
-    parse_exception::InValid exception2 = {1, '*'};
+    parse_exception::Invalid exception2 = {1, '*'};
     EXPECT_EQ(exception2.getPosition(), 1);
     EXPECT_EQ(exception2.getSymbol(), '*');
 }
 
-TEST(Warnning, reportsTypeValidationException) {
-    IT("store warnning details when validating type and warnning occurs");
-    parse_exception::Warnning exception = {4, 'i'};
+TEST(Warning, reportsTypeValidationException) {
+    IT("store Warning details when validating type and Warning occurs");
+    parse_exception::Warning exception = {4, 'i'};
     EXPECT_EQ(exception.getPosition(), 4);
     EXPECT_EQ(exception.getSymbol(), 'i');
 
-    parse_exception::Warnning exception2 = {1, '*'};
+    parse_exception::Warning exception2 = {1, '*'};
     EXPECT_EQ(exception2.getPosition(), 1);
     EXPECT_EQ(exception2.getSymbol(), '*');
 }

@@ -15,7 +15,7 @@ public:
 
     bool matchesType() const noexcept final;
     
-    bool isValid() const noexcept final;
+    void validate() const final;
 
 private:
     const StringObject& token;

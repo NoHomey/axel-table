@@ -1,4 +1,5 @@
 #include "IntegerParser.h"
+#include "../ValidationException/ValidationException.h"
 #include "../../utils/numberTextUtils/numberTextUtils.h"
 #include <iostream>
 
@@ -25,6 +26,6 @@ bool IntegerParser::matchesType() const noexcept {
     return true;
 }
 
-bool IntegerParser::isValid() const noexcept {
-    return false;
+void IntegerParser::validate() const {
+
 }

@@ -13,5 +13,5 @@ public:
 
     virtual bool matchesType() const noexcept = 0;
     
-    virtual bool isValid() const noexcept = 0;
+    virtual void validate() const = 0;
 };

@@ -21,21 +21,21 @@ namespace parse_exception {
         const char symbol;
     };
 
-    class InValid: public ValidationException {
+    class Invalid: public ValidationException {
     public:
-        InValid(const size_t pos, const char sym) noexcept;
+        Invalid(const size_t pos, const char sym) noexcept;
 
-        InValid(const InValid&) = delete;
+        Invalid(const Invalid&) = delete;
 
-        InValid& operator=(const InValid&) = delete;
+        Invalid& operator=(const Invalid&) = delete;
     };
 
-    class Warnning: public ValidationException {
+    class Warning: public ValidationException {
     public:
-        Warnning(const size_t pos, const char sym) noexcept;
+        Warning(const size_t pos, const char sym) noexcept;
 
-        Warnning(const Warnning&) = delete;
+        Warning(const Warning&) = delete;
 
-        Warnning& operator=(const Warnning&) = delete;
+        Warning& operator=(const Warning&) = delete;
     };
 }

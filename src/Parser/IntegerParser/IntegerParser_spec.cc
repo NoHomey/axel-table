@@ -14,7 +14,7 @@ TEST(IntegerParser, matchesType) {
     const char* token7 = "+0";
     const char* token8 = "-0";
     const char* token9 = "1394578";
-    const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
+    const char* match[] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
         IntegerParser parser = {match[i]};
@@ -55,7 +55,7 @@ TEST(IntegerParser, validateWhenValid) {
     const char* token7 = "+0";
     const char* token8 = "-0";
     const char* token9 = "1394578";
-    const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
+    const char* match[] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
         IntegerParser parser = {match[i]};
@@ -108,7 +108,7 @@ TEST(IntegerParser, validateWhenThereIsInvalidSymbol) {
     const char* token7 = "+)0";
     const char* token8 = "-0(";
     const char* token9 = "2147483648#";
-    const char* match[] = {token1, token2, token3, token4, token5, token6, token6, token7, token8, token9};
+    const char* match[] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
         IntegerParser parser = {match[i]};
@@ -147,4 +147,24 @@ TEST(IntegerParser, parseWhenNotValidated) {
     EXPECT_FALSE(parser2.isValidated());
     EXPECT_THROW(parser2.parse(), parse_exception::Null);
     EXPECT_TRUE(parser2.isValidated());
+}
+
+TEST(IntegerParser, parse) {
+    IT("parses a valid int string to int");
+    const char* token1 = "+2147483647";
+    const char* token2 = "-2147483647";
+    const char* token3 = "1234";
+    const char* token4 = "+43535";
+    const char* token5 = "-42";
+    const char* token6 = "0";
+    const char* token7 = "+0";
+    const char* token8 = "-0";
+    const char* token9 = "456245";
+    const char* match[9] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
+    const int expect[9] = {2147483647, -2147483647, 1234, 43535, -42, 0, 0, 0, 456245};
+    
+    for(size_t i = 0; i < 9; ++i) {
+        IntegerParser parser = {match[i]};
+        EXPECT_EQ(parser.parse(), expect[i]);
+    }
 }

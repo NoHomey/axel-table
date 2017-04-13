@@ -10,7 +10,17 @@ IntegerParser::IntegerParser(const StringObject& string) noexcept
 : TypeParser<int>{string} {}
 
 int IntegerParser::parser() const {
-    return 0;
+    const size_t firstDigit = utils::numberTextUtils::isPlusMinus(token[0]) ? 1 : 0;
+    const bool isNegative = utils::numberTextUtils::isMinus(token[0]);
+    int result = 0;
+    size_t i = firstDigit;
+    while(token[i] != '\0') {
+        result *= 10;
+        result += utils::numberTextUtils::toDigit(token[i]);
+        ++i;
+    }
+
+    return isNegative ? (-result) : result;
 }
 
 bool IntegerParser::matchesType() const noexcept {

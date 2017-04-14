@@ -47,9 +47,14 @@ void IntegerParser::validator() const {
     const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0;
     const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstDigit;
     size_t index = firstDigit; 
-    int isZeroException = -1;
-    if(utils::numberTextUtils::isZero(token[index]) && (token[index + 1] != '\0')) {
-        isZeroException = index;
+    bool isZeroException = false;
+    size_t leadingZerosCount = 0;
+    if(utils::numberTextUtils::isZero(token[firstDigit]) && (token[firstDigit + 1] != '\0')) {
+        isZeroException = true;
+        leadingZerosCount = 1;
+        while(token[leadingZerosCount + firstDigit] == '0') {
+            leadingZerosCount += 1;
+        }
     }
     while(token[index] != '\0') {
         if(!utils::numberTextUtils::isDigit(token[index])) {
@@ -60,8 +65,8 @@ void IntegerParser::validator() const {
     if(isFirstSymbolSignSymbol && (index == 1)) {
         throw parse_exception::SingleSign(token[0]);
     }
-    if(isZeroException != -1) {
-        throw parse_exception::LeadingZero(index);
+    if(isZeroException) {
+        throw parse_exception::LeadingZero(firstDigit, leadingZerosCount);
     }
     if(index >= maxLength) {
         if(ABS_MAX_VALUE < StringObject{token.cString() + firstDigit}) {

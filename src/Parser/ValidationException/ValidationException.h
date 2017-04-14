@@ -54,6 +54,10 @@ namespace parse_exception {
 
     class LeadingZero: public Warning {
     public:
-        LeadingZero(const size_t pos) noexcept;
+        LeadingZero(const size_t pos, const size_t zeros) noexcept;
+
+        size_t getCount() const noexcept;
+    protected:
+        size_t count;
     };
 }

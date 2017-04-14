@@ -32,5 +32,9 @@ parse_exception::Warning::Warning(const size_t pos, const char sym) noexcept
 parse_exception::Limit::Limit(const size_t pos, const char sym) noexcept
 : Warning{pos, sym} {}
 
-parse_exception::LeadingZero::LeadingZero(const size_t pos) noexcept
-: Warning{pos, '0'} {}
+parse_exception::LeadingZero::LeadingZero(const size_t pos, const size_t zeros) noexcept
+: Warning{pos, '0'}, count{zeros} {}
+
+size_t parse_exception::LeadingZero::getCount() const noexcept {
+    return count;
+}

@@ -13,17 +13,17 @@ TEST(FixedSizeString, length) {
 
 TEST(FixedSizeString, filling) {
     FixedSizeString ivo{3};
-    str << 'i' << 'v' << 'o';
-    EXPECT_EQ(ivo, ConstString{"ivo"});
+    ivo << 'i' << 'v' << 'o';
+    EXPECT_TRUE(ivo == ConstString{"ivo"});
     FixedSizeString str{8};
     str << "fixedStr";
-    EXPECT_EQ(str, ConstString{"fixedStr"});
-    FixedSizeString str2{12};
-    str2 << "mixed " << 's' << 't' << 'r' << "!!!";
-    EXPECT_EQ(str2, ConstString{"mixed str!!!"});
+    EXPECT_TRUE(str == ConstString{"fixedStr"});
+    FixedSizeString str2{13};
+    str2 << "mixed " << 's' << 't' << 'r' << "!!!" << '.';
+    EXPECT_TRUE(str2 == ConstString{"mixed str!!!."});
     FixedSizeString full{4};
-    str2 << "fully " << 's' << 't' << 'r' << "!!!";
-    EXPECT_EQ(full, ConstString{"full"});
+    full << "full" << 'y' << ' ' << "str" << "!!" << '!';
+    EXPECT_TRUE(full == ConstString{"full"});
 }
 
 

@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec ConstString_spec ValidationException_spec
+TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec numberTextUtils_spec IntegerParser_spec
 
 all : $(TESTS)
 
@@ -13,7 +13,7 @@ GTEST_INCLUDE = $(GTEST_DIR)/include
 
 CPPFLAGS += -isystem $(GTEST_INCLUDE)
 
-CXXFLAGS += -g -std=c++11 -Wall -Wextra -Wpedantic -pthread -O -O0
+CXXFLAGS += -g -std=c++14 -Wall -Wextra -Wpedantic -pthread -O -O0
 
 COVER = --coverage
 
@@ -42,7 +42,7 @@ objDeps = $(1).o $(1)_spec.o
 dirDeps = $(USER_DIR)/$(1)/$(2)/$(2).h $(USER_DIR)/$(1)/$(2)/$(2).cc $(specDeps)
 
 define spec
-$(1).o : $(call unitDeps,$(1))
+$(1).o : $(call unitDeps,$(1)) $(2)
 	$(COMPILE_COMPONENT)/$(1)/$(1).cc $(COVER)
 
 $(1)_spec.o : $(call unitDeps,$(1)) $(2)
@@ -91,6 +91,8 @@ ConstString_spec.o : $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/Bas
 
 ConstString_spec : $(USER_DIR)/String/ConstString/ConstString.h gtest_main.a It.o BasicString.o ConstString_spec.o
 	$(COMPILER) $(COVER) -lpthread $^ -o $@
+
+$(eval $(call specInDir,String,FixedSizeString,BasicString.o))
 
 $(eval $(call spec,TableCell))
 

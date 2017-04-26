@@ -17,7 +17,8 @@ TEST(IntegerParser, matchesType) {
     const char* match[] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
-        IntegerParser parser = {match[i]};
+        ConstString str = {match[i]};
+        IntegerParser parser = {str};
         EXPECT_TRUE(parser.matchesType());
     }
 
@@ -39,7 +40,8 @@ TEST(IntegerParser, matchesType) {
                             token17, token18, token19, token20, token21, token22, token23};
 
     for(size_t i = 0; i < 14; ++i) {
-        IntegerParser parser = {noMatch[i]};
+        ConstString str = {noMatch[i]};
+        IntegerParser parser = {str};
         EXPECT_FALSE(parser.matchesType());
     }
 }
@@ -58,7 +60,8 @@ TEST(IntegerParser, validateWhenValid) {
     const char* match[] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
-        IntegerParser parser = {match[i]};
+        ConstString str = {match[i]};
+        IntegerParser parser = {str};
         EXPECT_NO_THROW(parser.validate());
     }
 }
@@ -76,7 +79,8 @@ TEST(IntegerParser, validateWhenInputIsOutOfRange) {
     const char* token9 = "-2200000000";
     const char* match[9] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     for(size_t i = 0; i < 9; ++i) {
-        IntegerParser parser = {match[i]};
+        ConstString str = {match[i]};
+        IntegerParser parser = {str};
         EXPECT_THROW(parser.validate(), parse_exception::Limit);
     }
 }
@@ -92,7 +96,8 @@ TEST(IntegerParser, validateWhenThereIsLeadingZero) {
     const char* match[] = {token1, token2, token3, token4, token5, token6};
     
     for(size_t i = 0; i < 6; ++i) {
-        IntegerParser parser = {match[i]};
+        ConstString str = {match[i]};
+        IntegerParser parser = {str};
         EXPECT_THROW(parser.validate(), parse_exception::LeadingZero);
     }
 }
@@ -111,28 +116,33 @@ TEST(IntegerParser, validateWhenThereIsInvalidSymbol) {
     const char* match[] = {token1, token2, token3, token4, token5, token6, token7, token8, token9};
     
     for(size_t i = 0; i < 9; ++i) {
-        IntegerParser parser = {match[i]};
+        ConstString str = {match[i]};
+        IntegerParser parser = {str};
         EXPECT_THROW(parser.validate(), parse_exception::InvalidSymbol);
     }
 }
 
 TEST(IntegerParser, validateWhenEmpty) {
     IT("should throw Empty if input is empty string");
-    IntegerParser parser = {""};
+    ConstString str = {""};
+    IntegerParser parser = {str};
     EXPECT_THROW(parser.validate(), parse_exception::Empty);
 }
 
 TEST(IntegerParser, validateWhenNull) {
     IT("should throw Null if input is Null string");
-    IntegerParser parser = {nullptr};
+    ConstString str = {nullptr};
+    IntegerParser parser = {str};
     EXPECT_THROW(parser.validate(), parse_exception::Null);
 }
 
 TEST(IntegerParser, validateWhenItIsJustASignSymbol) {
     IT("should throw SingleSign if input is just a sign symbol");
-    IntegerParser plus = {"+"};
+    ConstString strP = {"+"};
+    IntegerParser plus = {strP};
     EXPECT_THROW(plus.validate(), parse_exception::SingleSign);
-    IntegerParser minus = {"-"};
+    ConstString strM = {"-"};
+    IntegerParser minus = {strM};
     EXPECT_THROW(minus.validate(), parse_exception::SingleSign);
 }
 
@@ -140,7 +150,8 @@ TEST(IntegerParser, parseWhenNotValidated) {
     IT("should call validate and remeber that it was validated");
     ConstString str = {""};
     IntegerParser parser = {str};
-    IntegerParser parser2 = {nullptr};
+    ConstString str2 = {nullptr};
+    IntegerParser parser2 = {str2};
     EXPECT_FALSE(parser.isValidated());
     EXPECT_THROW(parser.parse(), parse_exception::Empty);
     EXPECT_TRUE(parser.isValidated());
@@ -164,7 +175,8 @@ TEST(IntegerParser, parse) {
     const int expect[9] = {2147483647, -2147483647, 1234, 43535, -42, 0, 0, 0, 456245};
     
     for(size_t i = 0; i < 9; ++i) {
-        IntegerParser parser = {match[i]};
+        ConstString str = {match[i]};
+        IntegerParser parser = {str};
         EXPECT_EQ(parser.parse(), expect[i]);
     }
 }

@@ -15,25 +15,25 @@ public:
 
     BasicString& operator=(const BasicString&) = delete;
 
-    bool isNull() const noexcept final;
+    bool isNull() const noexcept override final;
 
-    bool isEmpty() const noexcept final;
+    bool isEmpty() const noexcept override final;
 
-    bool hasContent() const noexcept final;
+    bool hasContent() const noexcept override final;
 
-    size_t length() const noexcept final;
+    virtual size_t length() const noexcept override;
 
-    const char* cString() const noexcept final;
+    const char* cString() const noexcept override final;
 
-    char operator[](const size_t index) const noexcept final;
+    char operator[](const size_t index) const noexcept override final;
 
-    bool operator==(const ImmutableString& other) const noexcept final;
+    bool operator==(const ImmutableString& other) const noexcept override final;
 
-    bool operator!=(const ImmutableString& other) const noexcept final;
+    bool operator!=(const ImmutableString& other) const noexcept override final;
 
-    bool operator<(const ImmutableString& other) const noexcept final;
+    bool operator<(const ImmutableString& other) const noexcept override final;
 
-    bool operator>(const ImmutableString& other) const noexcept final;
+    bool operator>(const ImmutableString& other) const noexcept override final;
 
 protected:
     CString string;

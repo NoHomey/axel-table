@@ -116,5 +116,5 @@ bool BasicString<CString>::operator>(const ImmutableString& other) const noexcep
     return other < *this;
 }
 
-//template class BasicString<char*>;
+template class BasicString<char*>;
 template class BasicString<const char*>;

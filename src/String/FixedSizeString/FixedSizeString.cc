@@ -11,3 +11,7 @@ FixedSizeString::~FixedSizeString() {
 size_t FixedSizeString::length() const noexcept {
     return size;
 }
+
+FixedSizeString& FixedSizeString::operator<<(const char symbol) noexcept {
+    return *this;
+}

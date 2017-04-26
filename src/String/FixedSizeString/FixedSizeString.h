@@ -12,7 +12,9 @@ public:
 
     FixedSizeString& operator=(const FixedSizeString&) = delete;
 
-    size_t length() const noexcept final;
+    size_t length() const noexcept override final;
+
+    FixedSizeString& operator<<(const char symbol) noexcept;
 
 protected:
     const size_t size;

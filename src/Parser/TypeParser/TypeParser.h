@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../../String/StringObject/StringObject.h"
+#include "../../String/ConstString/ConstString.h"
 
 template<typename Type>
 class TypeParser {
 public:
-    TypeParser(const StringObject& string) noexcept;
+    TypeParser(ConstString& string) noexcept;
 
     TypeParser(const TypeParser&) = delete;
 
@@ -24,7 +24,7 @@ protected:
 
     virtual Type parser() const = 0; 
 
-    const StringObject& token;
+    ConstString& token;
 
     bool validated;
 };

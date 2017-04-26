@@ -2,11 +2,11 @@
 #include "../ValidationException/ValidationException.h"
 #include "../../utils/numberTextUtils/numberTextUtils.h"
 
-const StringObject IntegerParser::ABS_MAX_VALUE = {"2147483647"};
+ConstString IntegerParser::ABS_MAX_VALUE = {"2147483647"};
 
 const size_t IntegerParser::ABS_MAX_VALUE_LENGTH = 10;
 
-IntegerParser::IntegerParser(const StringObject& string) noexcept
+IntegerParser::IntegerParser(ConstString& string) noexcept
 : TypeParser<int>{string} {}
 
 int IntegerParser::parser() const {
@@ -69,7 +69,7 @@ void IntegerParser::validator() const {
         throw parse_exception::LeadingZero(firstDigit, leadingZerosCount);
     }
     if(index >= maxLength) {
-        if(ABS_MAX_VALUE < StringObject{token.cString() + firstDigit}) {
+        if(ABS_MAX_VALUE < ConstString{token.cString() + firstDigit}) {
             throw parse_exception::Limit(index, token[index]);
         }
     }

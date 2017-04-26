@@ -4,7 +4,7 @@
 
 class IntegerParser: public TypeParser<int> {
 public:
-    IntegerParser(const StringObject& string) noexcept;
+    IntegerParser(ConstString& string) noexcept;
 
     IntegerParser(const IntegerParser&) = delete;
 
@@ -18,6 +18,6 @@ protected:
     int parser() const final;
 
 private:
-    static const StringObject ABS_MAX_VALUE;
+    static ConstString ABS_MAX_VALUE;
     static const size_t ABS_MAX_VALUE_LENGTH;
 };

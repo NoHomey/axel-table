@@ -4,6 +4,6 @@
 
 #include "../BasicString/BasicString.h"
 
-using StringObject = BasicString<const char*>;
+using ConstString = const BasicString<const char*>;
 
 #endif

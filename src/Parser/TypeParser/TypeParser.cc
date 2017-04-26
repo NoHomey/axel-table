@@ -1,7 +1,7 @@
 #include "TypeParser.h"
 
 template<typename Type>
-TypeParser<Type>::TypeParser(const StringObject& string) noexcept
+TypeParser<Type>::TypeParser(ConstString& string) noexcept
 : token{string}, validated{false} {}
 
 template<typename Type>
@@ -26,4 +26,4 @@ Type TypeParser<Type>::parse() {
 
 template class TypeParser<int>;
 //template class TypeParser<double>;
-//template class TypeParser<StringObject>;
+//template class TypeParser<ConstString>;

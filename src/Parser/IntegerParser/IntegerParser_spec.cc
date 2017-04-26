@@ -138,7 +138,7 @@ TEST(IntegerParser, validateWhenItIsJustASignSymbol) {
 
 TEST(IntegerParser, parseWhenNotValidated) {
     IT("should call validate and remeber that it was validated");
-    StringObject str = {""};
+    ConstString str = {""};
     IntegerParser parser = {str};
     IntegerParser parser2 = {nullptr};
     EXPECT_FALSE(parser.isValidated());

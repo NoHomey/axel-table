@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec StringObject_spec ValidationException_spec
+TESTS = TableCell_spec IntegerParser_spec numberTextUtils_spec ConstString_spec ValidationException_spec
 
 all : $(TESTS)
 
@@ -86,10 +86,10 @@ It.o: $(call ownDeps,It)
 BasicString.o : $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
 	$(COMPILE_COMPONENT)/String/BasicString/BasicString.cc $(COVER)
 
-StringObject_spec.o : $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
-	$(COMPILE_COMPONENT)/String/StringObject/StringObject_spec.cc
+ConstString_spec.o : $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
+	$(COMPILE_COMPONENT)/String/ConstString/ConstString_spec.cc
 
-StringObject_spec : $(USER_DIR)/String/StringObject/StringObject.h gtest_main.a It.o BasicString.o StringObject_spec.o
+ConstString_spec : $(USER_DIR)/String/ConstString/ConstString.h gtest_main.a It.o BasicString.o ConstString_spec.o
 	$(COMPILER) $(COVER) -lpthread $^ -o $@
 
 $(eval $(call spec,TableCell))

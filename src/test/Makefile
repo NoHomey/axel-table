@@ -102,7 +102,7 @@ $(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTe
 
 $(eval $(call specInDir,Parser,ValidationException))
 
-$(eval $(call specInDir,utils,numberTextUtils))	
+$(eval $(call specInDir,Parser,numberTextUtils, ValidationException.o))	
 
 test :
 	$(MAKE) clean

@@ -1,6 +1,6 @@
 #include "IntegerParser.h"
 #include "../ValidationException/ValidationException.h"
-#include "../../utils/numberTextUtils/numberTextUtils.h"
+#include "../numberTextUtils/numberTextUtils.h"
 
 ConstString IntegerParser::ABS_MAX_VALUE = {"9223372036854775807"};
 
@@ -10,15 +10,13 @@ IntegerParser::IntegerParser(ConstString& string) noexcept
 : TypeParser<long long>{string} {}
 
 long long IntegerParser::parser() const {
-    const bool isNegative = utils::numberTextUtils::isMinus(token[0]);
-    size_t index = isNegative || utils::numberTextUtils::isPlus(token[0]) ? 1 : 0;
+    const bool isNegative = numberTextUtils::isMinus(token[0]);
+    const size_t firstDigit = isNegative || numberTextUtils::isPlus(token[0]) ? 1 : 0;
     long long result = 0;
-    while(token[index] == '0') {
-        ++index;
-    }
+    size_t index = firstDigit + numberTextUtils::skipZeros(token.cString() + firstDigit);
     while(token[index] != '\0') {
         result *= 10;
-        result += utils::numberTextUtils::toDigit(token[index]);
+        result += numberTextUtils::toDigit(token[index]);
         ++index;
     }
 
@@ -26,23 +24,16 @@ long long IntegerParser::parser() const {
 }
 
 void IntegerParser::validator() const {
-    const bool isFirstSymbolSignSymbol = utils::numberTextUtils::isPlusMinus(token[0]);
-    size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0; 
-    while(token[firstDigit] == '0') {
-        ++firstDigit;
-    }
-    const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstDigit;
-    size_t index = firstDigit;
-    while(token[index] != '\0') {
-        if(!utils::numberTextUtils::isDigit(token[index])) {
-            throw parse_exception::InvalidSymbol(index, token[index]);
-        }
-        ++index;
-    }
-    if(isFirstSymbolSignSymbol && (index == 1)) {
+    const bool isFirstSymbolSignSymbol = numberTextUtils::isPlusMinus(token[0]);
+    const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0; 
+    const size_t firstNoneZero = firstDigit + numberTextUtils::skipZeros(token.cString() + firstDigit);
+    const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstNoneZero;
+    const char* tokenFromFirstDigit = token.cString() + firstNoneZero;
+    const size_t length = firstNoneZero + numberTextUtils::containsOnlyDigits(tokenFromFirstDigit);
+    if(isFirstSymbolSignSymbol && (length == 1)) {
         throw parse_exception::SingleSign(token[0]);
     }
-    if((index >= maxLength) && (ABS_MAX_VALUE < ConstString{token.cString() + firstDigit})) {
-        throw parse_exception::Limit(index, token[index]);
+    if((length >= maxLength) && (ABS_MAX_VALUE < ConstString{tokenFromFirstDigit})) {
+        throw parse_exception::Limit(length, token[length]);
     }
 }

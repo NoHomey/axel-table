@@ -14,4 +14,7 @@ protected:
     void typeValidator() const override final;
 
     double typeParser() const override final;
+
+private:
+    static const size_t TOTAL_DIGITS_COUNT;
 };

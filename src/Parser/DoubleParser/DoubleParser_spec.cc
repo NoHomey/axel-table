@@ -53,8 +53,10 @@ TEST(DoubleParser, validateWhenValid) {
 }
 
 TEST(DoubleParser, parseTypeWhenInputIsOutOfRange) {
-    IT("should throw Limit when input is not in the range[-2^63 + 1, 2^63 - 1]");
+    IT("should throw Limit when input is not in the range[-2^52 + 1, 2^52 - 1]");
     const char* match[] = {
+        "9223372036854775808",
+        "+9223372036854775808",
         "922337203685.4778",
         "+922337203.68545808",
         "922337203685478.08",
@@ -65,21 +67,22 @@ TEST(DoubleParser, parseTypeWhenInputIsOutOfRange) {
         "-9330000.000000000",
         "-922337.0203685773",
         "-9243372036.8547723",
-        "-00000.9223372036854775808"
+        "-00000.9223372036854775808",
+        "-9223372036854775808"
     };
-    for(size_t i = 0; i < 11; ++i) {
+    for(size_t i = 0; i < 14; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::Limit);
     }
 
-    for(size_t i = 0; i < 7; ++i) {
+    for(size_t i = 0; i < 9; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit);
     }
 
-    for(size_t i = 7; i < 11; ++i) {
+    for(size_t i = 10; i < 14; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit);
@@ -144,6 +147,41 @@ TEST(DoubleParser, parseTypeWhenThereIsInvalidSymbol) {
         } catch(const parse_exception::InvalidSymbol& error) {
             EXPECT_EQ(error.getPosition(), expectPosition[i]);
             EXPECT_EQ(error.getSymbol(), expectSymbol[i]);
+        }
+    }
+}
+
+TEST(DoubleParser, parseTypeWhenItIsParsingInteger) {
+    IT("throws ParsedAsInteger if the parsed strig is a valid Integer Type");
+    const char* match[] = {
+        "+9223372036854775807",
+        "-9223372036854775807",
+        "1234",
+        "+43535",
+        "-42",
+        "0",
+        "+0",
+        "-0",
+        "456245",
+        "-001234",
+        "0000001",
+        "-0000017",
+        "+000000234343",
+        "+099",
+        "+00009223372036854775807",
+        "-000009223372036854775807"
+    };
+    const long long expect[] = {9223372036854775807, -9223372036854775807, 1234, 43535, -42, 0, 0, 0, 456245,
+        -1234, 1, -17, 234343, 99, 9223372036854775807, -9223372036854775807};
+    
+    for(size_t i = 0; i < 16; ++i) {
+        ConstString str = {match[i]};
+        DoubleParser parser = {str};
+        EXPECT_THROW(parser.parseType(), parse_exception::ParsedAsInteger);
+        try {
+            parser.parseType();
+        } catch(const parse_exception::ParsedAsInteger& error) {
+            EXPECT_EQ(error.getValue(), expect[i]);
         }
     }
 }

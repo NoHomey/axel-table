@@ -30,4 +30,14 @@ namespace parse_exception {
         const size_t position;
         const char symbol;
     };
+
+    class ParsedAsInteger: public Invalid {
+    public:
+        ParsedAsInteger(const long long val) noexcept;
+
+        long long getValue() const noexcept;
+        
+    protected:
+        long long value;
+    };
 }

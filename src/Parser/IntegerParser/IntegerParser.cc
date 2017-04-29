@@ -39,10 +39,6 @@ void IntegerParser::typeValidator() const {
         throw parse_exception::SingleSign();
     }
     if((length >= maxLength) && (ABS_MAX_VALUE < ConstString{tokenFromFirstDigit})) {
-        if(token[0] == '-') {
-            throw parse_exception::MinimumLimit();
-        } else {
-            throw parse_exception::MaximumLimit();
-        }
+        numberTextUtils::throwLimitException(token[0]);
     }
 }

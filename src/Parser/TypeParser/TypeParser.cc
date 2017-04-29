@@ -19,5 +19,5 @@ Type TypeParser<Type>::parseType() {
 }
 
 template class TypeParser<long long>;
-//template class TypeParser<double>;
+template class TypeParser<double>;
 //template class TypeParser<ConstString>;

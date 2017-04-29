@@ -10,3 +10,10 @@ size_t parse_exception::InvalidSymbol::getPosition() const noexcept {
 char parse_exception::InvalidSymbol::getSymbol() const noexcept {
     return symbol;
 }
+
+parse_exception::ParsedAsInteger::ParsedAsInteger(const long long val) noexcept
+: Invalid{}, value{val} {}
+
+long long parse_exception::ParsedAsInteger::getValue() const noexcept {
+    return value;
+}

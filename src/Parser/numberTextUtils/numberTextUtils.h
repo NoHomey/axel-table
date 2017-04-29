@@ -18,4 +18,6 @@ namespace numberTextUtils {
     size_t skipZeros(const char* string) noexcept;
 
     size_t containsOnlyDigits(const char* string);
+
+    void throwLimitException(const char symbol);
 }

@@ -149,3 +149,10 @@ TEST(numberTextUtils, containsOnlyDigits) {
         EXPECT_EQ(numberTextUtils::containsOnlyDigits(match[i]), expect[i]);
     }
 }
+
+TEST(numberTextUtils, throwLimitException) {
+    EXPECT_THROW(numberTextUtils::throwLimitException('-'), parse_exception::MinimumLimit);
+    EXPECT_THROW(numberTextUtils::throwLimitException('+'), parse_exception::MaximumLimit);
+    EXPECT_THROW(numberTextUtils::throwLimitException('0'), parse_exception::MaximumLimit);
+    EXPECT_THROW(numberTextUtils::throwLimitException('-'), parse_exception::MinimumLimit);
+}

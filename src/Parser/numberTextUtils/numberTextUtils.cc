@@ -46,3 +46,11 @@ size_t numberTextUtils::containsOnlyDigits(const char* string) {
 
     return index;
 }
+
+void numberTextUtils::throwLimitException(const char symbol) {
+    if(isMinus(symbol)) {
+        throw parse_exception::MinimumLimit();
+    } else {
+        throw parse_exception::MaximumLimit();
+    }
+}

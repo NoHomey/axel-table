@@ -12,3 +12,12 @@ TEST(InvalidSymbol, reportsInvlaidSymbolInformation) {
     EXPECT_EQ(exception2.getPosition(), 1);
     EXPECT_EQ(exception2.getSymbol(), '*');
 }
+
+TEST(ParsedAsInteger, thrownWhenParsingDoubleFailedDueToSuccessfullyParsingToInteger) {
+    IT("stores parsed integer value");
+    parse_exception::ParsedAsInteger exception = {4};
+    EXPECT_EQ(exception.getValue(), 4);
+
+    parse_exception::ParsedAsInteger exception2 = {-9};
+    EXPECT_EQ(exception2.getValue(), -9);
+}

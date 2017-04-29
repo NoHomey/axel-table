@@ -2,7 +2,7 @@
 
 #include "../TypeParser/TypeParser.h"
 
-class IntegerParser: public TypeParser<int> {
+class IntegerParser: public TypeParser<long long> {
 public:
     IntegerParser(ConstString& string) noexcept;
 
@@ -13,7 +13,7 @@ public:
 protected:
     void validator() const override final;
 
-    int parser() const override final;
+    long long parser() const override final;
 
 private:
     static ConstString ABS_MAX_VALUE;

@@ -14,8 +14,8 @@ TEST(TableCell, NewTableCell) {
 }
 
 TEST(TableCell, NewIntegerCell) {
-	IT("should become Integer cell when construted with int");
-	TableCell cell = 9;
+	IT("should become Integer cell when construted with long long");
+	TableCell cell = static_cast<long long>(999999);
 	EXPECT_FALSE(cell.isEmpty());
 	EXPECT_TRUE(cell.isInteger());
 	EXPECT_FALSE(cell.isDouble());
@@ -51,7 +51,7 @@ TEST(TableCell, toIntegerWhenTableCellisEmpty) {
 
 TEST(TableCell, toIntegerWhenTableCellisInteger) {
 	IT("should return value with which it was constructed if TableCell isInteger");
-	int values[14] = {9, -1, 4, 7, 12332, 324, 24324, 24, -3424, 564, 256, 1, 0, 42};
+	long long values[14] = {9, -1, 4, 7, 12332, 324, 24324, 24, -3424, 564, 256, 1, 0, 42};
 	for(size_t i = 0; i < 14; ++i) {
 		TableCell cell1 = values[i];
 		EXPECT_EQ(cell1.toInteger(), values[i]);
@@ -61,7 +61,7 @@ TEST(TableCell, toIntegerWhenTableCellisInteger) {
 TEST(TableCell, toIntegerWhenTableCellisDouble) {
 	IT("should return the whole part of the double with which it was constructed if TableCell isDouble");
 	double values[14] = {9.383479, -1.34324, 4.2, 7.3, 12332.69, 324.8342, 24324.003, 24.2, -3424.5, 564.12, 256.99, 1.5679, 0, -42.3};
-	int expects[14] = {9, -1, 4, 7, 12332, 324, 24324, 24, -3424, 564, 256, 1, 0, -42};
+	long long expects[14] = {9, -1, 4, 7, 12332, 324, 24324, 24, -3424, 564, 256, 1, 0, -42};
 	for(size_t i = 0; i < 14; ++i) {
 		TableCell cell1 = values[i];
 		EXPECT_EQ(cell1.toInteger(), expects[i]);

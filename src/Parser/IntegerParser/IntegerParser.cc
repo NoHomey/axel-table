@@ -2,17 +2,17 @@
 #include "../ValidationException/ValidationException.h"
 #include "../../utils/numberTextUtils/numberTextUtils.h"
 
-ConstString IntegerParser::ABS_MAX_VALUE = {"2147483647"};
+ConstString IntegerParser::ABS_MAX_VALUE = {"9223372036854775807"};
 
-const size_t IntegerParser::ABS_MAX_VALUE_LENGTH = 10;
+const size_t IntegerParser::ABS_MAX_VALUE_LENGTH = 19;
 
 IntegerParser::IntegerParser(ConstString& string) noexcept
-: TypeParser<int>{string} {}
+: TypeParser<long long>{string} {}
 
-int IntegerParser::parser() const {
+long long IntegerParser::parser() const {
     const bool isNegative = utils::numberTextUtils::isMinus(token[0]);
     size_t index = isNegative || utils::numberTextUtils::isPlus(token[0]) ? 1 : 0;
-    int result = 0;
+    long long result = 0;
     while(token[index] == '0') {
         ++index;
     }
@@ -42,9 +42,7 @@ void IntegerParser::validator() const {
     if(isFirstSymbolSignSymbol && (index == 1)) {
         throw parse_exception::SingleSign(token[0]);
     }
-    if(index >= maxLength) {
-        if(ABS_MAX_VALUE < ConstString{token.cString() + firstDigit}) {
-            throw parse_exception::Limit(index, token[index]);
-        }
+    if((index >= maxLength) && (ABS_MAX_VALUE < ConstString{token.cString() + firstDigit})) {
+        throw parse_exception::Limit(index, token[index]);
     }
 }

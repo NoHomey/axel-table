@@ -6,8 +6,8 @@
 TEST(IntegerParser, validateWhenValid) {
     IT("should not throw any exception");
     const char* match[] = {
-        "+2147483647",
-        "-2147483647",
+        "+9223372036854775807",
+        "-9223372036854775807",
         "1234",
         "+43535",
         "-42",
@@ -31,19 +31,19 @@ TEST(IntegerParser, validateWhenValid) {
 }
 
 TEST(IntegerParser, validateWhenInputIsOutOfRange) {
-    IT("should throw Limit when input is not in the range[-2^31 + 1, 2^31 - 1]");
+    IT("should throw Limit when input is not in the range[-2^63 + 1, 2^63 - 1]");
     const char* match[] = {
-        "2147483648",
-        "+2147483648",
-        "-2147483648",
-        "2147483659",
-        "+2147483659",
-        "-2147483659",
-        "2200000000",
-        "+2200000000",
-        "-2200000000",
-        "+00002147483648",
-        "-000002147483648"
+        "9223372036854775808",
+        "+9223372036854775808",
+        "-9223372036854775808",
+        "9223372036854775808",
+        "+9233372036854775808",
+        "-9243372036854775808",
+        "9330000000000000000",
+        "+9330000000000000000",
+        "-9330000000000000000",
+        "+00009223372036854775808",
+        "-000009223372036854775808"
     };
     for(size_t i = 0; i < 11; ++i) {
         ConstString str = {match[i]};
@@ -64,7 +64,7 @@ TEST(IntegerParser, validateWhenThereIsInvalidSymbol) {
         "@0",
         "+)0",
         "-0(",
-        "2147483648#",
+        "9223372036854775808#",
         "++43535"
     };
 
@@ -114,10 +114,10 @@ TEST(IntegerParser, parseWhenNotValidated) {
 }
 
 TEST(IntegerParser, parse) {
-    IT("parses a valid integer string to int");
+    IT("parses a valid integer string to long long");
     const char* match[] = {
-        "+2147483647",
-        "-2147483647",
+        "+9223372036854775807",
+        "-9223372036854775807",
         "1234",
         "+43535",
         "-42",
@@ -130,11 +130,11 @@ TEST(IntegerParser, parse) {
         "-0000017",
         "+000000234343",
         "+099",
-        "+00002147483647",
-        "-000002147483647"
+        "+00009223372036854775807",
+        "-000009223372036854775807"
     };
-    const int expect[] = {2147483647, -2147483647, 1234, 43535, -42, 0, 0, 0, 456245,
-        -1234, 1, -17, 234343, 99, 2147483647, -2147483647};
+    const long long expect[] = {9223372036854775807, -9223372036854775807, 1234, 43535, -42, 0, 0, 0, 456245,
+        -1234, 1, -17, 234343, 99, 9223372036854775807, -9223372036854775807};
     
     for(size_t i = 0; i < 16; ++i) {
         ConstString str = {match[i]};

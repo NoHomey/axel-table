@@ -31,6 +31,6 @@ Type TypeParser<Type>::parse() {
     return parser();
 }
 
-template class TypeParser<int>;
+template class TypeParser<long long>;
 //template class TypeParser<double>;
 //template class TypeParser<ConstString>;

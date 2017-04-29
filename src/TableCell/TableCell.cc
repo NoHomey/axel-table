@@ -10,7 +10,7 @@ TableCell TableCell::ErrorCell() noexcept {
 TableCell::TableCell() noexcept
 : cellType{TableCellType::Empty}, cellValue{nullptr} {}
 
-TableCell::TableCell(const int value) noexcept
+TableCell::TableCell(const long long value) noexcept
 : cellType{TableCellType::Integer}, cellValue{nullptr} {
 	cellValue.integerValue = value;
 }
@@ -40,7 +40,7 @@ bool TableCell::isError() const noexcept {
 	return cellType == TableCellType::Error;
 }
 
-int TableCell::toInteger() const noexcept {
+long long TableCell::toInteger() const noexcept {
 	if(isInteger()) {
 		return cellValue.integerValue;
 	}

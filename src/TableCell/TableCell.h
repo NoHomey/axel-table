@@ -5,7 +5,7 @@ public:
 	static TableCell ErrorCell() noexcept;
 
 	TableCell() noexcept;
-	TableCell(const int value) noexcept;
+	TableCell(const long long value) noexcept;
 	TableCell(const double value) noexcept;
 
 	bool isEmpty() const noexcept;
@@ -14,7 +14,7 @@ public:
 	bool isString() const noexcept;
 	bool isError() const noexcept;
 
-	int toInteger() const noexcept;
+	long long toInteger() const noexcept;
 
 protected:
 	enum TableCellType {
@@ -26,7 +26,7 @@ protected:
 
 	union TableCellValue {
 		void* noValue;
-		int integerValue;
+		long long integerValue;
 		double doubleValue;
 	};
 

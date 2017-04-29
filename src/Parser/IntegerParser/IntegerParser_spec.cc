@@ -14,10 +14,16 @@ TEST(IntegerParser, validateWhenValid) {
         "0",
         "+0",
         "-0",
-        "1394578"
+        "1394578",
+        "+01234",
+        "-001234",
+        "0000001",
+        "-0000017",
+        "+000000234343",
+        "+099"
     };
     
-    for(size_t i = 0; i < 9; ++i) {
+    for(size_t i = 0; i < 14; ++i) {
         ConstString str = {match[i]};
         IntegerParser parser = {str};
         EXPECT_NO_THROW(parser.validate());
@@ -26,7 +32,7 @@ TEST(IntegerParser, validateWhenValid) {
 
 TEST(IntegerParser, validateWhenInputIsOutOfRange) {
     IT("should throw Limit when input is not in the range[-2^31 + 1, 2^31 - 1]");
-    const char* match[9] = {
+    const char* match[] = {
         "2147483648",
         "+2147483648",
         "-2147483648",
@@ -35,30 +41,14 @@ TEST(IntegerParser, validateWhenInputIsOutOfRange) {
         "-2147483659",
         "2200000000",
         "+2200000000",
-        "-2200000000"
+        "-2200000000",
+        "+00002147483648",
+        "-000002147483648"
     };
-    for(size_t i = 0; i < 9; ++i) {
+    for(size_t i = 0; i < 11; ++i) {
         ConstString str = {match[i]};
         IntegerParser parser = {str};
         EXPECT_THROW(parser.validate(), parse_exception::Limit);
-    }
-}
-
-TEST(IntegerParser, validateWhenThereIsLeadingZero) {
-    IT("should throw LeadingZero when input is not zero and starts with zero");
-    const char* match[] = {
-        "+01234",
-        "-001234",
-        "01234",
-        "0000001",
-        "+0000002",
-        "-000001"
-    };
-    
-    for(size_t i = 0; i < 6; ++i) {
-        ConstString str = {match[i]};
-        IntegerParser parser = {str};
-        EXPECT_THROW(parser.validate(), parse_exception::LeadingZero);
     }
 }
 
@@ -124,7 +114,7 @@ TEST(IntegerParser, parseWhenNotValidated) {
 }
 
 TEST(IntegerParser, parse) {
-    IT("parses a valid int string to int");
+    IT("parses a valid integer string to int");
     const char* match[] = {
         "+2147483647",
         "-2147483647",
@@ -134,11 +124,19 @@ TEST(IntegerParser, parse) {
         "0",
         "+0",
         "-0",
-        "456245"
+        "456245",
+        "-001234",
+        "0000001",
+        "-0000017",
+        "+000000234343",
+        "+099",
+        "+00002147483647",
+        "-000002147483647"
     };
-    const int expect[9] = {2147483647, -2147483647, 1234, 43535, -42, 0, 0, 0, 456245};
+    const int expect[] = {2147483647, -2147483647, 1234, 43535, -42, 0, 0, 0, 456245,
+        -1234, 1, -17, 234343, 99, 2147483647, -2147483647};
     
-    for(size_t i = 0; i < 9; ++i) {
+    for(size_t i = 0; i < 16; ++i) {
         ConstString str = {match[i]};
         IntegerParser parser = {str};
         EXPECT_EQ(parser.parse(), expect[i]);

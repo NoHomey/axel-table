@@ -51,13 +51,4 @@ namespace parse_exception {
     public:
         Limit(const size_t pos, const char sym) noexcept;
     };
-
-    class LeadingZero: public Warning {
-    public:
-        LeadingZero(const size_t pos, const size_t zeros) noexcept;
-
-        size_t getCount() const noexcept;
-    protected:
-        size_t count;
-    };
 }

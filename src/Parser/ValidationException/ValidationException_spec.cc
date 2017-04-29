@@ -80,16 +80,3 @@ TEST(Limit, reportsTypeValidationExceptionWhenLimitIsReached) {
     EXPECT_EQ(exception2.getPosition(), 2);
     EXPECT_EQ(exception2.getSymbol(), '2');
 }
-
-TEST(LeadingZero, reportsNumberTypeValidationWhenLeadingZeroIsFound) {
-    IT("store details when validating number type and it contains leading zeros");
-    parse_exception::LeadingZero exception = {0, 2};
-    EXPECT_EQ(exception.getPosition(), 0);
-    EXPECT_EQ(exception.getSymbol(), '0');
-    EXPECT_EQ(exception.getCount(), 2);
-
-    parse_exception::LeadingZero exception2 = {1, 3};
-    EXPECT_EQ(exception2.getPosition(), 1);
-    EXPECT_EQ(exception2.getSymbol(), '0');
-    EXPECT_EQ(exception2.getCount(), 3);
-}

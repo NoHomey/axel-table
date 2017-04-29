@@ -19,6 +19,8 @@ public:
     FixedSizeString& operator<<(const char* symbols) noexcept;
 
 protected:
+    bool isntFilled() const noexcept;
+
     const size_t size;
 
     size_t filled;

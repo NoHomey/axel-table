@@ -12,8 +12,12 @@ size_t FixedSizeString::length() const noexcept {
     return size;
 }
 
+bool FixedSizeString::isntFilled() const noexcept {
+    return filled < size;
+}
+
 FixedSizeString& FixedSizeString::operator<<(const char symbol) noexcept {
-    if(filled < size) {
+    if(isntFilled()) {
         string[filled] = symbol;
         ++filled;
         if(filled == size) {
@@ -26,7 +30,7 @@ FixedSizeString& FixedSizeString::operator<<(const char symbol) noexcept {
 
 FixedSizeString& FixedSizeString::operator<<(const char* symbols) noexcept {
     size_t i = 0;
-    while((filled < size) && (symbols[i] != '\0')) {
+    while(isntFilled() && (symbols[i] != '\0')) {
         operator<<(symbols[i]);
         ++i;
     }

@@ -23,26 +23,7 @@ int IntegerParser::parser() const {
     return isNegative ? (-result) : result;
 }
 
-bool IntegerParser::matchesType() const noexcept {
-    const size_t firstDigit = utils::numberTextUtils::isPlusMinus(token[0]) ? 1 : 0;
-    size_t i = firstDigit;
-    while(token[i] != '\0') {
-        if(!utils::numberTextUtils::isDigit(token[i])) {
-            return false;
-        }
-        ++i;
-    }
-
-    return i > firstDigit;
-}
-
 void IntegerParser::validator() const {
-    if(token.isEmpty()) {
-        throw parse_exception::Empty();
-    }
-    if(token.isNull()) {
-        throw parse_exception::Null();
-    }
     const bool isFirstSymbolSignSymbol = utils::numberTextUtils::isPlusMinus(token[0]);
     const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0;
     const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstDigit;

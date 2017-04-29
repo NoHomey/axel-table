@@ -10,8 +10,6 @@ public:
     TypeParser(const TypeParser&) = delete;
 
     TypeParser& operator=(const TypeParser&) = delete;
-
-    virtual bool matchesType() const noexcept = 0;
     
     void validate();
 

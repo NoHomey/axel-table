@@ -1,4 +1,5 @@
 #include "TypeParser.h"
+#include "../ValidationException/ValidationException.h"
 
 template<typename Type>
 TypeParser<Type>::TypeParser(ConstString& string) noexcept
@@ -7,6 +8,12 @@ TypeParser<Type>::TypeParser(ConstString& string) noexcept
 template<typename Type>
 void TypeParser<Type>::validate() {
     validated = true;
+    if(token.isEmpty()) {
+        throw parse_exception::Empty();
+    }
+    if(token.isNull()) {
+        throw parse_exception::Null();
+    }
     validator();
 }
 

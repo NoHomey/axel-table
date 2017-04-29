@@ -9,8 +9,6 @@ public:
     IntegerParser(const IntegerParser&) = delete;
 
     IntegerParser& operator=(const IntegerParser&) = delete;
-
-    bool matchesType() const noexcept override final;
     
 protected:
     void validator() const override final;

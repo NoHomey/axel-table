@@ -96,7 +96,7 @@ $(eval $(call specInDir,String,FixedSizeString,BasicString.o))
 
 $(eval $(call spec,TableCell))
 
-$(eval $(call specInDir,Parser,TypeParser,BasicString.o))
+$(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 
 $(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o))
 

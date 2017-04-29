@@ -11,9 +11,9 @@ public:
     IntegerParser& operator=(const IntegerParser&) = delete;
     
 protected:
-    void validator() const override final;
+    void typeValidator() const override final;
 
-    long long parser() const override final;
+    long long typeParser() const override final;
 
 private:
     static ConstString ABS_MAX_VALUE;

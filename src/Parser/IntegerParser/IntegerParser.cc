@@ -9,7 +9,7 @@ const size_t IntegerParser::ABS_MAX_VALUE_LENGTH = 19;
 IntegerParser::IntegerParser(ConstString& string) noexcept
 : TypeParser<long long>{string} {}
 
-long long IntegerParser::parser() const {
+long long IntegerParser::typeParser() const {
     const bool isNegative = numberTextUtils::isMinus(token[0]);
     const size_t firstDigit = isNegative || numberTextUtils::isPlus(token[0]) ? 1 : 0;
     long long result = 0;
@@ -23,17 +23,26 @@ long long IntegerParser::parser() const {
     return isNegative ? (-result) : result;
 }
 
-void IntegerParser::validator() const {
+void IntegerParser::typeValidator() const {
     const bool isFirstSymbolSignSymbol = numberTextUtils::isPlusMinus(token[0]);
     const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0; 
     const size_t firstNoneZero = firstDigit + numberTextUtils::skipZeros(token.cString() + firstDigit);
     const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstNoneZero;
     const char* tokenFromFirstDigit = token.cString() + firstNoneZero;
-    const size_t length = firstNoneZero + numberTextUtils::containsOnlyDigits(tokenFromFirstDigit);
+    size_t length;
+    try {
+        length = firstNoneZero + numberTextUtils::containsOnlyDigits(tokenFromFirstDigit);
+    } catch(const parse_exception::InvalidSymbol& error) {
+        throw parse_exception::InvalidSymbol(error.getPosition() + firstNoneZero, error.getSymbol());
+    }
     if(isFirstSymbolSignSymbol && (length == 1)) {
-        throw parse_exception::SingleSign(token[0]);
+        throw parse_exception::SingleSign();
     }
     if((length >= maxLength) && (ABS_MAX_VALUE < ConstString{tokenFromFirstDigit})) {
-        throw parse_exception::Limit(length, token[length]);
+        if(token[0] == '-') {
+            throw parse_exception::MinimumLimit();
+        } else {
+            throw parse_exception::MaximumLimit();
+        }
     }
 }

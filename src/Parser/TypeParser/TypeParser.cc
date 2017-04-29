@@ -3,32 +3,19 @@
 
 template<typename Type>
 TypeParser<Type>::TypeParser(ConstString& string) noexcept
-: token{string}, validated{false} {}
+: token{string} {}
 
 template<typename Type>
-void TypeParser<Type>::validate() {
-    validated = true;
+Type TypeParser<Type>::parseType() {
     if(token.isEmpty()) {
         throw parse_exception::Empty();
     }
     if(token.isNull()) {
         throw parse_exception::Null();
     }
-    validator();
-}
+    typeValidator();
 
-template<typename Type>
-bool TypeParser<Type>::isValidated() const noexcept {
-    return validated;
-}
-
-template<typename Type>
-Type TypeParser<Type>::parse() {
-    if(!isValidated()) {
-        validate();
-    }
-
-    return parser();
+    return typeParser();
 }
 
 template class TypeParser<long long>;

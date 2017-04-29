@@ -4,9 +4,23 @@
 #include "../../Exception.h"
 
 namespace parse_exception {
-    class ValidationException: public Exception {
+    class Invalid: public Exception { };
+
+    class Empty: public Invalid { };
+
+    class Null: public Invalid { };
+
+    class SingleSign: public Invalid { };
+
+    class Limit: public Invalid { };
+
+    class MinimumLimit: public Limit { };
+
+    class MaximumLimit: public Limit { };
+
+    class InvalidSymbol: public Invalid {
     public:
-        ValidationException(const size_t pos, const char sym) noexcept;
+        InvalidSymbol(const size_t pos, const char sym) noexcept;
 
         size_t getPosition() const noexcept;
 
@@ -15,40 +29,5 @@ namespace parse_exception {
     protected:
         const size_t position;
         const char symbol;
-    };
-
-    class Invalid: public ValidationException {
-    public:
-        Invalid(const size_t pos, const char sym) noexcept;
-    };
-
-    class Empty: public Invalid {
-    public:
-        Empty() noexcept;
-    };
-
-    class Null: public Invalid {
-    public:
-        Null() noexcept;
-    };
-
-    class InvalidSymbol: public Invalid {
-    public:
-        InvalidSymbol(const size_t pos, const char sym) noexcept;
-    };
-
-    class SingleSign: public Invalid {
-    public:
-        SingleSign(const char sym) noexcept;
-    };
-
-    class Warning: public ValidationException {
-    public:
-        Warning(const size_t pos, const char sym) noexcept;
-    };
-
-    class Limit: public Warning {
-    public:
-        Limit(const size_t pos, const char sym) noexcept;
     };
 }

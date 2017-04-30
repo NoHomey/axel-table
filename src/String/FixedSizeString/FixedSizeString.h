@@ -12,16 +12,12 @@ public:
 
     FixedSizeString& operator=(const FixedSizeString&) = delete;
 
-    size_t length() const noexcept override final;
-
     FixedSizeString& operator<<(const char symbol) noexcept;
 
     FixedSizeString& operator<<(const char* symbols) noexcept;
 
 protected:
     bool isntFilled() const noexcept;
-
-    const size_t size;
 
     size_t filled;
 };

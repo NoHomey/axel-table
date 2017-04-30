@@ -16,10 +16,10 @@ long long IntegerParser::typeParser() const {
 
 void IntegerParser::typeValidator() const {
     const bool isFirstSymbolSignSymbol = numberTextUtils::isPlusMinus(token[0]);
-    const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0; 
-    const size_t firstNoneZero = firstDigit + numberTextUtils::skipZeros(token.cString() + firstDigit);
+    const size_t firstDigit = isFirstSymbolSignSymbol ? 1 : 0;
+    const size_t firstNoneZero = firstDigit + numberTextUtils::skipZeros({token, firstDigit});
     const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstNoneZero;
-    ConstString tokenFromFirstDigit = {token.cString() + firstNoneZero};
+    ConstString tokenFromFirstDigit = {token, firstNoneZero};
     size_t length;
     try {
         length = firstNoneZero + numberTextUtils::containsOnlyDigits(tokenFromFirstDigit);

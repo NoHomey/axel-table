@@ -2,6 +2,20 @@
 #include "gtest/gtest.h"
 #include "../../It/It.h"
 
+TEST(ConstString, throwingBadStringOffset) {
+    IT("should throw BadStringOffset if offset constructor is used and offset is bigger than length");
+    ConstString str;
+    EXPECT_THROW((ConstString{str, 2}), ConstString::BadStringOffset);
+    EXPECT_THROW((ConstString{str, 1, true}), ConstString::BadStringOffset);
+    EXPECT_NO_THROW((ConstString{str, 0}));
+    EXPECT_NO_THROW((ConstString{str, 0, true}));
+    ConstString str2 = {"some text"};
+    EXPECT_THROW((ConstString{str2, 10}), ConstString::BadStringOffset);
+    EXPECT_THROW((ConstString{str2, 10, true}), ConstString::BadStringOffset);
+    EXPECT_NO_THROW((ConstString{str2, 3}));
+    EXPECT_NO_THROW((ConstString{str2, 3, true}));
+}
+
 TEST(ConstString, isNull) {
     IT("should return true if string internally is nullptr");
     ConstString str;
@@ -35,6 +49,18 @@ TEST(ConstString, isEmpty) {
 
     ConstString str4 = {"This is a \"ConstString\"!"};
     EXPECT_FALSE(str4.isEmpty());
+
+    ConstString str5 = {",", 1, true};
+    EXPECT_TRUE(str5.isEmpty());
+
+    ConstString str6 = {str2, 10};
+    EXPECT_TRUE(str6.isEmpty());
+
+    ConstString str7 = {"avcbc", 2, true};
+    EXPECT_FALSE(str7.isEmpty());
+
+    ConstString str8 = {str7, 2};
+    EXPECT_FALSE(str8.isEmpty());
 }
 
 TEST(ConstString, hasContent) {
@@ -55,6 +81,18 @@ TEST(ConstString, hasContent) {
 
     ConstString str4 = {"This is a \"ConstString\"!"};
     EXPECT_TRUE(str4.hasContent());
+
+    ConstString str5 = {",", 1, true};
+    EXPECT_FALSE(str5.hasContent());
+
+    ConstString str6 = {str2, 10};
+    EXPECT_FALSE(str6.hasContent());
+
+    ConstString str7 = {"avcbc", 2, true};
+    EXPECT_TRUE(str7.hasContent());
+
+    ConstString str8 = {str7, 2};
+    EXPECT_TRUE(str8.hasContent());
 }
 
 TEST(ConstString, length) {
@@ -73,6 +111,18 @@ TEST(ConstString, length) {
 
     ConstString str5 = {"549589358935"};
     EXPECT_EQ(str5.length(), 12);
+
+    ConstString str6 = {"123a4", 2, true};
+    EXPECT_EQ(str6.length(), 3);
+
+    ConstString str7 = {"123.234\"  ", 3, true};
+    EXPECT_EQ(str7.length(), 7);
+
+    ConstString str8 = {str7, 3};
+    EXPECT_EQ(str8.length(), 4);
+
+    ConstString str9 = {str6, 1};
+    EXPECT_EQ(str9.length(), 2);
 }
 
 TEST(ConstString, cString) {
@@ -83,6 +133,15 @@ TEST(ConstString, cString) {
     const char* data = "1234.56789";
     ConstString str2 = {data};
     EXPECT_EQ(str2.cString(), data);
+
+    ConstString str3 = {str2, 3};
+    EXPECT_EQ(str3.cString(), data + 3);
+
+    ConstString str4 = {str2, 4};
+    EXPECT_EQ(str4.cString(), data + 4);
+
+    ConstString str5 = {str2, 1, true};
+    EXPECT_EQ(str5.cString(), data);
 }
 
 TEST(ConstString, indexOperator) {
@@ -99,6 +158,27 @@ TEST(ConstString, indexOperator) {
     }
     EXPECT_EQ(str2[10], '\0');
     EXPECT_EQ(str2[100], '\0');
+
+    ConstString str3 = {"123.234\"  ", 3, true};
+    EXPECT_EQ(str3[3], '.');
+    EXPECT_EQ(str3[6], '4');
+    EXPECT_EQ(str3[7], '\0');
+
+    ConstString str4 = {"123.2347,    ", 5, true};
+    EXPECT_EQ(str4[8], '\0');
+
+    ConstString str5 = {str4, 2};
+    EXPECT_EQ(str5[0], '3');
+    EXPECT_EQ(str5[1], '.');
+    EXPECT_EQ(str5[4], '4');
+    EXPECT_EQ(str5[5], '7');
+    EXPECT_EQ(str5[6], '\0');
+
+    ConstString str6 = {str4, 4};
+    EXPECT_EQ(str6[0], '2');
+    EXPECT_EQ(str6[1], '3');
+    EXPECT_EQ(str6[3], '7');
+    EXPECT_EQ(str6[4], '\0');
 }
 
 TEST(ConstString, equalityOperators) {
@@ -118,6 +198,15 @@ TEST(ConstString, equalityOperators) {
     EXPECT_NE(ConstString{"txt"}, ConstString{"text"});
     EXPECT_NE(ConstString{"-235435"}, ConstString{"+235435"});
     EXPECT_FALSE(str != str);
+
+    bool equal = ConstString{str, 5, true} == ConstString{"some"};
+    EXPECT_TRUE(equal);
+    equal = ConstString{str, 4, true} == ConstString{"some "};
+    EXPECT_TRUE(equal);
+    equal = ConstString{str, 5} == ConstString{"text"};
+    EXPECT_TRUE(equal);
+    equal = ConstString{str, 4} == ConstString{" text"};
+    EXPECT_TRUE(equal);
 }
 
 TEST(ConstString, lessThanOperator) {

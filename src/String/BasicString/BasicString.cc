@@ -1,15 +1,40 @@
 #include "BasicString.h"
 
 template<typename CString>
-BasicString<CString>::BasicString() noexcept
-: ImmutableString{}, string{nullptr} {}
+size_t BasicString<CString>::calculateLength(CString cstring) noexcept {
+    if(cstring == nullptr) {
+        return 0;
+    }
+    size_t size = 0;
+    while(cstring[size] != '\0') {
+        ++size;
+    }
+
+    return size;
+}
 
 template<typename CString>
-BasicString<CString>::~BasicString() noexcept { }
+BasicString<CString>::BasicString(CString cstring, const size_t cstrLength) noexcept
+: ImmutableString{}, string{cstring}, stringLength{cstrLength} {}
+
+template<typename CString>
+BasicString<CString>::BasicString() noexcept
+: BasicString{nullptr} {}
 
 template<typename CString>
 BasicString<CString>::BasicString(CString cstring) noexcept
-: ImmutableString{}, string{cstring} {}
+: BasicString{cstring, calculateLength(cstring)} {}
+
+template<typename CString>
+BasicString<CString>::BasicString(const BasicString& other, const size_t offset, const bool fromEnd)
+: BasicString{fromEnd ? other.string : (other.string + offset), other.stringLength - offset} {
+    if(offset > other.stringLength) {
+        throw BadStringOffset{};
+    }
+}
+
+template<typename CString>
+BasicString<CString>::~BasicString() noexcept { }
 
 template<typename CString>
 bool BasicString<CString>::isNull() const noexcept {
@@ -22,7 +47,7 @@ bool BasicString<CString>::isEmpty() const noexcept {
         return false;
     }
 
-    return string[0] == '\0';
+    return stringLength == 0;
 }
 
 template<typename CString>
@@ -32,15 +57,7 @@ bool BasicString<CString>::hasContent() const noexcept {
 
 template<typename CString>
 size_t BasicString<CString>::length() const noexcept {
-    if(isNull()) {
-        return 0;
-    }
-    size_t size = 0;
-    while(string[size] != '\0') {
-        ++size;
-    }
-
-    return size;
+    return stringLength;
 }
 
 template<typename CString>
@@ -54,7 +71,7 @@ char BasicString<CString>::operator[](const size_t index) const noexcept {
         return '\0';
     }
 
-    return index < length() ? string[index] : '\0';
+    return index < stringLength ? string[index] : '\0';
 }
 
 template<typename CString>
@@ -71,11 +88,10 @@ bool BasicString<CString>::operator==(const ImmutableString& other) const noexce
         return false;
     }
     size_t index = 0;
-    const char* otherString = other.cString();
     while(true) {
-        if(string[index] != otherString[index]) {
+        if(operator[](index) != other[index]) {
             return false;
-        } else if(string[index] == '\0') {
+        } else if(operator[](index) == '\0') {
             return true;
         }
         ++index;
@@ -100,11 +116,10 @@ bool BasicString<CString>::operator<(const ImmutableString& other) const noexcep
         return false;
     }
     size_t index = 0;
-    const char* otherString = other.cString();
     while(true) {
-        if(string[index] != otherString[index]) {
-            return string[index] < otherString[index];
-        } else if(string[index] == '\0') {
+        if(operator[](index) != other[index]) {
+            return operator[](index) < other[index];
+        } else if(operator[](index) == '\0') {
             return false;
         }
         ++index;

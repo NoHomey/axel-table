@@ -5,7 +5,7 @@ IntegerExtractor::IntegerExtractor(ConstString& string) noexcept
 : integer{0}, extractionEnd{0} {
     const bool isNegative = numberTextUtils::isMinus(string[0]);
     const size_t firstDigit = isNegative || numberTextUtils::isPlus(string[0]) ? 1 : 0;
-    extractionEnd = firstDigit + numberTextUtils::skipZeros(ConstString{string.cString() + firstDigit});
+    extractionEnd = firstDigit + numberTextUtils::skipZeros({string, firstDigit});
     char symbol = string[extractionEnd];
     while(numberTextUtils::isDigit(symbol)) {
         integer *= 10;

@@ -4,6 +4,8 @@
 
 #include "../../String/ConstString/ConstString.h"
 
+#include "../ValidationException/ValidationException.h"
+
 namespace numberTextUtils {
     bool isMinus(const char symbol) noexcept;
 
@@ -19,7 +21,10 @@ namespace numberTextUtils {
 
     size_t skipZeros(ConstString& string) noexcept;
 
-    size_t containsOnlyDigits(ConstString& string);
+    size_t containsOnlyDigits(ConstString& string, const size_t maxCount);
 
     void throwLimitException(const char symbol);
+
+    void rethrowInvalidSymbolIfNotADigitAndSetProperPosition(
+        const parse_exception::InvalidSymbol& error, const size_t offset);
 }

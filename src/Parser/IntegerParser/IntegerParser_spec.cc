@@ -46,9 +46,11 @@ TEST(IntegerParser, parseTypeWhenInputIsOutOfRange) {
         "-9330000000000000000",
         "-9223372036854775808",
         "-9243372036854775808",
-        "-000009223372036854775808"
+        "-000009223372036854775808",
+        "-0092233720368547758071223",
+        "-92233720368547758011"
     };
-    for(size_t i = 0; i < 11; ++i) {
+    for(size_t i = 0; i < 13; ++i) {
         ConstString str = {match[i]};
         IntegerParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::Limit);
@@ -60,7 +62,7 @@ TEST(IntegerParser, parseTypeWhenInputIsOutOfRange) {
         EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit);
     }
 
-    for(size_t i = 7; i < 11; ++i) {
+    for(size_t i = 7; i < 13; ++i) {
         ConstString str = {match[i]};
         IntegerParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit);

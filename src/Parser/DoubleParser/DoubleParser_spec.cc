@@ -63,29 +63,29 @@ TEST(DoubleParser, parseTypeWhenInputIsOutOfRange) {
         "+9.233372054775808",
         "93300000.000233434",
         "+93300000.00000003",
-        "+0000922337.2036854775808",
+        "+0000922337.20368547344",
         "-9330000.000000000",
         "-922337.0203685773",
         "-9243372036.8547723",
-        "-00000.9223372036854775808",
+        "-00000.92233720368508123",
         "-9223372036854775808"
     };
     for(size_t i = 0; i < 14; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::Limit);
+        EXPECT_THROW(parser.parseType(), parse_exception::Limit) << i;
     }
 
     for(size_t i = 0; i < 9; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit);
+        EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit) << i;
     }
 
     for(size_t i = 10; i < 14; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit);
+        EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit) << i;
     }
 }
 

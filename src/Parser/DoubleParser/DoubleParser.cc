@@ -44,9 +44,10 @@ void DoubleParser::typeValidator() const {
         const size_t floatingPoint = error.getPosition() + 1;
         size_t floatingPartLength;
         try {
-            floatingPartLength = numberTextUtils::containsOnlyDigits({token, floatingPoint});
+            floatingPartLength = numberTextUtils::containsOnlyDigits({token, floatingPoint}, TOTAL_DIGITS_COUNT);
         } catch(const parse_exception::InvalidSymbol& error) {
-            throw parse_exception::InvalidSymbol{error.getPosition() + floatingPoint, error.getSymbol()};
+            numberTextUtils::rethrowInvalidSymbolIfNotADigitAndSetProperPosition(error, floatingPoint);
+            numberTextUtils::throwLimitException(token[0]);
         }
         const unsigned int firstDigit = static_cast<unsigned int>(numberTextUtils::isPlusMinus(token[0]));
         const size_t zerosCount = numberTextUtils::skipZeros({token, firstDigit});

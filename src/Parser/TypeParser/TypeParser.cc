@@ -8,10 +8,10 @@ TypeParser<Type>::TypeParser(ConstString& string) noexcept
 template<typename Type>
 Type TypeParser<Type>::parseType() {
     if(token.isEmpty()) {
-        throw parse_exception::Empty();
+        throw parse_exception::Empty{};
     }
     if(token.isNull()) {
-        throw parse_exception::Null();
+        throw parse_exception::Null{};
     }
     typeValidator();
 

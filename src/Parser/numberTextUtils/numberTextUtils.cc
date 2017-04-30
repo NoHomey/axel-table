@@ -26,7 +26,7 @@ unsigned int numberTextUtils::toDigit(const char symbol) noexcept {
     return isDigit(symbol) ? (symbol - '0') : symbol;
 }
 
-size_t numberTextUtils::skipZeros(const char* string) noexcept {
+size_t numberTextUtils::skipZeros(ConstString& string) noexcept {
     size_t index = 0;
     while(isZero(string[index])) {
         ++index;
@@ -35,11 +35,11 @@ size_t numberTextUtils::skipZeros(const char* string) noexcept {
     return index;
 }
 
-size_t numberTextUtils::containsOnlyDigits(const char* string) {
+size_t numberTextUtils::containsOnlyDigits(ConstString& string) {
     size_t index = 0;
     while(string[index] != '\0') {
         if(!isDigit(string[index])) {
-            throw parse_exception::InvalidSymbol(index, string[index]);
+            throw parse_exception::InvalidSymbol{index, string[index]};
         }
         ++index;
     }
@@ -49,8 +49,8 @@ size_t numberTextUtils::containsOnlyDigits(const char* string) {
 
 void numberTextUtils::throwLimitException(const char symbol) {
     if(isMinus(symbol)) {
-        throw parse_exception::MinimumLimit();
+        throw parse_exception::MinimumLimit{};
     } else {
-        throw parse_exception::MaximumLimit();
+        throw parse_exception::MaximumLimit{};
     }
 }

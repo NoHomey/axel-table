@@ -99,28 +99,43 @@ TEST(numberTextUtils, skipZeros) {
     size_t expect[] = {3, 4, 1, 2, 6, 0, 0, 0, 0, 12};
 
     for(size_t i = 0; i < 10; ++i) {
-        EXPECT_EQ(numberTextUtils::skipZeros(test[i]), expect[i]);
+        ConstString str = {test[i]};
+        EXPECT_EQ(numberTextUtils::skipZeros(str), expect[i]);
     }
 }
 
 TEST(numberTextUtils, containsOnlyDigits) {
     IT("should throw InvalidSymbol if the passed string contains none digit char");
-    const char* invalid[] = {
-        "+-4353",
-        "+1234.",
-        "-123.4",
-        "1234.0",
-        "+43535a",
-        "-4^2",
-        "@0",
-        "+)0",
-        "-0(",
-        "9223372036854775808#",
-        "++43535"
+
+    struct Test {
+        const char* string;
+        const char symbol;
+        const size_t position;
+    };
+
+    Test test[] = {
+        {"+-4353", '+', 0},
+        {"+1234.", '+', 0},
+        {"-123.4", '-', 0},
+        {"1234.0", '.', 4},
+        {"143535a", 'a', 6}, 
+        {"14^2", '^', 2},
+        {"@0",'@', 0},
+        {"2)0", ')', 1},
+        {"30(", '(', 2},
+        {"92233725808#", '#', 11} ,
+        {"++43535", '+', 0}
     };
 
     for(size_t i = 0; i < 11; ++i) {
-        EXPECT_THROW(numberTextUtils::containsOnlyDigits(invalid[i]), parse_exception::InvalidSymbol);
+        ConstString str = {test[i].string};
+        EXPECT_THROW(numberTextUtils::containsOnlyDigits(str), parse_exception::InvalidSymbol);
+        try {
+            numberTextUtils::containsOnlyDigits(str);
+        } catch(const parse_exception::InvalidSymbol& error) {
+            EXPECT_EQ(error.getSymbol(), test[i].symbol);
+            EXPECT_EQ(error.getPosition(), test[i].position);
+        }
     }
 
     IT("returns string length if it contains only digits");
@@ -146,7 +161,8 @@ TEST(numberTextUtils, containsOnlyDigits) {
     size_t expect[] = {19, 19, 4, 6, 2, 1, 1, 1, 7, 5, 6, 7, 8, 13, 4};
 
     for(size_t i = 0; i < 14; ++i) {
-        EXPECT_EQ(numberTextUtils::containsOnlyDigits(match[i]), expect[i]);
+        ConstString str = {match[i]};
+        EXPECT_EQ(numberTextUtils::containsOnlyDigits(str), expect[i]);
     }
 }
 

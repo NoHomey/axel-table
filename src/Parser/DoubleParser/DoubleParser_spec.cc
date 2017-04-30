@@ -141,7 +141,6 @@ TEST(DoubleParser, parseTypeWhenThereIsInvalidSymbol) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::InvalidSymbol);
-
         try {
             parser.parseType();
         } catch(const parse_exception::InvalidSymbol& error) {

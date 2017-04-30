@@ -2,6 +2,8 @@
 
 #include <cstddef>
 
+#include "../../String/ConstString/ConstString.h"
+
 namespace numberTextUtils {
     bool isMinus(const char symbol) noexcept;
 
@@ -15,9 +17,9 @@ namespace numberTextUtils {
         
     unsigned int toDigit(const char symbol) noexcept;
 
-    size_t skipZeros(const char* string) noexcept;
+    size_t skipZeros(ConstString& string) noexcept;
 
-    size_t containsOnlyDigits(const char* string);
+    size_t containsOnlyDigits(ConstString& string);
 
     void throwLimitException(const char symbol);
 }

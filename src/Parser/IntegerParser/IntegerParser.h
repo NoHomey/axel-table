@@ -17,5 +17,6 @@ protected:
 
 private:
     static ConstString ABS_MAX_VALUE;
+    
     static const size_t ABS_MAX_VALUE_LENGTH;
 };

@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec numberTextUtils_spec IntegerParser_spec DoubleParser_spec
+TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec numberTextUtils_spec IntegerExtractor_spec IntegerParser_spec DoubleParser_spec
 
 all : $(TESTS)
 
@@ -98,13 +98,15 @@ $(eval $(call spec,TableCell))
 
 $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 
-$(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o))
+$(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 
-$(eval $(call specInDir,Parser,DoubleParser,BasicString.o TypeParser.o IntegerParser.o numberTextUtils.o ValidationException.o))
+$(eval $(call specInDir,Parser,DoubleParser,BasicString.o TypeParser.o IntegerParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 
 $(eval $(call specInDir,Parser,ValidationException))
 
-$(eval $(call specInDir,Parser,numberTextUtils, ValidationException.o))	
+$(eval $(call specInDir,Parser,numberTextUtils,BasicString.o ValidationException.o))	
+
+$(eval $(call specInDir,Parser,IntegerExtractor,numberTextUtils.o BasicString.o ValidationException.o))	
 
 test :
 	$(MAKE) clean

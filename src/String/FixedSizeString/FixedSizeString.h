@@ -10,7 +10,11 @@ public:
 
     FixedSizeString(const FixedSizeString&) = delete;
 
+    FixedSizeString(FixedSizeString&&) = delete;
+
     FixedSizeString& operator=(const FixedSizeString&) = delete;
+
+    FixedSizeString& operator=(FixedSizeString&& other) = delete;
 
     FixedSizeString& operator<<(const char symbol) noexcept;
 

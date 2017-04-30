@@ -8,7 +8,11 @@ public:
 
     IntegerParser(const IntegerParser&) = delete;
 
+    IntegerParser(IntegerParser&&) = delete;
+
     IntegerParser& operator=(const IntegerParser&) = delete;
+
+    IntegerParser& operator=(IntegerParser&&) = delete;
     
 protected:
     void typeValidator() const override final;

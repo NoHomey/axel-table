@@ -10,7 +10,11 @@ public:
 
     IntegerExtractor(const IntegerExtractor&) = delete;
 
+    IntegerExtractor(IntegerExtractor&&) = delete;
+
     IntegerExtractor& operator=(const IntegerExtractor&) = delete;
+
+    IntegerExtractor& operator=(IntegerExtractor&&) = delete;
 
     long long getInteger() const noexcept;
 

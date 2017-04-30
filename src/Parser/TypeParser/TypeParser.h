@@ -9,7 +9,11 @@ public:
 
     TypeParser(const TypeParser&) = delete;
 
+    TypeParser(TypeParser&&) = delete;
+
     TypeParser& operator=(const TypeParser&) = delete;
+
+    TypeParser& operator=(TypeParser&&) = delete;
 
     Type parseType();
 

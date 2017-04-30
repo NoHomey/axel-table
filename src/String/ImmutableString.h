@@ -10,7 +10,11 @@ public:
 
     ImmutableString(const ImmutableString&) = delete;
 
+    ImmutableString(ImmutableString&&) = delete;
+
     ImmutableString& operator=(const ImmutableString&) = delete;
+
+    ImmutableString& operator=(ImmutableString&&) = delete;
 
     virtual bool isNull() const noexcept = 0;
 

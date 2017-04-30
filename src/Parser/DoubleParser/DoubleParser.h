@@ -8,7 +8,11 @@ public:
 
     DoubleParser(const DoubleParser&) = delete;
 
+    DoubleParser(DoubleParser&&) = delete;
+
     DoubleParser& operator=(const DoubleParser&) = delete;
+
+    DoubleParser& operator=(DoubleParser&&) = delete;
     
 protected:
     void typeValidator() const override final;

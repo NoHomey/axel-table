@@ -19,7 +19,11 @@ public:
     
     BasicString(const BasicString&) = delete;
 
+    BasicString(BasicString&&) = delete;
+
     BasicString& operator=(const BasicString&) = delete;
+
+    BasicString& operator=(BasicString&&) = delete;
 
     bool isNull() const noexcept override final;
 
@@ -48,5 +52,5 @@ protected:
 
     CString string;
 
-    const size_t stringLength;
+    size_t stringLength;
 };

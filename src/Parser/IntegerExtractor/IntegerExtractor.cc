@@ -6,10 +6,12 @@ IntegerExtractor::IntegerExtractor(ConstString& string) noexcept
     const bool isNegative = numberTextUtils::isMinus(string[0]);
     const size_t firstDigit = isNegative || numberTextUtils::isPlus(string[0]) ? 1 : 0;
     extractionEnd = firstDigit + numberTextUtils::skipZeros(ConstString{string.cString() + firstDigit});
-    while(numberTextUtils::isDigit(string[extractionEnd])) {
+    char symbol = string[extractionEnd];
+    while(numberTextUtils::isDigit(symbol)) {
         integer *= 10;
-        integer += numberTextUtils::toDigit(string[extractionEnd]);
+        integer += numberTextUtils::toDigit(symbol);
         ++extractionEnd;
+        symbol = string[extractionEnd];
     }
     if(isNegative) {
         integer *= -1;

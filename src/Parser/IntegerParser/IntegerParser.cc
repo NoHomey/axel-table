@@ -11,7 +11,7 @@ IntegerParser::IntegerParser(ConstString& string) noexcept
 : TypeParser<long long>{string} {}
 
 long long IntegerParser::typeParser() const {
-    return IntegerExtractor{token.cString()}.getInteger();
+    return IntegerExtractor{token}.getInteger();
 }
 
 void IntegerParser::typeValidator() const {

@@ -2,6 +2,7 @@
 #include "../IntegerParser/IntegerParser.h"
 #include "../ValidationException/ValidationException.h"
 #include "../numberTextUtils/numberTextUtils.h"
+#include "../IntegerExtractor/IntegerExtractor.h"
 
 const size_t DoubleParser::TOTAL_DIGITS_COUNT = 15;
 
@@ -9,7 +10,26 @@ DoubleParser::DoubleParser(ConstString& string) noexcept
 : TypeParser<double>{string} {}
 
 double DoubleParser::typeParser() const {
-    return 0;
+    IntegerExtractor extractor = {token};
+    unsigned long long floatingExponent = 1;
+    long long floating = 0;
+    size_t index = extractor.getExtractionEnd() + 1;
+    char symbol = token[index];
+    while(symbol != '\0') {
+        if((floating != 0) || (!numberTextUtils::isZero(symbol))) {
+            floating *= 10;
+            floating += numberTextUtils::toDigit(symbol);
+        }
+        floatingExponent *= 10;
+        ++index;
+        symbol = token[index];
+    }
+    if(numberTextUtils::isMinus(token[0])) {
+        floating *= -1;
+    }
+    const double floatingPart = static_cast<double>(floating) / static_cast<double>(floatingExponent);
+
+    return static_cast<double>(extractor.getInteger()) + floatingPart;
 }
 
 void DoubleParser::typeValidator() const {

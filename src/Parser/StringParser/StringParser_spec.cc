@@ -24,26 +24,26 @@ TEST(StringParser, parseTypeWhenParsingValidString) {
     Test test[] = {
         {"\"some text\"", "some text", 9},
         {"\"@#$%\"", "@#$%", 4},
-        {"Hello world!", "Hello world!", 12},
+        {"\"Hello world!\"", "Hello world!", 12},
         {"\"\\\\\"", "\\", 1},
         {"\"\\\"\"", "\"", 1},
-        {"\"a\\\\b\"", "a\\b", 4},
-        {"\"c\\\"d\"", "c\"d", 4},
+        {"\"a\\\\b\"", "a\\b", 3},
+        {"\"c\\\"d\"", "c\"d", 3},
         {"\"\\\\\\\"\"", "\\\"", 2},
         {"\"\\\"\\\\\"", "\"\\", 2},
-        {"\"\\\\\"", "\\", 1},
-        {"\"\\\"\"", "\"", 1},
-        {"C:\\\\temp\\\\", "C:\\temp\\", 8},
-        {"\\\"quote\\\"", "\"quote\"", 7},
-        {"\"e\\\\\\\"s\\\\c\\\"ape\\\\\\\\\\\\it!\"", "e\\\\\"s\"ape\\\\\\it!", 14}
+        {"\"\\\\12\\\"34\"", "\\12\"34", 6},
+        {"\"|\\\\\\\"\\\"\\\"|\"", "|\\\"\"\"|", 6},
+        {"\"C:\\\\temp\\\\\"", "C:\\temp\\", 8},
+        {"\"\\\"quote\\\"\"", "\"quote\"", 7},
+        {"\"e\\\\\\\"s\\\\c\\\"ape\\\\\\\\\\\\it!\"", "e\\\"s\\c\"ape\\\\\\it!", 16}
     };
 
-    for(size_t i = 0; i < 3; ++i) {
+    for(size_t i = 0; i < 14; ++i) {
         ConstString str = {test[i].valid};
         StringParser parser = {str};
         FixedSizeString result;
         EXPECT_NO_THROW(result = parser.parseType());
-        EXPECT_EQ(result, ConstString{test[i].expect});
+        EXPECT_TRUE(result == ConstString{test[i].expect});
         EXPECT_EQ(result.length(), test[i].length);
     }
 }

@@ -9,32 +9,38 @@ const size_t DoubleParser::TOTAL_DIGITS_COUNT = 15;
 DoubleParser::DoubleParser(ConstString& string) noexcept
 : TypeParser<double>{string} {}
 
-double DoubleParser::typeParser() const {
-    IntegerExtractor extractor = {token};
+double DoubleParser::parseFloatingPart(const size_t floatingPartBeginning) const noexcept {
+    long long floatingPart = 0;
     unsigned long long floatingExponent = 1;
-    long long floating = 0;
-    size_t index = extractor.getExtractionEnd() + 1;
-    char symbol = token[index];
-    while(symbol != '\0') {
-        if((floating != 0) || (!numberTextUtils::isZero(symbol))) {
-            floating *= 10;
-            floating += numberTextUtils::toDigit(symbol);
+    size_t index = floatingPartBeginning;
+    char currentSymbol = token[index];
+    while(currentSymbol != '\0') {
+        if((floatingPart != 0) || (!numberTextUtils::isZero(currentSymbol))) {
+            floatingPart *= 10;
+            floatingPart += numberTextUtils::toDigit(currentSymbol);
         }
         floatingExponent *= 10;
         ++index;
-        symbol = token[index];
+        currentSymbol = token[index];
     }
+
+    return static_cast<double>(floatingPart) / static_cast<double>(floatingExponent);
+}
+
+double DoubleParser::typeParser() const {
+    IntegerExtractor extractor = {token};
+    double floatingPart = parseFloatingPart(extractor.getExtractionEnd() + 1);
     if(numberTextUtils::isMinus(token[0])) {
-        floating *= -1;
+        floatingPart *= -1;
     }
-    const double floatingPart = static_cast<double>(floating) / static_cast<double>(floatingExponent);
 
     return static_cast<double>(extractor.getInteger()) + floatingPart;
 }
 
 void DoubleParser::typeValidator() const {
     const unsigned int firstDigit = static_cast<unsigned int>(numberTextUtils::isPlusMinus(token[0]));
-    if((token[firstDigit] == '.') && (token[firstDigit + 1] == '\0')) {
+    const bool isFirstDigitFloatingPoint = token[firstDigit] == '.';
+    if(isFirstDigitFloatingPoint && (token[firstDigit + 1] == '\0')) {
         throw parse_exception::SingleFloatingPoint{};
     }
     IntegerParser integerParser = {token};
@@ -52,11 +58,11 @@ void DoubleParser::typeValidator() const {
         } catch(const parse_exception::InvalidSymbol& error) {
             throw parse_exception::InvalidSymbol{error.getPosition() + floatingPoint, error.getSymbol()};
         }
-        if(token[firstDigit] == '.') {
+        if(isFirstDigitFloatingPoint) {
             throw parse_exception::DoubleHasNoIntegerPart{};
         }
         if(floatingPartLength == 0) {
-            throw parse_exception::IncompleteDouble();
+            throw parse_exception::IncompleteDouble{};
         }
         const size_t zerosCount = numberTextUtils::skipZeros({token, firstDigit});
         const size_t integerPartLength = floatingPoint - 1 - firstDigit - zerosCount;

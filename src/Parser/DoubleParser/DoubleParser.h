@@ -20,5 +20,7 @@ protected:
     double typeParser() const override final;
 
 private:
+    double parseFloatingPart(const size_t floatingPartBeginning) const noexcept;
+
     static const size_t TOTAL_DIGITS_COUNT;
 };

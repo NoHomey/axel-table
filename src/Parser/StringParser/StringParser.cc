@@ -13,15 +13,43 @@ bool StringParser::isQuotes(const char symbol) noexcept {
 StringParser::StringParser(ConstString& string) noexcept
 : TypeParser<FixedSizeString>{string} {}
 
+size_t StringParser::calculateParseResultStringLength() const noexcept {
+    size_t index = 1;
+    char currentSymbol = token[index];
+    size_t calculatedLength = 0;
+    while(true) {
+        ++calculatedLength;
+        index += isBackslash(currentSymbol) ? 2 : 1;
+        currentSymbol = token[index];
+        if(isQuotes(currentSymbol) && (token[index + 1] == '\0')) {
+            return calculatedLength;
+        }
+    }
+}
+
 FixedSizeString StringParser::typeParser() const {
-    return nullptr;
+    const size_t resultLength = calculateParseResultStringLength();
+    FixedSizeString result{resultLength};
+    size_t index = 1;
+    char currentSymbol = token[index];
+    for(size_t counter = 0; counter < resultLength; ++counter) {
+        if(isBackslash(currentSymbol)) {
+            ++index;
+            currentSymbol = token[index];
+        }
+        result << currentSymbol;
+        ++index;
+        currentSymbol = token[index];
+    }
+
+    return result;
 }
 
 bool StringParser::isCountOfBackslashesOdd(const size_t from, const size_t to) noexcept {
     return (to - from) % 2;
 }
 
-void StringParser::checkBetween(const size_t lastChecked) const {
+void StringParser::validateBackslashesBefore(const size_t lastChecked) const {
     size_t position;
     bool isBackslashesCountOdd;
     for(size_t index = isQuotes(token[0]); index <= lastChecked; ++index) {
@@ -30,10 +58,9 @@ void StringParser::checkBetween(const size_t lastChecked) const {
         }
         if(isBackslash(token[index])) {
             position = index;
-            ++index;
-            while(isBackslash(token[index])) {
+            do {
                 ++index;
-            }
+            } while(isBackslash(token[index]));
             isBackslashesCountOdd = isCountOfBackslashesOdd(position, index);
             if(isQuotes(token[index])) {
                 if(!isBackslashesCountOdd) {
@@ -44,6 +71,17 @@ void StringParser::checkBetween(const size_t lastChecked) const {
             }
         }
     }
+}
+
+void StringParser::validateBackslashes(const size_t length) const {
+    size_t index = length - 2;
+    while(isBackslash(token[index])) {
+        --index;
+    }
+    if(isCountOfBackslashesOdd(index, length)) {
+        throw parse_exception::MissingQuotesInTheEnd{};
+    }
+    validateBackslashesBefore(index);
 }
 
 void StringParser::typeValidator() const {
@@ -61,8 +99,8 @@ void StringParser::typeValidator() const {
     if(endsWithQuotes && (length == 2)) {
         throw parse_exception::EmptyString{};
     }
-    ConstString tokenWithoutLeadingQuotes = {token, static_cast<size_t>(startsWithQuotes)};
-    ConstString tokenWihtoutEndingQuotes = {tokenWithoutLeadingQuotes, static_cast<size_t>(endsWithQuotes), true};
+    ConstString tokenWithoutLeadingQuotes = {token, startsWithQuotes};
+    ConstString tokenWihtoutEndingQuotes = {tokenWithoutLeadingQuotes, endsWithQuotes, true};
     DoubleParser doubleParser = {tokenWihtoutEndingQuotes};
     double doubleValue;
     try {
@@ -71,15 +109,7 @@ void StringParser::typeValidator() const {
         if(!startsWithQuotes) {
             throw parse_exception::MissingQuotes{};
         }
-        size_t index = length - 2;
-        while(isBackslash(token[index])) {
-            --index;
-        }
-        if(isCountOfBackslashesOdd(index, length)) {
-            throw parse_exception::MissingQuotesInTheEnd{};
-        }
-        checkBetween(index);
-        return;
+        return validateBackslashes(length);
     }
     throw parse_exception::ParsedAsDouble{doubleValue};
 }

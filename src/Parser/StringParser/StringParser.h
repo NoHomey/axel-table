@@ -26,6 +26,10 @@ protected:
 
 private:
     static bool isCountOfBackslashesOdd(const size_t from, const size_t to) noexcept;
+
+    size_t calculateParseResultStringLength() const noexcept;
+
+    void validateBackslashes(const size_t length) const;
     
-    void checkBetween(const size_t lastChecked) const;
+    void validateBackslashesBefore(const size_t lastChecked) const;
 };

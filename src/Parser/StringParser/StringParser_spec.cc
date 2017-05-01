@@ -12,6 +12,42 @@ template class IntegerParserSpec<StringParser>;
 
 template class DoubleParserSpec<StringParser>;
 
+TEST(StringParser, parseTypeWhenParsingValidString) {
+    IT("parses valid string to FixedSizeString");
+
+    struct Test {
+        const char* valid;
+        const char* expect;
+        size_t length;
+    };
+
+    Test test[] = {
+        {"\"some text\"", "some text", 9},
+        {"\"@#$%\"", "@#$%", 4},
+        {"Hello world!", "Hello world!", 12},
+        {"\"\\\\\"", "\\", 1},
+        {"\"\\\"\"", "\"", 1},
+        {"\"a\\\\b\"", "a\\b", 4},
+        {"\"c\\\"d\"", "c\"d", 4},
+        {"\"\\\\\\\"\"", "\\\"", 2},
+        {"\"\\\"\\\\\"", "\"\\", 2},
+        {"\"\\\\\"", "\\", 1},
+        {"\"\\\"\"", "\"", 1},
+        {"C:\\\\temp\\\\", "C:\\temp\\", 8},
+        {"\\\"quote\\\"", "\"quote\"", 7},
+        {"\"e\\\\\\\"s\\\\c\\\"ape\\\\\\\\\\\\it!\"", "e\\\\\"s\"ape\\\\\\it!", 14}
+    };
+
+    for(size_t i = 0; i < 3; ++i) {
+        ConstString str = {test[i].valid};
+        StringParser parser = {str};
+        FixedSizeString result;
+        EXPECT_NO_THROW(result = parser.parseType());
+        EXPECT_EQ(result, ConstString{test[i].expect});
+        EXPECT_EQ(result.length(), test[i].length);
+    }
+}
+
 TEST(StringParser, parseTypeWhenParsingIntegerString) {
     IT("parses a valid integer string to long long");
     const char* match[] = {
@@ -148,6 +184,12 @@ TEST(StringParser, parseTypeWhenParsingNullString) {
 
 TEST(StringParser, parseTypeWhenItIsJustASignSymbol) {
     IntegerParserSpec<StringParser>::parseSingleSign();
+}
+
+TEST(StringParser, parseTypeWhenParsingStringWithNoContent) {
+    ConstString str = {"\"\""};
+    StringParser parser = {str};
+    EXPECT_THROW(parser.parseType(), parse_exception::EmptyString);
 }
 
 TEST(StringParser, parseTypeWhenParsingStringWhichIsNotAnumberAndDoseNotStartWithQuotes) {

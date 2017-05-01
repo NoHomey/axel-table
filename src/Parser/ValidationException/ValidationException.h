@@ -32,6 +32,8 @@ namespace parse_exception {
 
     class MissingQuotesInTheEnd: public MissingQuotes { };
 
+    class EmptyString: public Invalid { };
+
     class InvalidSymbolAtPosition: public Invalid {
     public:
         InvalidSymbolAtPosition(const size_t pos) noexcept;

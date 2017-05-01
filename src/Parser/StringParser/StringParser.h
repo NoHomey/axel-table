@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../TypeParser/TypeParser.h"
+#include "../../String/FixedSizeString/FixedSizeString.h"
 
-class StringParser: public TypeParser<const char*> {
+class StringParser: public TypeParser<FixedSizeString> {
 public:
     StringParser(ConstString& string) noexcept;
 
@@ -21,7 +22,7 @@ protected:
 
     void typeValidator() const override final;
 
-    const char* typeParser() const override final;
+    FixedSizeString typeParser() const override final;
 
 private:
     static bool isCountOfBackslashesOdd(const size_t from, const size_t to) noexcept;

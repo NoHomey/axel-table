@@ -11,9 +11,9 @@ bool StringParser::isQuotes(const char symbol) noexcept {
 }
 
 StringParser::StringParser(ConstString& string) noexcept
-: TypeParser<const char*>{string} {}
+: TypeParser<FixedSizeString>{string} {}
 
-const char* StringParser::typeParser() const {
+FixedSizeString StringParser::typeParser() const {
     return nullptr;
 }
 
@@ -57,6 +57,9 @@ void StringParser::typeValidator() const {
         if(endsWithQuotes) {
             throw parse_exception::MissingQuotesInTheBeginng{};
         }
+    }
+    if(endsWithQuotes && (length == 2)) {
+        throw parse_exception::EmptyString{};
     }
     ConstString tokenWithoutLeadingQuotes = {token, static_cast<size_t>(startsWithQuotes)};
     ConstString tokenWihtoutEndingQuotes = {tokenWithoutLeadingQuotes, static_cast<size_t>(endsWithQuotes), true};

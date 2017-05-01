@@ -102,7 +102,7 @@ $(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTe
 
 $(eval $(call specInDir,Parser,DoubleParser,BasicString.o TypeParser.o IntegerParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 
-$(eval $(call specInDir,Parser,StringParser,BasicString.o TypeParser.o IntegerParser.o DoubleParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
+$(eval $(call specInDir,Parser,StringParser,BasicString.o FixedSizeString.o TypeParser.o IntegerParser.o DoubleParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 
 $(eval $(call specInDir,Parser,ValidationException))
 

@@ -66,7 +66,7 @@ void StringParser::typeValidator() const {
         doubleValue = doubleParser.parseType();
     } catch(const parse_exception::InvalidSymbol& error) {
         if(!startsWithQuotes) {
-            throw parse_exception::MissingQuotesInTheBeginng{};
+            throw parse_exception::MissingQuotes{};
         }
         size_t index = length - 2;
         while(isBackslash(token[index])) {

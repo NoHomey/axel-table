@@ -1,9 +1,18 @@
 #include "StringParser.h"
-#include "gtest/gtest.h"
-#include "../../It/It.h"
-#include "../ValidationException/ValidationException.h"
 
-TEST(StringParser, parseTypeWhenParsingInteger) {
+#include "../IntegerParser/IntegerParserSpec.h"
+
+#include "../TypeParser/TypeParserSpec.h"
+
+#include "../DoubleParser/DoubleParserSpec.h"
+
+template class TypeParserSpec<StringParser>;
+
+template class IntegerParserSpec<StringParser>;
+
+template class DoubleParserSpec<StringParser>;
+
+TEST(StringParser, parseTypeWhenParsingIntegerString) {
     IT("parses a valid integer string to long long");
     const char* match[] = {
         "\"+9223372036854775807\"",
@@ -23,8 +32,8 @@ TEST(StringParser, parseTypeWhenParsingInteger) {
         "\"+00009223372036854775807\"",
         "\"-000009223372036854775807\""
     };
-    const long long expect[] = {9223372036854775807, -9223372036854775807, 1234, 43535, -42, 0, 0, 0, 456245,
-        -1234, 1, -17, 234343, 99, 9223372036854775807, -9223372036854775807};
+    const long long expect[] = {9223372036854775807, -9223372036854775807, 1234, 43535, -42, 0, 0, 0,
+        456245, -1234, 1, -17, 234343, 99, 9223372036854775807, -9223372036854775807};
     
     for(size_t i = 0; i < 16; ++i) {
         ConstString str = {match[i]};
@@ -38,7 +47,7 @@ TEST(StringParser, parseTypeWhenParsingInteger) {
     }
 }
 
-TEST(StringParser, parseTypeWhenParsingDouble) {
+TEST(StringParser, parseTypeWhenParsingDoubleString) {
     IT("parses a valid double string to double");
     const char* match[] = {
         "\"+9223372.0367\"",
@@ -92,8 +101,75 @@ TEST(StringParser, parseTypeWhenParsingDouble) {
     }
 }
 
+static void stringValidDoubleExpecter(StringParser& parser, const double expect) noexcept {
+    EXPECT_THROW(parser.parseType(), parse_exception::ParsedAsDouble);
+    try {
+        parser.parseType();
+    } catch(const parse_exception::ParsedAsDouble& error) {
+        EXPECT_DOUBLE_EQ(error.getValue(), expect);
+    }
+}
+
+TEST(StringParser, pareseTypeWhenItParsesDouble) {
+    DoubleParserSpec<StringParser>::parseValid(stringValidDoubleExpecter);
+}
+
+TEST(StringParser, parseTypeWhenParsingDoubleWithMoreThan15Digits) {
+    DoubleParserSpec<StringParser>::parseWhenLossOfPrecision();
+}
+
+TEST(StringParser, pareseTypeWhenParsingSingleFloatingPoint) {
+    DoubleParserSpec<StringParser>::parseWhenSingleFloatingPoint();
+}
+
+TEST(StringParser, parseTypeWhenParsingDoubleWhichHasNoIntegerPart) {
+    DoubleParserSpec<StringParser>::parseWhenDoubleHasNoIntegerPart();
+}
+
+TEST(StringParser, parseTypeWhenParsingInteger) {
+    DoubleParserSpec<StringParser>::parseValidInteger();
+}
+
+TEST(StringParser, parseTypeWhenParsingIntegerWhichIsOutOfRange) {
+    IntegerParserSpec<StringParser>::parseOutOfRange();
+}
+
+TEST(StringParser, parseTypeWhenParsingIncompleteDouble) {
+    DoubleParserSpec<StringParser>::parseWhenIncompleteDouble();
+}
+
+TEST(StringParser, parseTypeWhenParsingEmptyString) {
+    TypeParserSpec<StringParser>::parseWhenEmpty("\"string\"");
+}
+
+TEST(StringParser, parseTypeWhenParsingNullString) {
+    TypeParserSpec<StringParser>::parseWhenNull("\"string\"");
+}
+
+TEST(StringParser, parseTypeWhenItIsJustASignSymbol) {
+    IntegerParserSpec<StringParser>::parseSingleSign();
+}
+
+TEST(StringParser, parseTypeWhenParsingStringWhichIsNotAnumberAndDoseNotStartWithQuotes) {
+    IT("throws MissingQuotes if the string it's not a number but it dose not have quotes");
+
+    const char* badInput[] = {
+        "dfsfkdslfsfl;ds,",
+        "@993895",
+        "338.$$$",
+        "some text",
+        "This is String"
+    };
+
+    for(size_t i = 0; i < 4; ++i) {
+        ConstString str = {badInput[i]};
+        StringParser parser = {str};
+        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotes);
+    }
+}
+
 TEST(StringParser, parseTypeWhenParsingStringWithUnbalancedQuotes) {
-    IT("throws MissingQuotesInTheBeginng if the string dose not start and end with quotes");
+    IT("throws if the string dose not start and end with quotes");
 
     const char* badInput[] = {
         "34424sfsf\"",
@@ -112,13 +188,13 @@ TEST(StringParser, parseTypeWhenParsingStringWithUnbalancedQuotes) {
     for(size_t i = 0; i < 4; ++i) {
         ConstString str = {badInput[i]};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotesInTheBeginng) << i;
+        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotesInTheBeginng);
     }
 
     for(size_t i = 5; i < 11; ++i) {
         ConstString str = {badInput[i]};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotesInTheEnd) << i;
+        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotesInTheEnd);
     }
 }
 
@@ -128,16 +204,23 @@ TEST(StringParser, parseTypeWhenParsingStringWichHasBackslashThatDoseNotEscaping
     const char* badInput[] = {
         "\"\\ \"",
         "\"aa\\bb\"",
-        "\"aa\\\\\\bb\"",
+        "\"aa\\\\\\ bb\"",
         "\"aa\\\"\\bb\"",
         "\"aa\\\"\\\\bb\\\\\\ \"",
-        "\"aa\\\"\\bb\\\\\\\" \\\" \\ \"",
+        "\"aa\\\"\\\\bb\\\\\\\" \\\" \\ \"",
     };
+
+    size_t position[] = {1, 3, 5, 5, 11, 17};
 
     for(size_t i = 0; i < 6; ++i) {
         ConstString str = {badInput[i]};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::AloneBackslash) << i;
+        EXPECT_THROW(parser.parseType(), parse_exception::AloneBackslash);
+        try {
+            parser.parseType();
+        } catch(const parse_exception::AloneBackslash& error) {
+            EXPECT_EQ(error.getPosition(), position[i]);
+        }
     }
 }
 
@@ -149,14 +232,21 @@ TEST(StringParser, parseTypeWhenParsingStringIncludesNotEscapedQuotes) {
         "\"aa\"bb\"",
         "\"aa\\\"\"bb\"",
         "\"aa\\\"\"bb\"",
-        "\"aa\\\"\\\"bb\"\\\\ \"",
-        "\"aa\\\"bb\\\"\\\" \\\\\"\"",
-        "\"aa\\\"bb\\\"\\\" \\\" \"\\ \"",
+        "\"aa\\\"\\\"bb\"\\\\\"",
+        "\"aa\\\"bb\\\"\\\"\\\\\"\"",
+        "\"aa\\\"bb\\\"\\\"\\\"\"\\ \"",
     };
+
+    size_t position[] = {1, 3, 5, 5, 9, 13, 13};
 
     for(size_t i = 0; i < 7; ++i) {
         ConstString str = {badInput[i]};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::NotEscapedQuotes) << i;
+        EXPECT_THROW(parser.parseType(), parse_exception::NotEscapedQuotes);
+        try {
+            parser.parseType();
+        } catch(const parse_exception::NotEscapedQuotes& error) {
+            EXPECT_EQ(error.getPosition(), position[i]);
+        }
     }
 }

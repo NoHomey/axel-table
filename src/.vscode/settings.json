@@ -8,6 +8,8 @@
         "ostream": "cpp",
         "system_error": "cpp",
         "type_traits": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "exception": "cpp",
+        "limits": "cpp"
     }
 }

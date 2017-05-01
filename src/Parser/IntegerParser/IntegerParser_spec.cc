@@ -1,130 +1,68 @@
 #include "IntegerParser.h"
-#include "gtest/gtest.h"
-#include "../../It/It.h"
-#include "../ValidationException/ValidationException.h"
 
-TEST(IntegerParser, parseType) {
-    IT("parses a valid integer string to long long");
-    const char* match[] = {
-        "+9223372036854775807",
-        "-9223372036854775807",
-        "1234",
-        "+43535",
-        "-42",
-        "0",
-        "+0",
-        "-0",
-        "456245",
-        "-001234",
-        "0000001",
-        "-0000017",
-        "+000000234343",
-        "+099",
-        "+00009223372036854775807",
-        "-000009223372036854775807"
-    };
-    const long long expect[] = {9223372036854775807, -9223372036854775807, 1234, 43535, -42, 0, 0, 0, 456245,
-        -1234, 1, -17, 234343, 99, 9223372036854775807, -9223372036854775807};
-    
-    for(size_t i = 0; i < 16; ++i) {
-        ConstString str = {match[i]};
-        IntegerParser parser = {str};
-        EXPECT_EQ(parser.parseType(), expect[i]);
-    }
+#include "IntegerParserSpec.h"
+
+#include "../TypeParser/TypeParserSpec.h"
+
+template class TypeParserSpec<IntegerParser>;
+
+template class IntegerParserSpec<IntegerParser>;
+
+static void validIntegerExpecter(IntegerParser& parser, const long long expect) noexcept {
+    EXPECT_EQ(parser.parseType(), expect);
+}
+
+TEST(IntegerParser, parseTypeWhenParsingValidInteger) {
+    IntegerParserSpec<IntegerParser>::parseValid(validIntegerExpecter);
 }
 
 TEST(IntegerParser, parseTypeWhenInputIsOutOfRange) {
-    IT("should throw Limit when input is not in the range[-2^63 + 1, 2^63 - 1]");
-    const char* match[] = {
-        "9223372036854775808",
-        "+9223372036854775808",
-        "9223372036854775808",
-        "+9233372036854775808",
-        "9330000000000000000",
-        "+9330000000000000000",
-        "+00009223372036854775808",
-        "-9330000000000000000",
-        "-9223372036854775808",
-        "-9243372036854775808",
-        "-000009223372036854775808",
-        "-0092233720368547758071223",
-        "-92233720368547758011"
-    };
-    for(size_t i = 0; i < 13; ++i) {
-        ConstString str = {match[i]};
-        IntegerParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::Limit);
-    }
-
-    for(size_t i = 0; i < 7; ++i) {
-        ConstString str = {match[i]};
-        IntegerParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit);
-    }
-
-    for(size_t i = 7; i < 13; ++i) {
-        ConstString str = {match[i]};
-        IntegerParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit);
-    }
+    IntegerParserSpec<IntegerParser>::parseOutOfRange();
 }
 
-TEST(IntegerParser, parseTypeWhenEmpty) {
-    IT("should throw Empty if input is empty string");
-    ConstString str = {""};
-    IntegerParser parser = {str};
-    EXPECT_THROW(parser.parseType(), parse_exception::Empty);
+TEST(IntegerParser, parseTypeWhenParsingEmptyString) {
+    TypeParserSpec<IntegerParser>::parseWhenEmpty("12345");
 }
 
-TEST(IntegerParser, parseTypeWhenNull) {
-    IT("should throw Null if input is Null string");
-    ConstString str = {nullptr};
-    IntegerParser parser = {str};
-    EXPECT_THROW(parser.parseType(), parse_exception::Null);
+TEST(IntegerParser, parseTypeWhenParsingNullString) {
+    TypeParserSpec<IntegerParser>::parseWhenNull("12345");
 }
 
 TEST(IntegerParser, parseTypeWhenItIsJustASignSymbol) {
-    IT("should throw SingleSign if input is just a sign symbol");
-    ConstString strP = {"+"};
-    IntegerParser plus = {strP};
-    EXPECT_THROW(plus.parseType(), parse_exception::SingleSign);
-    ConstString strM = {"-"};
-    IntegerParser minus = {strM};
-    EXPECT_THROW(minus.parseType(), parse_exception::SingleSign);
+    IntegerParserSpec<IntegerParser>::parseSingleSign();
 }
 
 TEST(IntegerParser, parseTypeWhenThereIsInvalidSymbol) {
-    IT("should throw InvalidSymbol if input is invalid");
+    IntegerParserSpec<IntegerParser>::parseWithInvalidSymbol();
     const char* match[] = {
-        "+-4353",
-        "+1234.",
+        "+43.53",
+        "+1234.2",
         "-123.4",
         "1234.0",
-        "+43535a",
-        "-4^2",
-        "@0",
-        "+)0",
-        "-0(",
-        "94775808#",
-        "++43535",
-        "+000&3535",
-        "-00000000!^$9"
+        "+43535.3",
+        "-4.2",
+        "0.23",
+        "0.43",
+        "-0.34",
+        ".5808",
+        "+435.35",
+        "+000123.3535",
+        "-0000.00009",
+        "348.12",
+        "3.144535356546"
     };
 
-    const char* expectSymbol = "-...a^@)(#+&!";
+    const size_t expectPosition[] = {3, 5, 4, 4, 6, 2, 1, 1, 2, 0, 4, 7, 5, 3, 1};
 
-    const size_t expectPosition[] = {1, 5, 4, 4, 6, 2, 0, 1, 2, 8, 1, 4, 9};
-
-    for(size_t i = 0; i < 13; ++i) {
+    for(size_t i = 0; i < 15; ++i) {
         ConstString str = {match[i]};
         IntegerParser parser = {str};
         EXPECT_THROW(parser.parseType(), parse_exception::InvalidSymbol);
-
         try {
             parser.parseType();
         } catch(const parse_exception::InvalidSymbol& error) {
             EXPECT_EQ(error.getPosition(), expectPosition[i]);
-            EXPECT_EQ(error.getSymbol(), expectSymbol[i]);
+            EXPECT_EQ(error.getSymbol(), '.');
         }
     }
 }

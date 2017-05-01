@@ -34,6 +34,9 @@ double DoubleParser::typeParser() const {
 
 void DoubleParser::typeValidator() const {
     const unsigned int firstDigit = static_cast<unsigned int>(numberTextUtils::isPlusMinus(token[0]));
+    if((token[firstDigit] == '.') && (token[firstDigit + 1] == '\0')) {
+        throw parse_exception::SingleFloatingPoint{};
+    }
     IntegerParser integerParser = {token};
     long long integerValue;
     try {
@@ -49,9 +52,15 @@ void DoubleParser::typeValidator() const {
         } catch(const parse_exception::InvalidSymbol& error) {
             throw parse_exception::InvalidSymbol{error.getPosition() + floatingPoint, error.getSymbol()};
         }
+        if(token[firstDigit] == '.') {
+            throw parse_exception::DoubleHasNoIntegerPart{};
+        }
+        if(floatingPartLength == 0) {
+            throw parse_exception::IncompleteDouble();
+        }
         const size_t zerosCount = numberTextUtils::skipZeros({token, firstDigit});
-        const size_t wholePartLength = floatingPoint - 1 - firstDigit - zerosCount;
-        const size_t totalDigitsCount = wholePartLength + floatingPartLength;
+        const size_t integerPartLength = floatingPoint - 1 - firstDigit - zerosCount;
+        const size_t totalDigitsCount = integerPartLength + floatingPartLength;
         if(totalDigitsCount > TOTAL_DIGITS_COUNT) {
             throw parse_exception::LossOfPrecision{};
         }

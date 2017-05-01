@@ -20,9 +20,17 @@ namespace parse_exception {
 
     class LossOfPrecision: public Limit { };
 
-    class MissingQuotesInTheBeginng: public Invalid { };
+    class DoubleHasNoIntegerPart: public Invalid { };
 
-    class MissingQuotesInTheEnd: public Invalid { };
+    class SingleFloatingPoint: public Invalid { };
+
+    class IncompleteDouble: public Invalid { };
+
+    class MissingQuotes: public Invalid { };
+
+    class MissingQuotesInTheBeginng: public MissingQuotes { };
+
+    class MissingQuotesInTheEnd: public MissingQuotes { };
 
     class InvalidSymbolAtPosition: public Invalid {
     public:

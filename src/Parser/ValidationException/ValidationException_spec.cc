@@ -41,7 +41,7 @@ TEST(ParsedAsInteger, thrownWhenParsingDoubleFailedDueToSuccessfullyParsingToInt
 }
 
 TEST(ParsedAsDouble, thrownWhenParsingStringFailedDueToSuccessfullyParsingToDouble) {
-    IT("stores parsed integer value");
+    IT("stores parsed double value");
     parse_exception::ParsedAsDouble exception = {0.3333};
     EXPECT_EQ(exception.getValue(), 0.3333);
 

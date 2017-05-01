@@ -55,11 +55,11 @@ TEST(DoubleParser, validateWhenValid) {
 TEST(DoubleParser, parseTypeWhenInputIsOutOfRange) {
     IT("should throw Limit when input is not in the range[-2^52 + 1, 2^52 - 1]");
     const char* match[] = {
-        "9223372036854775808",
-        "+9223372036854775808",
+        "92233720368547.75808",
+        "+9223372.036854775808",
         "922337203685.4778",
         "+922337203.68545808",
-        "922337203685478.08",
+        "0.92233720368547808",
         "+9.233372054775808",
         "93300000.000233434",
         "+93300000.00000003",
@@ -68,24 +68,12 @@ TEST(DoubleParser, parseTypeWhenInputIsOutOfRange) {
         "-922337.0203685773",
         "-9243372036.8547723",
         "-00000.92233720368508123",
-        "-9223372036854775808"
+        "-92233720368.54775808"
     };
     for(size_t i = 0; i < 14; ++i) {
         ConstString str = {match[i]};
         DoubleParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::Limit) << i;
-    }
-
-    for(size_t i = 0; i < 9; ++i) {
-        ConstString str = {match[i]};
-        DoubleParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit) << i;
-    }
-
-    for(size_t i = 10; i < 14; ++i) {
-        ConstString str = {match[i]};
-        DoubleParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit) << i;
+        EXPECT_THROW(parser.parseType(), parse_exception::LossOfPrecision);
     }
 }
 

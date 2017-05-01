@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec numberTextUtils_spec IntegerExtractor_spec IntegerParser_spec DoubleParser_spec
+TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec numberTextUtils_spec IntegerExtractor_spec IntegerParser_spec DoubleParser_spec StringParser_spec
 
 all : $(TESTS)
 
@@ -101,6 +101,8 @@ $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 $(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 
 $(eval $(call specInDir,Parser,DoubleParser,BasicString.o TypeParser.o IntegerParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
+
+$(eval $(call specInDir,Parser,StringParser,BasicString.o TypeParser.o IntegerParser.o DoubleParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 
 $(eval $(call specInDir,Parser,ValidationException))
 

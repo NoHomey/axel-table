@@ -123,6 +123,12 @@ TEST(ConstString, length) {
 
     ConstString str9 = {str6, 1};
     EXPECT_EQ(str9.length(), 2);
+
+    ConstString str10 = {str5, 0};
+    EXPECT_EQ(str10.length(), 12);
+
+    ConstString str11 = {str5, 0, true};
+    EXPECT_EQ(str11.length(), 12);
 }
 
 TEST(ConstString, cString) {
@@ -142,6 +148,12 @@ TEST(ConstString, cString) {
 
     ConstString str5 = {str2, 1, true};
     EXPECT_EQ(str5.cString(), data);
+
+    ConstString str6 = {str2, 0};
+    EXPECT_EQ(str6.cString(), data);
+
+    ConstString str7 = {str2, 0, true};
+    EXPECT_EQ(str7.cString(), data);
 }
 
 TEST(ConstString, indexOperator) {
@@ -206,6 +218,10 @@ TEST(ConstString, equalityOperators) {
     equal = ConstString{str, 5} == ConstString{"text"};
     EXPECT_TRUE(equal);
     equal = ConstString{str, 4} == ConstString{" text"};
+    EXPECT_TRUE(equal);
+    equal = ConstString{str, 0} == str;
+    EXPECT_TRUE(equal);
+    equal = ConstString{str, 0, true} == str;
     EXPECT_TRUE(equal);
 }
 

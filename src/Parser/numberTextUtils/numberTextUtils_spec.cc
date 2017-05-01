@@ -123,15 +123,15 @@ TEST(numberTextUtils, containsOnlyDigits) {
         {"@0",'@', 0},
         {"2)0", ')', 1},
         {"30(", '(', 2},
-        {"922337258080123456789#", '8', 19} ,
+        {"922337258080123456789#", '#', 21},
         {"++43535", '+', 0}
     };
 
     for(size_t i = 0; i < 11; ++i) {
         ConstString str = {test[i].string};
-        EXPECT_THROW(numberTextUtils::containsOnlyDigits(str, 19), parse_exception::InvalidSymbol);
+        EXPECT_THROW(numberTextUtils::containsOnlyDigits(str), parse_exception::InvalidSymbol);
         try {
-            numberTextUtils::containsOnlyDigits(str, 19);
+            numberTextUtils::containsOnlyDigits(str);
         } catch(const parse_exception::InvalidSymbol& error) {
             EXPECT_EQ(error.getSymbol(), test[i].symbol);
             EXPECT_EQ(error.getPosition(), test[i].position);
@@ -162,7 +162,7 @@ TEST(numberTextUtils, containsOnlyDigits) {
 
     for(size_t i = 0; i < 14; ++i) {
         ConstString str = {match[i]};
-        EXPECT_EQ(numberTextUtils::containsOnlyDigits(str, 19), expect[i]);
+        EXPECT_EQ(numberTextUtils::containsOnlyDigits(str), expect[i]);
     }
 }
 
@@ -172,33 +172,4 @@ TEST(numberTextUtils, throwLimitException) {
     EXPECT_THROW(numberTextUtils::throwLimitException('+'), parse_exception::MaximumLimit);
     EXPECT_THROW(numberTextUtils::throwLimitException('0'), parse_exception::MaximumLimit);
     EXPECT_THROW(numberTextUtils::throwLimitException('-'), parse_exception::MinimumLimit);
-}
-
-TEST(numberTextUtils, rethrowInvalidSymbolIfNotADigitAndSetProperPosition) {
-    IT("rethrows the passed InvalidSymbol if it is not about digit and adds the provided offset to the error position");
-    void (*rethrowIf)(const parse_exception::InvalidSymbol&, const size_t) =
-        numberTextUtils::rethrowInvalidSymbolIfNotADigitAndSetProperPosition;
-    EXPECT_NO_THROW(rethrowIf({10, '9'}, 3));
-    EXPECT_NO_THROW(rethrowIf({19, '7'}, 4));
-    EXPECT_THROW(rethrowIf({19, '.'}, 4), parse_exception::InvalidSymbol);
-    EXPECT_THROW(rethrowIf({20, 'a'}, 5), parse_exception::InvalidSymbol);
-    EXPECT_THROW(rethrowIf({21, '@'}, 1), parse_exception::InvalidSymbol);
-    try {
-        rethrowIf({19, '.'}, 4);
-    } catch(const parse_exception::InvalidSymbol& error) {
-        EXPECT_EQ(error.getSymbol(), '.');
-        EXPECT_EQ(error.getPosition(), 23);
-    }
-    try {
-        rethrowIf({20, 'a'}, 3);
-    } catch(const parse_exception::InvalidSymbol& error) {
-        EXPECT_EQ(error.getSymbol(), 'a');
-        EXPECT_EQ(error.getPosition(), 23);
-    }
-    try {
-        rethrowIf({21, '@'}, 1);
-    } catch(const parse_exception::InvalidSymbol& error) {
-        EXPECT_EQ(error.getSymbol(), '@');
-        EXPECT_EQ(error.getPosition(), 22);
-    }
 }

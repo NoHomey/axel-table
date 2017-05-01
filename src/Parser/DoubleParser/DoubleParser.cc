@@ -33,6 +33,7 @@ double DoubleParser::typeParser() const {
 }
 
 void DoubleParser::typeValidator() const {
+    const unsigned int firstDigit = static_cast<unsigned int>(numberTextUtils::isPlusMinus(token[0]));
     IntegerParser integerParser = {token};
     long long integerValue;
     try {
@@ -44,17 +45,15 @@ void DoubleParser::typeValidator() const {
         const size_t floatingPoint = error.getPosition() + 1;
         size_t floatingPartLength;
         try {
-            floatingPartLength = numberTextUtils::containsOnlyDigits({token, floatingPoint}, TOTAL_DIGITS_COUNT);
+            floatingPartLength = numberTextUtils::containsOnlyDigits({token, floatingPoint});
         } catch(const parse_exception::InvalidSymbol& error) {
-            numberTextUtils::rethrowInvalidSymbolIfNotADigitAndSetProperPosition(error, floatingPoint);
-            numberTextUtils::throwLimitException(token[0]);
+            throw parse_exception::InvalidSymbol{error.getPosition() + floatingPoint, error.getSymbol()};
         }
-        const unsigned int firstDigit = static_cast<unsigned int>(numberTextUtils::isPlusMinus(token[0]));
         const size_t zerosCount = numberTextUtils::skipZeros({token, firstDigit});
         const size_t wholePartLength = floatingPoint - 1 - firstDigit - zerosCount;
         const size_t totalDigitsCount = wholePartLength + floatingPartLength;
         if(totalDigitsCount > TOTAL_DIGITS_COUNT) {
-            numberTextUtils::throwLimitException(token[0]);
+            throw parse_exception::LossOfPrecision{};
         }
         return;
     }

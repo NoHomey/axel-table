@@ -21,10 +21,7 @@ namespace numberTextUtils {
 
     size_t skipZeros(ConstString& string) noexcept;
 
-    size_t containsOnlyDigits(ConstString& string, const size_t maxCount);
+    size_t containsOnlyDigits(ConstString& string);
 
     void throwLimitException(const char symbol);
-
-    void rethrowInvalidSymbolIfNotADigitAndSetProperPosition(
-        const parse_exception::InvalidSymbol& error, const size_t offset);
 }

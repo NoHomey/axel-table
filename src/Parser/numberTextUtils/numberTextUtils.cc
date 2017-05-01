@@ -34,10 +34,10 @@ size_t numberTextUtils::skipZeros(ConstString& string) noexcept {
     return index;
 }
 
-size_t numberTextUtils::containsOnlyDigits(ConstString& string, const size_t maxCount) {
+size_t numberTextUtils::containsOnlyDigits(ConstString& string) {
     size_t index = 0;
     while(string[index] != '\0') {
-        if(!isDigit(string[index]) || (index == maxCount)) {
+        if(!isDigit(string[index])) {
             throw parse_exception::InvalidSymbol{index, string[index]};
         }
         ++index;
@@ -51,13 +51,5 @@ void numberTextUtils::throwLimitException(const char symbol) {
         throw parse_exception::MinimumLimit{};
     } else {
         throw parse_exception::MaximumLimit{};
-    }
-}
-
-void numberTextUtils::rethrowInvalidSymbolIfNotADigitAndSetProperPosition(
-        const parse_exception::InvalidSymbol& error, const size_t offset) {
-    const char errorSymbol = error.getSymbol();
-    if(!isDigit(errorSymbol)) {
-        throw parse_exception::InvalidSymbol{error.getPosition() + offset, errorSymbol};
     }
 }

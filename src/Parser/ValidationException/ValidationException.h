@@ -18,26 +18,54 @@ namespace parse_exception {
 
     class MaximumLimit: public Limit { };
 
-    class InvalidSymbol: public Invalid {
+    class LossOfPrecision: public Limit { };
+
+    class MissingQuotesInTheBeginng: public Invalid { };
+
+    class MissingQuotesInTheEnd: public Invalid { };
+
+    class InvalidSymbolAtPosition: public Invalid {
     public:
-        InvalidSymbol(const size_t pos, const char sym) noexcept;
+        InvalidSymbolAtPosition(const size_t pos) noexcept;
 
         size_t getPosition() const noexcept;
+
+    protected:
+        const size_t position;
+    };
+
+    class NotEscapedQuotes: public InvalidSymbolAtPosition {
+    public:
+        NotEscapedQuotes(const size_t pos) noexcept;
+    };
+
+    class AloneBackslash: public InvalidSymbolAtPosition {
+    public:
+        AloneBackslash(const size_t pos) noexcept;
+    };
+
+    class InvalidSymbol: public InvalidSymbolAtPosition {
+    public:
+        InvalidSymbol(const size_t pos, const char sym) noexcept;
 
         char getSymbol() const noexcept;
 
     protected:
-        const size_t position;
         const char symbol;
     };
 
-    class ParsedAsInteger: public Invalid {
+    template<typename Type>
+    class ParsedAsDifferentType: public Invalid {
     public:
-        ParsedAsInteger(const long long val) noexcept;
+        ParsedAsDifferentType(const Type val) noexcept;
 
-        long long getValue() const noexcept;
+        Type getValue() const noexcept;
         
     protected:
-        long long value;
+        Type value;
     };
+
+    using ParsedAsInteger = ParsedAsDifferentType<long long>;
+
+    using ParsedAsDouble = ParsedAsDifferentType<double>;
 }

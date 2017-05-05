@@ -8,7 +8,7 @@ template class TypeParserSpec<IntegerParser>;
 
 template class IntegerParserSpec<IntegerParser>;
 
-static void validIntegerExpecter(IntegerParser& parser, const long long expect) noexcept {
+/*void validIntegerExpecter(IntegerParser& parser, const long long expect) noexcept {
     EXPECT_EQ(parser.parseType(), expect);
 }
 
@@ -26,13 +26,13 @@ TEST(IntegerParser, parseTypeWhenParsingEmptyString) {
 
 TEST(IntegerParser, parseTypeWhenParsingNullString) {
     TypeParserSpec<IntegerParser>::parseWhenNull("12345");
-}
+}*/
 
 TEST(IntegerParser, parseTypeWhenItIsJustASignSymbol) {
     IntegerParserSpec<IntegerParser>::parseSingleSign();
 }
 
-TEST(IntegerParser, parseTypeWhenThereIsInvalidSymbol) {
+/*TEST(IntegerParser, parseTypeWhenThereIsInvalidSymbol) {
     IntegerParserSpec<IntegerParser>::parseWithInvalidSymbol();
     const char* match[] = {
         "+43.53",
@@ -65,4 +65,4 @@ TEST(IntegerParser, parseTypeWhenThereIsInvalidSymbol) {
             EXPECT_EQ(error.getSymbol(), '.');
         }
     }
-}
+}*/

@@ -83,24 +83,29 @@ TEST(numberTextUtils, toDigit) {
 
 TEST(numberTextUtils, skipZeros) {
     IT("returns the first posions on which the char is not zero");
-    const char* test[] = {
-        "0003",
-        "000042",
-        "0999",
-        "0010",
-        "000000@",
-        "@$%",
-        "8878",
-        "10",
-        "9999999",
-        "0000000000001"
+
+    struct Test {
+        const char* string;
+        const size_t length;
+        const size_t expect;
     };
 
-    size_t expect[] = {3, 4, 1, 2, 6, 0, 0, 0, 0, 12};
+    Test test[] = {
+        {"0003", 4, 3}, 
+        {"000042", 5, 4},
+        {"0999", 4, 1},
+        {"0010", 4, 2},
+        {"000000@", 7, 6},
+        {"@$%", 3, 0},
+        {"8878", 4, 0},
+        {"10", 2, 0},
+        {"999999999", 9, 0},
+        {"0000000000001", 13, 12}
+    };
 
     for(size_t i = 0; i < 10; ++i) {
-        ConstString str = {test[i]};
-        EXPECT_EQ(numberTextUtils::skipZeros(str), expect[i]);
+        ConstString str = {test[i].string, test[i].length};
+        EXPECT_EQ(numberTextUtils::skipZeros(str), test[i].expect);
     }
 }
 
@@ -109,26 +114,27 @@ TEST(numberTextUtils, containsOnlyDigits) {
 
     struct Test {
         const char* string;
+        const size_t length;
         const char symbol;
         const size_t position;
     };
 
     Test test[] = {
-        {"+-4353", '+', 0},
-        {"+1234.", '+', 0},
-        {"-123.4", '-', 0},
-        {"1234.0", '.', 4},
-        {"143535a", 'a', 6}, 
-        {"14^2", '^', 2},
-        {"@0",'@', 0},
-        {"2)0", ')', 1},
-        {"30(", '(', 2},
-        {"922337258080123456789#", '#', 21},
-        {"++43535", '+', 0}
+        {"+-4353", 6, '+', 0},
+        {"+1234.", 6, '+', 0},
+        {"-123.4", 6, '-', 0},
+        {"1234.0", 6, '.', 4},
+        {"143535a", 7, 'a', 6}, 
+        {"14^2", 4, '^', 2},
+        {"@0", 2, '@', 0},
+        {"2)0", 3, ')', 1},
+        {"30(", 3, '(', 2},
+        {"922337258080123456789#", 22, '#', 21},
+        {"++43535", 7, '+', 0}
     };
 
     for(size_t i = 0; i < 11; ++i) {
-        ConstString str = {test[i].string};
+        ConstString str = {test[i].string, test[i].length};
         EXPECT_THROW(numberTextUtils::containsOnlyDigits(str), parse_exception::InvalidSymbol);
         try {
             numberTextUtils::containsOnlyDigits(str);
@@ -161,7 +167,7 @@ TEST(numberTextUtils, containsOnlyDigits) {
     size_t expect[] = {19, 19, 4, 6, 2, 1, 1, 1, 7, 5, 6, 7, 8, 13, 4};
 
     for(size_t i = 0; i < 14; ++i) {
-        ConstString str = {match[i]};
+        ConstString str = {match[i], expect[i]};
         EXPECT_EQ(numberTextUtils::containsOnlyDigits(str), expect[i]);
     }
 }

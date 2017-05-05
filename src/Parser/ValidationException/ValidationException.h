@@ -8,8 +8,6 @@ namespace parse_exception {
 
     class Empty: public Invalid { };
 
-    class Null: public Invalid { };
-
     class SingleSign: public Invalid { };
 
     class Limit: public Invalid { };

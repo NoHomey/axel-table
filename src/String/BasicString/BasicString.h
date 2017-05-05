@@ -4,16 +4,14 @@
 
 #include "../../Exception.h"
 
+class BadStringOffset: public Exception { };
+
 template<typename CString>
 class BasicString: public ImmutableString {
 public:
-    class BadStringOffset: public Exception { };
+    BasicString(CString cstring, const size_t cstrLength) noexcept;
 
-    BasicString() noexcept;
-
-    BasicString(CString cstring) noexcept;
-
-    BasicString(const BasicString& other, const size_t offset, const bool fromEnd = false);
+    BasicString(const BasicString& other, const size_t offsetFromBegging, const size_t offsetFromEnd = 0);
 
     virtual ~BasicString() noexcept;
     
@@ -31,7 +29,7 @@ public:
 
     bool hasContent() const noexcept override final;
 
-    virtual size_t length() const noexcept override final;
+    size_t length() const noexcept override final;
 
     const char* cString() const noexcept override final;
 
@@ -46,11 +44,19 @@ public:
     bool operator>(const ImmutableString& other) const noexcept override final;
 
 protected:
-    static size_t calculateLength(CString cstring) noexcept;
+    static bool shouldBeNull(const char* cstring, const size_t cstrLength) noexcept;
 
-    explicit BasicString(CString cstring, const size_t cstrLength) noexcept;
+    void canBeParted(const size_t offsetFromBegging, const size_t offsetFromEnd) const;
+
+    size_t stringLength;
 
     CString string;
 
-    size_t stringLength;
+private:
+    static bool constFalse(const char a, const char b) noexcept;
+
+    static bool lessThanOperator(const char a, const char b) noexcept;
+
+    bool compareStrings(const ImmutableString& other, const bool onEqual,
+                        bool (*onDiff)(const char a, const char b)) const noexcept;
 };

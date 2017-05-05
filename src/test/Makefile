@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec numberTextUtils_spec IntegerExtractor_spec IntegerParser_spec DoubleParser_spec StringParser_spec
+TESTS = ConstString_spec FixedSizeString_spec
 
 all : $(TESTS)
 

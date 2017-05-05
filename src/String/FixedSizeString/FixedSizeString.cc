@@ -1,46 +1,37 @@
 #include "FixedSizeString.h"
 
-#include "../ConstString/ConstString.h"
-
 FixedSizeString::FixedSizeString() noexcept
-: BasicString<char*>{}, filled{0} { }
-
-FixedSizeString::FixedSizeString(const char* cstring)
-: FixedSizeString{} {
-    stringLength = ConstString{cstring}.length();
-    string = new char[stringLength + 1];
-    for(size_t index = 0; index < stringLength; ++index) {
-        string[index] = cstring[index];
-    }
-    filled = stringLength;
-    string[filled] = '\0';
-}
-
-FixedSizeString::FixedSizeString(const FixedSizeString& other, const size_t offset, const bool fromEnd)
-: FixedSizeString{} {
-    if(offset > other.stringLength) {
-        throw BadStringOffset{};
-    }
-    stringLength = other.stringLength - offset;
-    string = new char[stringLength + 1];
-    size_t index = offset;
-    size_t copyLength = other.stringLength;
-    if(fromEnd) {
-        index = 0;
-        copyLength = stringLength;
-    }
-    for(filled = 0; index < copyLength; ++index, ++filled) {
-        string[filled] = other.string[index];
-    }
-    string[filled] = '\0';
-}
+: BasicString<char*>{nullptr, 0}, filled{0} { }
 
 FixedSizeString::FixedSizeString(const size_t chars)
-: BasicString<char*>{new char[chars + 1], chars}, filled{0} { }
+: FixedSizeString{} {
+    stringLength = chars;
+    string = new char[chars + 1];
+}
+
+FixedSizeString::FixedSizeString(const char* cstring, const size_t chars)
+: FixedSizeString{} {
+    if(!shouldBeNull(cstring, chars)) {
+        stringLength = chars;
+        fill(cstring);
+    }
+}
+
+FixedSizeString::FixedSizeString(const FixedSizeString& other, const size_t offsetFromBegging, const size_t offsetFromEnd)
+: FixedSizeString{} {
+    other.canBeParted(offsetFromBegging, offsetFromEnd);
+    stringLength = other.stringLength - offsetFromBegging - offsetFromEnd;
+    fill(other.string + offsetFromBegging);
+}
 
 FixedSizeString::FixedSizeString(FixedSizeString&& other) noexcept
 : BasicString{other.string, other.stringLength}, filled{other.filled} {
     other.string = nullptr;
+}
+
+FixedSizeString::~FixedSizeString() {
+    delete[] string;
+    string = nullptr;
 }
 
 FixedSizeString& FixedSizeString::operator=(FixedSizeString&& other) noexcept {
@@ -54,9 +45,12 @@ FixedSizeString& FixedSizeString::operator=(FixedSizeString&& other) noexcept {
     return *this;
 }
 
-FixedSizeString::~FixedSizeString() {
-    delete[] string;
-    string = nullptr;
+void FixedSizeString::fill(const char* cstring) noexcept {
+    string = new char[stringLength];
+    for(; filled < stringLength; ++filled) {
+        string[filled] = cstring[filled];
+    }
+    string[filled] = '\0';
 }
 
 bool FixedSizeString::isntFilled() const noexcept {

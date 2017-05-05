@@ -28,7 +28,7 @@ TEST(ConstString, cString) {
     BasicStringSpec<ConstString>::cString();
 
     const char* data = "1234.56789";
-    ConstString str2 = {data};
+    ConstString str2 = {data, 10};
     EXPECT_EQ(str2.cString(), data);
 
     ConstString str3 = {str2, 3};
@@ -37,13 +37,13 @@ TEST(ConstString, cString) {
     ConstString str4 = {str2, 4};
     EXPECT_EQ(str4.cString(), data + 4);
 
-    ConstString str5 = {str2, 1, true};
+    ConstString str5 = {str2, 0, 1};
     EXPECT_EQ(str5.cString(), data);
 
     ConstString str6 = {str2, 0};
     EXPECT_EQ(str6.cString(), data);
 
-    ConstString str7 = {str2, 0, true};
+    ConstString str7 = {str2, 0, 0};
     EXPECT_EQ(str7.cString(), data);
 }
 

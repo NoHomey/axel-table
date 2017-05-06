@@ -5,6 +5,7 @@
 #include "../TypeParser/TypeParser.h"
 #include "../IntegerParser/IntegerParserSpec.h"
 #include "../ValidationException/ValidationException.h"
+#include "../DoubleParser/DoubleParser.h"
 
 template<typename Parser>
 class DoubleParserSpec {
@@ -81,10 +82,6 @@ public:
             Parser parser = {str};
             EXPECT_THROW(parser.parseType(), parse_exception::LossOfPrecision);
         }
-
-        ConstString str = {"9223372036.4778", 16};
-        Parser parser = {str};
-        EXPECT_NO_THROW(parser.parseType());
     }
 
     static void DoubleValidIntegerExpecter(Parser& parser, const long long expect) noexcept {

@@ -99,9 +99,8 @@ void StringParser::typeValidator() const {
     if(endsWithQuotes && (length == 2)) {
         throw parse_exception::EmptyString{};
     }
-    ConstString tokenWithoutLeadingQuotes = {token, startsWithQuotes};
-    ConstString tokenWihtoutEndingQuotes = {tokenWithoutLeadingQuotes, endsWithQuotes, true};
-    DoubleParser doubleParser = {tokenWihtoutEndingQuotes};
+    ConstString tokenWithoutQuotes = {token, startsWithQuotes, endsWithQuotes};
+    DoubleParser doubleParser = {tokenWithoutQuotes};
     double doubleValue;
     try {
         doubleValue = doubleParser.parseType();

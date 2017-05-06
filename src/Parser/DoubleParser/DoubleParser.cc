@@ -54,21 +54,21 @@ void DoubleParser::typeValidator() const {
         if(error.getSymbol() != '.') {
             throw error;
         }
-        const size_t floatingPoint = error.getPosition() + 1;
-        if(token[floatingPoint] == '\0') {
+        const size_t afterFloatingPoint = error.getPosition() + 1;
+        if(token[afterFloatingPoint] == '\0') {
             throw parse_exception::IncompleteDouble{};
         }
         size_t floatingPartLength;
         try {
-            floatingPartLength = numberTextUtils::containsOnlyDigits({token, floatingPoint});
+            floatingPartLength = numberTextUtils::containsOnlyDigits({token, afterFloatingPoint});
         } catch(const parse_exception::InvalidSymbol& error) {
-            throw parse_exception::InvalidSymbol{error.getPosition() + floatingPoint, error.getSymbol()};
+            throw parse_exception::InvalidSymbol{error.getPosition() + afterFloatingPoint, error.getSymbol()};
         }
         if(isFirstDigitFloatingPoint) {
             throw parse_exception::DoubleHasNoIntegerPart{};
         }
         const size_t zerosCount = numberTextUtils::skipZeros({token, firstDigit});
-        const size_t integerPartLength = floatingPoint - 1 - firstDigit - zerosCount;
+        const size_t integerPartLength = afterFloatingPoint - 1 - firstDigit - zerosCount;
         const size_t totalDigitsCount = integerPartLength + floatingPartLength;
         if(totalDigitsCount > TOTAL_DIGITS_COUNT) {
             throw parse_exception::LossOfPrecision{};

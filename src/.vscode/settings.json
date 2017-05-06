@@ -1,4 +1,21 @@
 {
+    "C_Cpp.clang_format_path": "/usr/bin/clang-3.8",
+    "clang.executable": "/usr/bin/clang-3.8",
+    "clang.cxxflags": [
+        "-std=c++14"
+    ],
+    "C_Cpp.autocomplete": "Default",
+    "clang.completion.enable": true,
+    "editor.fontSize": 18,
+    "window.zoomLevel": 2,
+    "[cpp]": {
+        "editor.quickSuggestions": true
+    },
+    "[c]": {
+        "editor.quickSuggestions": true
+    },
+    "workbench.colorTheme": "Atom One Dark",
+    "editor.renderWhitespace": "none", 
     "files.associations": {
         "cstddef": "cpp",
         "array": "cpp",

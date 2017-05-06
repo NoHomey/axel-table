@@ -6,7 +6,7 @@ bool BasicString<CString>::shouldBeNull(const char* cstring, const size_t cstrLe
 }
 
 template<typename CString>
-bool BasicString<CString>::constFalse(const char a, const char b) noexcept {
+bool BasicString<CString>::constFalse(const char, const char) noexcept {
     return false;
 }
 

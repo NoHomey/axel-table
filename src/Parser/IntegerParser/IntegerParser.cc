@@ -22,15 +22,18 @@ void IntegerParser::typeValidator() const {
     } catch(const BadStringOffset& error) {
         throw parse_exception::SingleSign{};
     }
-    const size_t maxLength = ABS_MAX_VALUE_LENGTH + firstNoneZero;
+    if(firstNoneZero == token.length()) {
+        return;
+    }
     ConstString tokenFromFirstDigit = {token, firstNoneZero};
     size_t length;
     try {
-        length = firstNoneZero + numberTextUtils::containsOnlyDigits(tokenFromFirstDigit);
+        length = numberTextUtils::containsOnlyDigits(tokenFromFirstDigit);
     } catch(const parse_exception::InvalidSymbol& error) {
         throw parse_exception::InvalidSymbol{error.getPosition() + firstNoneZero, error.getSymbol()};
     }
-    if((length > maxLength) || ((length == maxLength) && (ABS_MAX_VALUE < tokenFromFirstDigit))) {
+    if((length > ABS_MAX_VALUE_LENGTH) || ((length == ABS_MAX_VALUE_LENGTH) &&
+                                        (ABS_MAX_VALUE < tokenFromFirstDigit))) {
         numberTextUtils::throwLimitException(token[0]);
     }
 }

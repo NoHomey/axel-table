@@ -47,8 +47,7 @@ TEST(StringParser, parseTypeWhenParsingValidString) {
 
 TEST(StringParser, parseTypeWhenParsingIntegerString) {
     IT("parses a valid integer string to long long");
-    
-    
+        
     struct Test {
         const char* string;
         const size_t length;
@@ -142,49 +141,49 @@ static void stringValidDoubleExpecter(StringParser& parser, const double expect)
     }
 }
 
-TEST(StringParser, pareseTypeWhenItParsesDouble) {
+TEST(StringParser, validateTypeWhenItParsesDouble) {
     DoubleParserSpec<StringParser>::parseValid(stringValidDoubleExpecter);
 }
 
-TEST(StringParser, parseTypeWhenParsingDoubleWithMoreThan15Digits) {
-    DoubleParserSpec<StringParser>::parseWhenLossOfPrecision();
+TEST(StringParser, validateTypeWhenParsingDoubleWithMoreThan15Digits) {
+    DoubleParserSpec<StringParser>::validateLossOfPrecision();
 }
 
-TEST(StringParser, pareseTypeWhenParsingSingleFloatingPoint) {
-    DoubleParserSpec<StringParser>::parseWhenSingleFloatingPoint();
+TEST(StringParser, validateTypeWhenParsingSingleFloatingPoint) {
+    DoubleParserSpec<StringParser>::validateSingleFloatingPoint();
 }
 
-TEST(StringParser, parseTypeWhenParsingDoubleWhichHasNoIntegerPart) {
-    DoubleParserSpec<StringParser>::parseWhenDoubleHasNoIntegerPart();
+TEST(StringParser, validateTypeWhenParsingDoubleWhichHasNoIntegerPart) {
+    DoubleParserSpec<StringParser>::validateWhenDoubleHasNoIntegerPart();
 }
 
-TEST(StringParser, parseTypeWhenParsingInteger) {
+TEST(StringParser, validateTypeWhenParsingInteger) {
     DoubleParserSpec<StringParser>::parseValidInteger();
 }
 
-TEST(StringParser, parseTypeWhenParsingIntegerWhichIsOutOfRange) {
-    IntegerParserSpec<StringParser>::parseOutOfRange();
+TEST(StringParser, validateTypeWhenParsingIntegerWhichIsOutOfRange) {
+    IntegerParserSpec<StringParser>::validateOutOfRange();
 }
 
-TEST(StringParser, parseTypeWhenParsingIncompleteDouble) {
-    DoubleParserSpec<StringParser>::parseWhenIncompleteDouble();
+TEST(StringParser, validateTypeWhenParsingIncompleteDouble) {
+    DoubleParserSpec<StringParser>::validateIncompleteDouble();
 }
 
-TEST(StringParser, parseTypeWhenParsingEmptyString) {
-    TypeParserSpec<StringParser>::parseWhenEmpty({"\"string\"", 8});
+TEST(StringParser, validateTypeWhenParsingEmptyString) {
+    TypeParserSpec<StringParser>::validateWhenEmpty({"\"string\"", 8});
 }
 
-TEST(StringParser, parseTypeWhenItIsJustASignSymbol) {
-    IntegerParserSpec<StringParser>::parseSingleSign();
+TEST(StringParser, validateTypeWhenItIsJustASignSymbol) {
+    IntegerParserSpec<StringParser>::validateSingleSign();
 }
 
-TEST(StringParser, parseTypeWhenItIsEmptyString) {
+TEST(StringParser, validateTypeWhenItIsEmptyString) {
     ConstString str = {"\"\"", 2};
     StringParser parser = {str};
-    EXPECT_THROW(parser.parseType(), parse_exception::EmptyString);
+    EXPECT_THROW(parser.validateType(), parse_exception::EmptyString);
 }
 
-TEST(StringParser, parseTypeWhenParsingStringWhichIsNotAnumberAndDoseNotStartWithQuotes) {
+TEST(StringParser, validateTypeWhenParsingStringWhichIsNotANumberAndDoseNotStartWithQuotes) {
     IT("throws MissingQuotes if the string it's not a number but it dose not have quotes");
 
     struct Test {
@@ -203,11 +202,11 @@ TEST(StringParser, parseTypeWhenParsingStringWhichIsNotAnumberAndDoseNotStartWit
     for(size_t i = 0; i < 5; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotes);
+        EXPECT_THROW(parser.validateType(), parse_exception::MissingQuotes);
     }
 }
 
-TEST(StringParser, parseTypeWhenParsingStringWithUnbalancedQuotes) {
+TEST(StringParser, validateTypeWhenParsingStringWithUnbalancedQuotes) {
     IT("throws if the string dose not start and end with quotes");
 
     struct Test {
@@ -232,17 +231,17 @@ TEST(StringParser, parseTypeWhenParsingStringWithUnbalancedQuotes) {
     for(size_t i = 0; i < 4; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotesInTheBeginng);
+        EXPECT_THROW(parser.validateType(), parse_exception::MissingQuotesInTheBeginng);
     }
 
     for(size_t i = 5; i < 11; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::MissingQuotesInTheEnd);
+        EXPECT_THROW(parser.validateType(), parse_exception::MissingQuotesInTheEnd);
     }
 }
 
-TEST(StringParser, parseTypeWhenParsingStringWichHasBackslashThatDoseNotEscapingAnything) {
+TEST(StringParser, validateTypeWhenParsingStringWichHasBackslashThatDoseNotEscapingAnything) {
     IT("throws AloneBackslash if the string includes alone backslash");
 
     struct Test {
@@ -263,16 +262,16 @@ TEST(StringParser, parseTypeWhenParsingStringWichHasBackslashThatDoseNotEscaping
     for(size_t i = 0; i < 6; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::AloneBackslash);
+        EXPECT_THROW(parser.validateType(), parse_exception::AloneBackslash);
         try {
-            parser.parseType();
+            parser.validateType();
         } catch(const parse_exception::AloneBackslash& error) {
             EXPECT_EQ(error.getPosition(), test[i].position);
         }
     }
 }
 
-TEST(StringParser, parseTypeWhenParsingStringIncludesNotEscapedQuotes) {
+TEST(StringParser, validateTypeWhenParsingStringIncludesNotEscapedQuotes) {
     IT("throws NotEscapedQuotes if the string includes not escaped quotes");
 
      struct Test {
@@ -294,9 +293,9 @@ TEST(StringParser, parseTypeWhenParsingStringIncludesNotEscapedQuotes) {
     for(size_t i = 0; i < 7; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::NotEscapedQuotes);
+        EXPECT_THROW(parser.validateType(), parse_exception::NotEscapedQuotes);
         try {
-            parser.parseType();
+            parser.validateType();
         } catch(const parse_exception::NotEscapedQuotes& error) {
             EXPECT_EQ(error.getPosition(), test[i].position);
         }

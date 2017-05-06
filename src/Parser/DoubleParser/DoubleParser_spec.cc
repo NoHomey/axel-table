@@ -10,6 +10,7 @@ template class IntegerParserSpec<DoubleParser>;
 template class DoubleParserSpec<DoubleParser>;
 
 static void validDoubleExpecter(DoubleParser& parser, const double expect) noexcept {
+    EXPECT_NO_THROW(parser.validateType());
     EXPECT_DOUBLE_EQ(parser.parseType(), expect);
 }
 
@@ -17,39 +18,39 @@ TEST(DoubleParser, pareseTypeWhenParsingValid) {
     DoubleParserSpec<DoubleParser>::parseValid(validDoubleExpecter);
 }
 
-TEST(DoubleParser, parseTypeWhenParsingDoubleWithMoreThan15Digits) {
-    DoubleParserSpec<DoubleParser>::parseWhenLossOfPrecision();
+TEST(DoubleParser, validateTypeWhenParsingDoubleWithMoreThan15Digits) {
+    DoubleParserSpec<DoubleParser>::validateLossOfPrecision();
 }
 
-TEST(DoubleParser, parseTypeWhenParsingSingleFloatingPoint) {
-    DoubleParserSpec<DoubleParser>::parseWhenSingleFloatingPoint();
+TEST(DoubleParser, validateTypeWhenParsingSingleFloatingPoint) {
+    DoubleParserSpec<DoubleParser>::validateSingleFloatingPoint();
 }
 
-TEST(DoubleParser, parseTypeWhenItIsParsingInteger) {
+TEST(DoubleParser, validateTypeWhenItIsParsingInteger) {
     DoubleParserSpec<DoubleParser>::parseValidInteger();
 }
 
-TEST(DoubleParser, parseTypeWhenParsingIncompleteDouble) {
-    DoubleParserSpec<DoubleParser>::parseWhenIncompleteDouble();
+TEST(DoubleParser, validateTypeWhenParsingIncompleteDouble) {
+    DoubleParserSpec<DoubleParser>::validateIncompleteDouble();
 }
 
-TEST(DoubleParser, parseTypeWhenParsingDoubleWhichHasNoIntegerPart) {
-    DoubleParserSpec<DoubleParser>::parseWhenDoubleHasNoIntegerPart();
+TEST(DoubleParser, validateTypeWhenParsingDoubleWhichHasNoIntegerPart) {
+    DoubleParserSpec<DoubleParser>::validateWhenDoubleHasNoIntegerPart();
 }
 
-TEST(DoubleParser, parseTypeWhenParsingEmptyString) {
-    TypeParserSpec<DoubleParser>::parseWhenEmpty({"123.45", 6});
+TEST(DoubleParser, validateTypeWhenParsingEmptyString) {
+    TypeParserSpec<DoubleParser>::validateWhenEmpty({"123.45", 6});
 }
 
-TEST(DoubleParser, parseTypeWhenItIsJustASignSymbol) {
-    IntegerParserSpec<DoubleParser>::parseSingleSign();
+TEST(DoubleParser, validateTypeWhenItIsJustASignSymbol) {
+    IntegerParserSpec<DoubleParser>::validateSingleSign();
 }
 
-TEST(DoubleParser, parseTypeWhenParsingIntegerWhichIOutOfRange) {
-    IntegerParserSpec<DoubleParser>::parseOutOfRange();
+TEST(DoubleParser, validateTypeWhenParsingIntegerWhichIOutOfRange) {
+    IntegerParserSpec<DoubleParser>::validateOutOfRange();
 }
 
-TEST(DoubleParser, parseTypeWhenThereIsInvalidSymbol) {
-    IntegerParserSpec<DoubleParser>::parseWithInvalidSymbol();
-    DoubleParserSpec<DoubleParser>::parseWithInvalidSymbol();
+TEST(DoubleParser, validateTypeWhenThereIsInvalidSymbol) {
+    IntegerParserSpec<DoubleParser>::validateInvalidSymbol();
+    DoubleParserSpec<DoubleParser>::validateInvalidSymbol();
 }

@@ -43,7 +43,7 @@ public:
         }
     }
 
-    static void parseOutOfRange() noexcept {
+    static void validateOutOfRange() noexcept {
         IT("should throw Limit when input is not in the range[-2^63 + 1, 2^63 - 1]");
 
         struct Test {
@@ -69,33 +69,33 @@ public:
         for(size_t i = 0; i < 13; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::Limit);
+            EXPECT_THROW(parser.validateType(), parse_exception::Limit);
         }
 
         for(size_t i = 0; i < 7; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::MaximumLimit);
+            EXPECT_THROW(parser.validateType(), parse_exception::MaximumLimit);
         }
 
         for(size_t i = 7; i < 13; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::MinimumLimit);
+            EXPECT_THROW(parser.validateType(), parse_exception::MinimumLimit);
         }
     }
 
-    static void parseSingleSign() noexcept {
+    static void validateSingleSign() noexcept {
         IT("should throw SingleSign if input is just a sign symbol (+ or -)");
         ConstString strPlus = {"+", 1};
         Parser plus = {strPlus};
-        EXPECT_THROW(plus.parseType(), parse_exception::SingleSign);
+        EXPECT_THROW(plus.validateType(), parse_exception::SingleSign);
         ConstString strMinus = {"-", 1};
         Parser minus = {strMinus};
-        EXPECT_THROW(minus.parseType(), parse_exception::SingleSign);
+        EXPECT_THROW(minus.validateType(), parse_exception::SingleSign);
     }
 
-    static void parseWithInvalidSymbol() noexcept {
+    static void validateInvalidSymbol() noexcept {
         IT("should throw InvalidSymbol if the passed string is not of the Parser Type");
 
         struct Test {
@@ -124,10 +124,9 @@ public:
         for(size_t i = 0; i < 13; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::InvalidSymbol);
-
+            EXPECT_THROW(parser.validateType(), parse_exception::InvalidSymbol);
             try {
-                parser.parseType();
+                parser.validateType();
             } catch(const parse_exception::InvalidSymbol& error) {
                 EXPECT_EQ(error.getPosition(), test[i].expectPosition);
                 EXPECT_EQ(error.getSymbol(), test[i].expectSymbol);

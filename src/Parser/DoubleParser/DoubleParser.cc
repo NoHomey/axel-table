@@ -23,18 +23,23 @@ double DoubleParser::parseFloatingPart(const size_t floatingPartBeginning) const
         ++index;
         currentSymbol = token[index];
     }
-
     return static_cast<double>(floatingPart) / static_cast<double>(floatingExponent);
 }
 
 double DoubleParser::typeParser() const {
-    IntegerExtractor extractor = {token};
-    double floatingPart = parseFloatingPart(extractor.getExtractionEnd() + 1);
-    if(numberTextUtils::isMinus(token[0])) {
-        floatingPart *= -1;
-    }
+    IntegerParser integerParser = {token};
+    try {
+        integerParser.validateType();
+    } catch(const parse_exception::InvalidSymbol&) {
+        IntegerExtractor extractor = {token};
+        double floatingPart = parseFloatingPart(extractor.getExtractionEnd() + 1);
+        if(numberTextUtils::isMinus(token[0])) {
+            floatingPart *= -1;
+        }
 
-    return static_cast<double>(extractor.getInteger()) + floatingPart;
+        return static_cast<double>(extractor.getInteger()) + floatingPart;
+    }
+    throw parse_exception::ParsedAsInteger{integerParser.parseType()};
 }
 
 void DoubleParser::typeValidator() const {
@@ -43,10 +48,8 @@ void DoubleParser::typeValidator() const {
     if(isFirstDigitFloatingPoint && (token[firstDigit + 1] == '\0')) {
         throw parse_exception::SingleFloatingPoint{};
     }
-    IntegerParser integerParser = {token};
-    long long integerValue;
     try {
-        integerValue = integerParser.parseType();
+        IntegerParser{token}.validateType();
     } catch(const parse_exception::InvalidSymbol& error) {
         if(error.getSymbol() != '.') {
             throw error;
@@ -70,7 +73,5 @@ void DoubleParser::typeValidator() const {
         if(totalDigitsCount > TOTAL_DIGITS_COUNT) {
             throw parse_exception::LossOfPrecision{};
         }
-        return;
     }
-    throw parse_exception::ParsedAsInteger{integerValue};
 }

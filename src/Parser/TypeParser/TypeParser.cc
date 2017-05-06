@@ -7,12 +7,15 @@ TypeParser<Type>::TypeParser(ConstString& string) noexcept
 : token{string} {}
 
 template<typename Type>
-Type TypeParser<Type>::parseType() {
+void TypeParser<Type>::validateType() const {
     if(!token.hasContent()) {
         throw parse_exception::Empty{};
     }
     typeValidator();
+}
 
+template<typename Type>
+Type TypeParser<Type>::parseType() const {
     return typeParser();
 }
 

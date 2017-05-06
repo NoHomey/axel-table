@@ -9,27 +9,28 @@ template class TypeParserSpec<IntegerParser>;
 template class IntegerParserSpec<IntegerParser>;
 
 void validIntegerExpecter(IntegerParser& parser, const long long expect) noexcept {
+    EXPECT_NO_THROW(parser.validateType());
     EXPECT_EQ(parser.parseType(), expect);
 }
 
-TEST(IntegerParser, parseTypeWhenParsingValidInteger) {
+TEST(IntegerParser, validateTypeWhenParsingValidInteger) {
     IntegerParserSpec<IntegerParser>::parseValid(validIntegerExpecter);
 }
 
-TEST(IntegerParser, parseTypeWhenInputIsOutOfRange) {
-    IntegerParserSpec<IntegerParser>::parseOutOfRange();
+TEST(IntegerParser, validateTypeWhenInputIsOutOfRange) {
+    IntegerParserSpec<IntegerParser>::validateOutOfRange();
 }
 
-TEST(IntegerParser, parseTypeWhenParsingEmptyString) {
-    TypeParserSpec<IntegerParser>::parseWhenEmpty({"12345", 5});
+TEST(IntegerParser, validateTypeWhenParsingEmptyString) {
+    TypeParserSpec<IntegerParser>::validateWhenEmpty({"12345", 5});
 }
 
-TEST(IntegerParser, parseTypeWhenItIsJustASignSymbol) {
-    IntegerParserSpec<IntegerParser>::parseSingleSign();
+TEST(IntegerParser, validateTypeWhenItIsJustASignSymbol) {
+    IntegerParserSpec<IntegerParser>::validateSingleSign();
 }
 
-TEST(IntegerParser, parseTypeWhenThereIsInvalidSymbol) {
-    IntegerParserSpec<IntegerParser>::parseWithInvalidSymbol();
+TEST(IntegerParser, validateTypeWhenThereIsInvalidSymbol) {
+    IntegerParserSpec<IntegerParser>::validateInvalidSymbol();
 
     struct Test {
         const char* string;
@@ -58,9 +59,9 @@ TEST(IntegerParser, parseTypeWhenThereIsInvalidSymbol) {
     for(size_t i = 0; i < 15; ++i) {
         ConstString str = {test[i].string, test[i].length};
         IntegerParser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::InvalidSymbol);
+        EXPECT_THROW(parser.validateType(), parse_exception::InvalidSymbol);
         try {
-            parser.parseType();
+            parser.validateType();
         } catch(const parse_exception::InvalidSymbol& error) {
             EXPECT_EQ(error.getPosition(), test[i].expect);
             EXPECT_EQ(error.getSymbol(), '.');

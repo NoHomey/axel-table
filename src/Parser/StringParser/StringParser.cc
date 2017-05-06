@@ -28,21 +28,27 @@ size_t StringParser::calculateParseResultStringLength() const noexcept {
 }
 
 FixedSizeString StringParser::typeParser() const {
-    const size_t resultLength = calculateParseResultStringLength();
-    FixedSizeString result{resultLength};
-    size_t index = 1;
-    char currentSymbol = token[index];
-    for(size_t counter = 0; counter < resultLength; ++counter) {
-        if(isBackslash(currentSymbol)) {
+    ConstString tokenWithoutQuotes = {token, isQuotes(token[0]), isQuotes(token[token.length() - 1])};
+    DoubleParser doubleParser = {tokenWithoutQuotes};
+    try {
+        doubleParser.validateType();
+    } catch(const parse_exception::InvalidSymbol&) {
+        const size_t resultLength = calculateParseResultStringLength();
+        FixedSizeString result{resultLength};
+        size_t index = 1;
+        char currentSymbol = token[index];
+        for(size_t counter = 0; counter < resultLength; ++counter) {
+            if(isBackslash(currentSymbol)) {
+                ++index;
+                currentSymbol = token[index];
+            }
+            result << currentSymbol;
             ++index;
             currentSymbol = token[index];
         }
-        result << currentSymbol;
-        ++index;
-        currentSymbol = token[index];
+        return result;
     }
-
-    return result;
+    throw parse_exception::ParsedAsDouble{doubleParser.parseType()};
 }
 
 bool StringParser::isCountOfBackslashesOdd(const size_t from, const size_t to) noexcept {
@@ -99,16 +105,13 @@ void StringParser::typeValidator() const {
     if(endsWithQuotes && (length == 2)) {
         throw parse_exception::EmptyString{};
     }
-    ConstString tokenWithoutQuotes = {token, startsWithQuotes, endsWithQuotes};
-    DoubleParser doubleParser = {tokenWithoutQuotes};
-    double doubleValue;
     try {
-        doubleValue = doubleParser.parseType();
+        ConstString tokenWithoutQuotes = {token, startsWithQuotes, endsWithQuotes};
+        DoubleParser{tokenWithoutQuotes}.validateType();
     } catch(const parse_exception::InvalidSymbol& error) {
         if(!startsWithQuotes) {
             throw parse_exception::MissingQuotes{};
         }
-        return validateBackslashes(length);
+        validateBackslashes(length);
     }
-    throw parse_exception::ParsedAsDouble{doubleValue};
 }

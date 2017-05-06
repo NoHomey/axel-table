@@ -52,7 +52,7 @@ public:
         }
     }
 
-    static void parseWhenLossOfPrecision() noexcept {
+    static void validateLossOfPrecision() noexcept {
         IT("should throw LossOfPrecision when the parsed double contains more than 15 digits");
 
         struct Test {
@@ -80,7 +80,7 @@ public:
         for(size_t i = 0; i < 14; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::LossOfPrecision);
+            EXPECT_THROW(parser.validateType(), parse_exception::LossOfPrecision);
         }
     }
 
@@ -97,20 +97,20 @@ public:
         IntegerParserSpec<Parser>::parseValid(DoubleValidIntegerExpecter);
     }
 
-    static void parseWhenSingleFloatingPoint() noexcept {
+    static void validateSingleFloatingPoint() noexcept {
         IT("throws SingleFloatingPoint if is is parsing just a floating pint with no digits");
         ConstString str = {".", 1};
         Parser parser = {str};
-        EXPECT_THROW(parser.parseType(), parse_exception::SingleFloatingPoint);
+        EXPECT_THROW(parser.validateType(), parse_exception::SingleFloatingPoint);
         ConstString strPlus = {"+.", 2};
         Parser parserPlus = {strPlus};
-        EXPECT_THROW(parserPlus.parseType(), parse_exception::SingleFloatingPoint);
+        EXPECT_THROW(parserPlus.validateType(), parse_exception::SingleFloatingPoint);
         ConstString strMinus = {"-.", 2};
         Parser parserMinus = {strMinus};
-        EXPECT_THROW(parserMinus.parseType(), parse_exception::SingleFloatingPoint);
+        EXPECT_THROW(parserMinus.validateType(), parse_exception::SingleFloatingPoint);
     }
 
-    static void parseWhenIncompleteDouble() noexcept {
+    static void validateIncompleteDouble() noexcept {
         IT("should throw IncompleteDouble when there is floating point but no digit proceed it");
 
         struct Test {
@@ -137,11 +137,11 @@ public:
         for(size_t i = 0; i < 14; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::IncompleteDouble);
+            EXPECT_THROW(parser.validateType(), parse_exception::IncompleteDouble);
         }
     }
 
-    static void parseWhenDoubleHasNoIntegerPart() noexcept {
+    static void validateWhenDoubleHasNoIntegerPart() noexcept {
         IT("should throw DoubleHasNoIntegerPart when there is floating point but no digit is before it");
 
         struct Test {
@@ -168,11 +168,11 @@ public:
         for(size_t i = 0; i < 14; ++i) {
             ConstString str = {test[i].string, test[i].length};
             Parser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::DoubleHasNoIntegerPart);
+            EXPECT_THROW(parser.validateType(), parse_exception::DoubleHasNoIntegerPart);
         }
     }
 
-    static void parseWithInvalidSymbol() noexcept {
+    static void validateInvalidSymbol() noexcept {
         struct Test {
             const char* string;
             const size_t length;
@@ -201,9 +201,9 @@ public:
         for(size_t i = 0; i < 15; ++i) {
             ConstString str = {test[i].string, test[i].length};
             DoubleParser parser = {str};
-            EXPECT_THROW(parser.parseType(), parse_exception::InvalidSymbol);
+            EXPECT_THROW(parser.validateType(), parse_exception::InvalidSymbol);
             try {
-                parser.parseType();
+                parser.validateType();
             } catch(const parse_exception::InvalidSymbol& error) {
                 EXPECT_EQ(error.getPosition(), test[i].expectPosition);
                 EXPECT_EQ(error.getSymbol(), test[i].expectSymbol);

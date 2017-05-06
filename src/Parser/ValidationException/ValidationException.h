@@ -63,7 +63,7 @@ namespace parse_exception {
     };
 
     template<typename Type>
-    class ParsedAsDifferentType: public Invalid {
+    class ParsedAsDifferentType: public Exception {
     public:
         ParsedAsDifferentType(const Type val) noexcept;
 

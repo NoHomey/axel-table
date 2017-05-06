@@ -22,7 +22,7 @@ char parse_exception::InvalidSymbol::getSymbol() const noexcept {
 
 template<typename Type>
 parse_exception::ParsedAsDifferentType<Type>::ParsedAsDifferentType(const Type val) noexcept
-: Invalid{}, value{val} {}
+: Exception{}, value{val} {}
 
 template<typename Type>
 Type parse_exception::ParsedAsDifferentType<Type>::getValue() const noexcept {

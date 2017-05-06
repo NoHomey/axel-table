@@ -15,7 +15,9 @@ public:
 
     TypeParser& operator=(TypeParser&&) = delete;
 
-    Type parseType();
+    Type parseType() const;
+
+    void validateType() const;
 
 protected:
     virtual void typeValidator() const = 0;

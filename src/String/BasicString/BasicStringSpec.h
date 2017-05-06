@@ -14,6 +14,7 @@ public:
         EXPECT_THROW((String{str, 0, 0}), BadStringOffset);
         String str2 = {"some text", 9};
         EXPECT_THROW((String{str2, 10}), BadStringOffset);
+        EXPECT_THROW((String{str2, 13}), BadStringOffset);
         EXPECT_THROW((String{str2, 0, 10}), BadStringOffset);
         EXPECT_NO_THROW((String{str2, 3}));
         EXPECT_NO_THROW((String{str2, 0, 3}));

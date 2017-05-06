@@ -7,7 +7,7 @@
     "C_Cpp.autocomplete": "Default",
     "clang.completion.enable": true,
     "editor.fontSize": 18,
-    "window.zoomLevel": 2,
+    "window.zoomLevel": 1,
     "[cpp]": {
         "editor.quickSuggestions": true
     },

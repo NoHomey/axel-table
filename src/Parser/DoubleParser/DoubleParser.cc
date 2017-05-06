@@ -52,6 +52,9 @@ void DoubleParser::typeValidator() const {
             throw error;
         }
         const size_t floatingPoint = error.getPosition() + 1;
+        if(token[floatingPoint] == '\0') {
+            throw parse_exception::IncompleteDouble{};
+        }
         size_t floatingPartLength;
         try {
             floatingPartLength = numberTextUtils::containsOnlyDigits({token, floatingPoint});
@@ -60,9 +63,6 @@ void DoubleParser::typeValidator() const {
         }
         if(isFirstDigitFloatingPoint) {
             throw parse_exception::DoubleHasNoIntegerPart{};
-        }
-        if(floatingPartLength == 0) {
-            throw parse_exception::IncompleteDouble{};
         }
         const size_t zerosCount = numberTextUtils::skipZeros({token, firstDigit});
         const size_t integerPartLength = floatingPoint - 1 - firstDigit - zerosCount;

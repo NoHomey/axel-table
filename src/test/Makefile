@@ -2,7 +2,9 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec\
+TESTS = Number_spec
+
+#TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec\
 numberTextUtils_spec IntegerExtractor_spec IntegerParser_spec DoubleParser_spec StringParser_spec
 
 .PHONY: all clean test
@@ -111,7 +113,12 @@ $(eval $(call specInDir,Parser,ValidationException))
 
 $(eval $(call specInDir,Parser,numberTextUtils,BasicString.o ValidationException.o))	
 
-$(eval $(call specInDir,Parser,IntegerExtractor,numberTextUtils.o BasicString.o ValidationException.o))	
+$(eval $(call specInDir,Parser,IntegerExtractor,numberTextUtils.o BasicString.o ValidationException.o))
+
+NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
+	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
+
+$(eval $(call spec,Number,NumberHelper.o))	
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

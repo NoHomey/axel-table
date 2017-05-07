@@ -115,56 +115,24 @@ Number  Number::operator/(const Number& number) const {
 
 template<typename BaseType>
 BaseType Number::positiveIntegerExponent(const BaseType base, const long long exponent) noexcept {
-    if(exponent == 1) {
-        return base;
-    }
-    if(exponent == 2) {
-        return base * base;
-    }
     BaseType result = 1;
     BaseType currentBase = base;
     long long currentExponent = exponent;
-    while(currentExponent) {
+    while(true) {
         if(currentExponent & 1) {
             result *= currentBase;
+            if(currentExponent == 1) {
+                return result;
+            }
         }
         currentExponent >>= 1;
         currentBase *= currentBase;
     }
-
-    return result;
 }
 
 double Number::realOnIntegerExponent(const double base, const long long exponent) noexcept { 
     if(exponent < 0) {
         return 1.0 / positiveIntegerExponent(base, -exponent);
-    }
-    return positiveIntegerExponent(base, exponent);
-}
-
-bool Number::isPowerOfTwo(const long long base) noexcept {
-    return ((base != 0) && !(base & (base - 1)));
-}
-
-unsigned int Number::whichPowerOfTwo(const long long base) noexcept {
-    unsigned int powerOfTwo = 1;
-    long long twoOnCurrentPower = 2;
-    while(twoOnCurrentPower != 0) {
-        if((base | twoOnCurrentPower) == base) {
-            break;
-        }
-        ++powerOfTwo;
-        twoOnCurrentPower <<= 1;
-    }
-    return powerOfTwo;
-}
-
-long long Number::integerOnPositiveIntegerExponent(const long long base, const long long exponent) noexcept {
-    if(base < 0) {
-        return ((exponent & 1) ? (-1) : 1) * integerOnPositiveIntegerExponent(-base, exponent);
-    }
-    if(isPowerOfTwo(base)) {
-        return 2 << ((whichPowerOfTwo(base) * exponent) - 1);
     }
     return positiveIntegerExponent(base, exponent);
 }
@@ -181,11 +149,11 @@ Number& Number::integerOnIntegerExponent(const long long exponent) {
         return *this;
     }
     if(exponent < 0) {
-        const long long thisValueOnPositiveExponent = integerOnPositiveIntegerExponent(thisValue, -exponent);
+        const long long thisValueOnPositiveExponent = positiveIntegerExponent(thisValue, -exponent);
         numberValue.realValue = 1.0 / static_cast<double>(thisValueOnPositiveExponent);
         numberType = NumberType::Real;
     } else {
-        numberValue.integerValue = integerOnPositiveIntegerExponent(thisValue, exponent);
+        numberValue.integerValue = positiveIntegerExponent(thisValue, exponent);
     }
     return *this;
 }

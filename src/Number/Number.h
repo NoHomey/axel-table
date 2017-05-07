@@ -56,12 +56,6 @@ private:
     template<typename BaseType>
     static BaseType positiveIntegerExponent(const BaseType base, const long long exponent) noexcept; 
 
-    static bool isPowerOfTwo(const long long base) noexcept;
-
-    static unsigned int whichPowerOfTwo(const long long base) noexcept;
-
-    static long long integerOnPositiveIntegerExponent(const long long base, const long long exponent) noexcept;
-
     static double realOnIntegerExponent(const double base, const long long exponent) noexcept;
 
     static bool isRealZero(const double number) noexcept;

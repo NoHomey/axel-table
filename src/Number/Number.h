@@ -64,9 +64,17 @@ private:
 
     static double realOnIntegerExponent(const double base, const long long exponent) noexcept;
 
+    static bool isRealZero(const double number) noexcept;
+
     Number& integerOnIntegerExponent(const long long exponent);
 
-    bool isRealZero() const noexcept; 
+    bool isZero() const noexcept;
+
+    Number& integerExponent(const long long exponent);
+
+    Number& realExponent(const double exponent);
+
+    static const double EPSILON; 
 
 protected:
     NumberType numberType;

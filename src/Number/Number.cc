@@ -19,6 +19,8 @@ Number result = *this;                 \
 result opt number;                     \
 return result
 
+const double Number::EPSILON = 1e-15;
+
 Number::Number(const long long integer) noexcept
 : numberType{NumberType::Integer}, numberValue{integer} {}
 
@@ -45,6 +47,22 @@ double Number::getReal() const noexcept {
 
 double Number::Number::getValue() const noexcept {
     return isReal() ? getReal() : getInteger();
+}
+
+bool Number::isRealZero(const double number) noexcept {
+    if(number < 0) {
+        return isRealZero(-number);
+    }
+
+    return number < EPSILON;
+}
+
+bool Number::isZero() const noexcept {
+    if(isInteger()) {
+        return getInteger() == 0;
+    }
+
+    return isRealZero(getReal());
 }
 
 Number Number::operator-() const noexcept {
@@ -79,13 +97,15 @@ Number Number::operator*(const Number& number) const noexcept {
 }
 
 Number& Number::operator/=(const Number& number) {
-    if(number.isInteger() && (0 == number.getInteger())) {
+    if(number.isZero()) {
         throw DivisionByZero{};
     }
-    const double nominator = getValue();
-    const double denominator = number.getValue();
-    numberValue.realValue = nominator / denominator;
-    numberType = NumberType::Real;
+    if(!isZero()) {
+        const double nominator = getValue();
+        const double denominator = number.getValue();
+        numberValue.realValue = nominator / denominator;
+        numberType = NumberType::Real;
+    }
     return *this;
 }
 
@@ -151,7 +171,7 @@ long long Number::integerOnPositiveIntegerExponent(const long long base, const l
 
 Number& Number::integerOnIntegerExponent(const long long exponent) {
     const long long thisValue = getInteger();
-    if(thisValue == 1) {
+    if((thisValue == 1) || (thisValue == 0)) {
         return *this;
     }
     if(thisValue == -1) {
@@ -160,60 +180,56 @@ Number& Number::integerOnIntegerExponent(const long long exponent) {
         }
         return *this;
     }
-    const bool isThisValueZero = thisValue == 0;
     if(exponent < 0) {
-        if(isThisValueZero) {
-            throw DivisionByZero{};
-        }
-        const long long onPositiveExponent = integerOnPositiveIntegerExponent(thisValue, -exponent);
-        numberValue.realValue = 1.0 / static_cast<double>(onPositiveExponent);
+        const long long thisValueOnPositiveExponent = integerOnPositiveIntegerExponent(thisValue, -exponent);
+        numberValue.realValue = 1.0 / static_cast<double>(thisValueOnPositiveExponent);
         numberType = NumberType::Real;
     } else {
-        numberValue.integerValue = isThisValueZero ? 0 :
-                                            integerOnPositiveIntegerExponent(thisValue, exponent);
+        numberValue.integerValue = integerOnPositiveIntegerExponent(thisValue, exponent);
     }
     return *this;
 }
 
-bool Number::isRealZero() const noexcept {
-    return (FP_ZERO == std::fpclassify(getValue()));
+Number& Number::integerExponent(const long long exponent) {
+    if(isZero() && (exponent < 0)) {
+        throw DivisionByZero{};
+    }
+    if(isInteger()) {
+        return integerOnIntegerExponent(exponent);
+    }
+    numberValue.realValue = realOnIntegerExponent(getReal(), exponent);
+    return *this;
+}
+
+Number& Number::realExponent(const double exponent) {
+    std::feclearexcept(FE_ALL_EXCEPT);
+    numberValue.realValue = std::pow(getValue(), exponent);
+    numberType = NumberType::Real;
+    if(std::fetestexcept(FE_DIVBYZERO)) {
+        throw DivisionByZero{};
+    }
+    if(std::fetestexcept(FE_INVALID)) {
+        throw NegativeNumberRaisedOnNoneIntegerPower{};
+    }
+    /*if(std::fetestexcept(FE_INEXACT)) {
+        // rounding
+    }*/
+    return *this;
 }
 
 Number& Number::operator^=(const Number& number) {
-    if(number.isInteger()) {
-        const long long exponent = number.getInteger();
-        const bool isTypeInteger = isInteger();
-        if(exponent == 0) {
-            if(isTypeInteger && (0 == getInteger())) {
-                throw ZeroRaisedOnZero{};
-            }
-            numberValue.integerValue = 1;
-            numberType = NumberType::Integer;
-            return *this;
-        }
-        if(isTypeInteger) {
-            return integerOnIntegerExponent(exponent);
-        }
-        numberValue.realValue = realOnIntegerExponent(getReal(), exponent);
-    } else {
-        if(isRealZero() && number.isRealZero()) {
+    if(number.isZero()) {
+        if(isZero()) {
             throw ZeroRaisedOnZero{};
         }
-        std::feclearexcept(FE_ALL_EXCEPT);
-        numberValue.realValue = std::pow(getValue(), number.getReal());
-        numberType = NumberType::Real;
-        if(std::fetestexcept(FE_DIVBYZERO)) {
-            throw DivisionByZero{};
-        }
-        if(std::fetestexcept(FE_INVALID)) {
-            throw NegativeNumberRaisedOnNoneIntegerPower{};
-        }
-        /*if(std::fetestexcept(FE_INEXACT)) {
-            // rounding
-        }*/
+        numberValue.integerValue = 1;
+        numberType = NumberType::Integer;
+        return *this;
     }
-
-    return *this;
+    if(number.isInteger()) {
+        return integerExponent(number.getInteger());
+    }
+    return realExponent(number.getReal());
 }
 
 Number Number::operator^(const Number& number) const {

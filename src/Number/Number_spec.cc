@@ -370,8 +370,12 @@ TEST(Number, division) {
 TEST(Number, divisionByZero) {
     IT("throws DivisionByZero");
 
-    const Number zero = static_cast<const long long>(0);
+    const Number intZero = static_cast<const long long>(0);
+    const Number zero = 0.0;
+
     for(long long n = 0; n < 13; ++n) {
+        EXPECT_THROW(Number{n} / intZero, Number::DivisionByZero);
+        EXPECT_THROW(Number{-n} / intZero, Number::DivisionByZero);
         EXPECT_THROW(Number{n} / zero, Number::DivisionByZero);
         EXPECT_THROW(Number{-n} / zero, Number::DivisionByZero);
     }
@@ -380,24 +384,35 @@ TEST(Number, divisionByZero) {
 TEST(Number, raisingZeroOnNegativePower) {
     IT("throws DivisionByZero");
 
-    const Number zero = static_cast<const long long>(0);
+    const Number intZero = static_cast<const long long>(0);
+    const Number zero = 0.0;
+
     for(long long n = -1; n > -13; --n) {
+        EXPECT_THROW(intZero ^ n, Number::DivisionByZero);
         EXPECT_THROW(zero ^ n, Number::DivisionByZero);
     }
 }
 
 TEST(Number, raisingZeroOnZeroPower) {
     IT("throws ZeroRaisedOnZero");
-    
-    const Number zero = static_cast<const long long>(0);
+
+    const Number intZero = static_cast<const long long>(0);
+    const Number zero = 0.0;
+
+    EXPECT_THROW(intZero ^ intZero, Number::ZeroRaisedOnZero);
+    EXPECT_THROW(intZero ^ zero, Number::ZeroRaisedOnZero);
+    EXPECT_THROW(zero ^ intZero, Number::ZeroRaisedOnZero);
     EXPECT_THROW(zero ^ zero, Number::ZeroRaisedOnZero);
 }
 
 TEST(Number, raisingZeroOnPositivePower) {
     IT("evaluates to zero");
 
-    const Number zero = static_cast<const long long>(0);
+    const Number intZero = static_cast<const long long>(0);
+    const Number zero = 0.0;
+
     for(long long n = 1; n > 13; ++n) {
+        EXPECT_EQ(NumberHelper{intZero ^ n}.getInteger(), 0);
         EXPECT_EQ(NumberHelper{zero ^ n}.getInteger(), 0);
     }
 }
@@ -554,14 +569,14 @@ struct TestRaisingOnRealPower {
     const double expect;
 };
 
-TEST(Number, raisingPositiveNumberOnNoneNegativeRealPower) {
+TEST(Number, raisingPositiveNumberOnPositiveeRealPower) {
     IT("raises one number on power of another number");
 
     TestRaisingOnRealPower<long long> intTest[] = {
         {1, 0.1, 1},
         {3, 0.3, 1.3903891703159093},
         {5, 1.2, 6.8986483073060736},
-        {91, 0.0, 1}
+        {91, 3.3, 2916329.5248532863}
     };
 
     for(size_t i = 0; i < 4; ++i) {
@@ -572,7 +587,7 @@ TEST(Number, raisingPositiveNumberOnNoneNegativeRealPower) {
         {1.3, 0.1, 1.026583631304232},
         {3.2, 0.3, 1.4175715661678827},
         {5.6, 1.2, 7.9036123723983769},
-        {9119.8876, 0.0, 1}
+        {9119.8876, 1.12, 27238.815880581664}
     };
 
     for(size_t i = 0; i < 4; ++i) {

@@ -3,6 +3,32 @@
 #include "../It/It.h"
 #include "NumberHelper.h"
 
+TEST(Number, opposite) {
+    IT("returns the addition invers of a number");
+
+    const long long ints[] = {1, -3, 5, -8, 9, 0, -23, 34, 456, -978, 1234, -8091, 18434, 34351, -343578};
+
+    const double reals[] = {0.23, 0.1, 1.2, -3.4, -5.67, -98.01, 1243.3434, -53.5665, -834.003434, 0.76};
+
+    for(int i = 0; i < 15; ++i) {
+        EXPECT_EQ(NumberHelper{Number{ints[i]}}.getInteger(), ints[i]);
+        EXPECT_EQ(NumberHelper{Number{-ints[i]}}.getInteger(), -ints[i]);
+        EXPECT_EQ(NumberHelper{-Number{ints[i]}}.getInteger(), -ints[i]);
+        EXPECT_EQ(NumberHelper{-Number{-ints[i]}}.getInteger(), ints[i]);
+        EXPECT_EQ(NumberHelper{-(-Number{ints[i]})}.getInteger(), ints[i]);
+        EXPECT_EQ(NumberHelper{-(-Number{-ints[i]})}.getInteger(), -ints[i]);
+    }
+
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_DOUBLE_EQ(NumberHelper{Number{reals[i]}}.getReal(), reals[i]);
+        EXPECT_DOUBLE_EQ(NumberHelper{Number{-reals[i]}}.getReal(), -reals[i]);
+        EXPECT_DOUBLE_EQ(NumberHelper{-Number{reals[i]}}.getReal(), -reals[i]);
+        EXPECT_DOUBLE_EQ(NumberHelper{-Number{-reals[i]}}.getReal(), reals[i]);
+        EXPECT_DOUBLE_EQ(NumberHelper{-(-Number{reals[i]})}.getReal(), reals[i]);
+        EXPECT_DOUBLE_EQ(NumberHelper{-(-Number{-reals[i]})}.getReal(), -reals[i]);
+    }
+}
+
 TEST(Number, addition) {
     IT("adds two numbers");
 

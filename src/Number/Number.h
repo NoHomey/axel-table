@@ -14,6 +14,8 @@ public:
 
     Number(const double real) noexcept;
 
+    Number operator-() const noexcept;
+
     Number& operator+=(const Number& number) noexcept;
     Number operator+(const Number& number) const noexcept;
 

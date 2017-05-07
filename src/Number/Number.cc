@@ -47,6 +47,13 @@ double Number::Number::getValue() const noexcept {
     return isReal() ? getReal() : getInteger();
 }
 
+Number Number::operator-() const noexcept {
+    if(isInteger()) {
+        return Number(-getInteger());
+    }
+    return Number(-getReal());
+}
+
 Number& Number::operator+=(const Number& number) noexcept {
     COMMON_ASSIGN_OPERATOR(+=);
 }
@@ -56,10 +63,7 @@ Number Number::operator+(const Number& number) const noexcept {
 }
 
 Number& Number::operator-=(const Number& number) noexcept {
-    if(number.isInteger()) {
-        return *this += -number.getInteger();
-    }
-    return *this += -number.getReal();
+    return *this += -number;
 }
 
 Number Number::operator-(const Number& number) const noexcept {

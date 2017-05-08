@@ -1,4 +1,5 @@
 #include "TypeParser.h"
+#include "../../Number/Number.h"
 #include "../ValidationException/ValidationException.h"
 #include "../../String/FixedSizeString/FixedSizeString.h"
 
@@ -19,6 +20,5 @@ Type TypeParser<Type>::parseType() const {
     return typeParser();
 }
 
-template class TypeParser<long long>;
-template class TypeParser<double>;
+template class TypeParser<Number>;
 template class TypeParser<FixedSizeString>;

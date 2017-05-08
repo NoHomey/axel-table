@@ -19,16 +19,3 @@ parse_exception::InvalidSymbol::InvalidSymbol(const size_t pos, const char sym) 
 char parse_exception::InvalidSymbol::getSymbol() const noexcept {
     return symbol;
 }
-
-template<typename Type>
-parse_exception::ParsedAsDifferentType<Type>::ParsedAsDifferentType(const Type val) noexcept
-: Exception{}, value{val} {}
-
-template<typename Type>
-Type parse_exception::ParsedAsDifferentType<Type>::getValue() const noexcept {
-    return value;
-}
-
-template class parse_exception::ParsedAsDifferentType<long long>;
-
-template class parse_exception::ParsedAsDifferentType<double>;

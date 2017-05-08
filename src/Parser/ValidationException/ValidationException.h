@@ -61,19 +61,4 @@ namespace parse_exception {
     protected:
         const char symbol;
     };
-
-    template<typename Type>
-    class ParsedAsDifferentType: public Exception {
-    public:
-        ParsedAsDifferentType(const Type val) noexcept;
-
-        Type getValue() const noexcept;
-        
-    protected:
-        Type value;
-    };
-
-    using ParsedAsInteger = ParsedAsDifferentType<long long>;
-
-    using ParsedAsDouble = ParsedAsDifferentType<double>;
 }

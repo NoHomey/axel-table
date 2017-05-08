@@ -104,7 +104,7 @@ $(eval $(call spec,TableCell))
 
 $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 
-$(eval $(call specInDir,Parser,NumberParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o Number.o))
+$(eval $(call specInDir,Parser,NumberParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o Number.o NumberHelper.o))
 
 $(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
 

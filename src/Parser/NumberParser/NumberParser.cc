@@ -10,5 +10,11 @@ Number NumberParser::typeParser() const {
 }
 
 void NumberParser::typeValidator() const {
-    
+    const size_t firstDigit = numberTextUtils::isPlusMinus(token[0]) ? 1 : 0;
+    size_t firstNoneZero;
+    try {
+        firstNoneZero = firstDigit + numberTextUtils::skipZeros({token, firstDigit});
+    } catch(const BadStringOffset& error) {
+        throw parse_exception::SingleSign{};
+    }
 }

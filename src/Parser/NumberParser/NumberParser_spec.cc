@@ -49,7 +49,7 @@ TEST(NumberParser, validateTypeWhenSingleSign) {
 }
 
 TEST(NumberParser, validateTypeWhenSingleFloatingPoint) {
-    IT("throws SingleFloatingPoint if is is parsing just a floating pint with no digits");
+    IT("throws SingleFloatingPoint if is is parsing just a floating point with no digits");
     ConstString str = {".", 1};
     NumberParser parser = {str};
     EXPECT_THROW(parser.validateType(), parse_exception::SingleFloatingPoint);
@@ -59,4 +59,68 @@ TEST(NumberParser, validateTypeWhenSingleFloatingPoint) {
     ConstString strMinus = {"-.", 2};
     NumberParser parserMinus = {strMinus};
     EXPECT_THROW(parserMinus.validateType(), parse_exception::SingleFloatingPoint);
+}
+
+TEST(NumberParser, validateTypeWhenDoubleHasNoIntegerPart) {
+    IT("should throw DoubleHasNoIntegerPart when there is floating point but no digit is before it");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+    };
+
+    Test test[] = {
+        {".922337203687", 13},
+        {"+.9223372", 9},
+        {".92233720365", 12},
+        {"+.922337203", 11},
+        {".92233727", 9},
+        {"+.9", 3},
+        {".93300000", 9},
+        {"+.9000", 6},
+        {"+.0000922337", 12},
+        {"-.000000000", 11},
+        {"-.922337", 8},
+        {"-.000001", 8},
+        {".22", 3},
+        {".3", 2}
+    };
+
+    for(size_t i = 0; i < 14; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_THROW(parser.validateType(), parse_exception::DoubleHasNoIntegerPart);
+    }
+}
+
+TEST(NumberParser, validateTypeWhenIncompleteDouble) {
+    IT("should throw IncompleteDouble when there is floating point but no digit proceed it");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+    };
+
+    Test test[] = {
+        {"922337203687.", 13},
+        {"+9223372.", 9},
+        {"92233720365.", 12},
+        {"+922337203.", 11},
+        {"9223372.", 8},
+        {"+9.", 3},
+        {"93300000.", 9},
+        {"+9000.", 6},
+        {"+0000922337.", 12},
+        {"-00000000.", 10},
+        {"-922337.", 8},
+        {"-000001.", 8},
+        {"22.", 3},
+        {"-3.", 3}
+    };
+
+    for(size_t i = 0; i < 14; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_THROW(parser.validateType(), parse_exception::IncompleteDouble);
+    }
 }

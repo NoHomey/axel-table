@@ -19,4 +19,25 @@ protected:
     void typeValidator() const override final;
 
     Number typeParser() const override final;
+
+private:
+    static bool isMinus(const char symbol) noexcept;
+
+    static bool isPlus(const char symbol) noexcept;
+
+    static bool isPlusMinus(const char symbol) noexcept;
+
+    static bool isFloatingPoint(const char symbol) noexcept;
+
+    static bool isZero(const char symbol) noexcept;
+
+    static bool isDigit(const char symbol) noexcept;
+        
+    static unsigned int toDigit(const char symbol) noexcept;
+
+    static size_t skipZeros(ConstString& string) noexcept;
+
+    static size_t containsOnlyDigits(ConstString& string, const size_t offset);
+
+    size_t getFirstNoneZeroDigitPosition() const;
 };

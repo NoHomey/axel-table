@@ -4,7 +4,7 @@
 
 template class TypeParserSpec<NumberParser>;
 
-TEST(NumberParser, validateTypeWhenValidInteger) {
+TEST(NumberParser, validatingAndParsingValidInteger) {
     IT("dose not throw when validating string which is valid integer");
 
     struct Test {
@@ -54,6 +54,52 @@ TEST(NumberParser, validateTypeWhenValidInteger) {
         EXPECT_NO_THROW(parser.validateType());
         EXPECT_EQ(NumberHelper{parser.parseType()}.getInteger(), test[i].expect);
     }
+}
+TEST(NumberParser, validatingAndParsingValidRealNumber) {
+    IT("dose not throw when validating string which is valid real number");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+        const double expect;
+    };
+
+    Test test[] = {
+        {"+9223372.0367", 13, 9223372.0367}, 
+        {"-0000.9223372036", 16, -0.9223372036},
+        {"12.34", 5, 12.34},
+        {"+43.535", 7, 43.535},
+        {"-42.3", 5, -42.3},
+        {"0.1", 3, 0.1},
+        {"+0.2", 4, 0.2},
+        {"-0.6", 4, -0.6},
+        {"1394.578", 8, 1394.578},
+        {"+012.34", 7, 12.34},
+        {"-001.234", 8, -1.234},
+        {"0000.001", 8, 0.001},
+        {"-000.0017", 9, -0.0017},
+        {"+0000.00234343", 14, 0.00234343},
+        {"+0.99", 5, 0.99},
+        {"223334.444777777", 16, 223334.444777777},
+        {"4254535435.65463", 16, 4254535435.65463},
+        {"+223334.444777777", 17, 223334.444777777},
+        {"+4254535435.65463", 17, 4254535435.65463},
+        {"-223334.444777777", 17, -223334.444777777},
+        {"-4254535435.65463", 17, -4254535435.65463},
+        {"+000223334.444777777", 20, 223334.444777777},
+        {"-0004254535435.65463", 20, -4254535435.65463}
+    };
+        
+    for(size_t i = 0; i < 23; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_NO_THROW(parser.validateType());
+        EXPECT_DOUBLE_EQ(NumberHelper{parser.parseType()}.getReal(), test[i].expect);
+    }
+}
+
+TEST(NumberParser, validateTypeWhenParsingEmptyString) {
+    TypeParserSpec<NumberParser>::validateWhenEmpty({"123.45", 6});
 }
 
 TEST(NumberParser, validateTypeWhenSingleSign) {

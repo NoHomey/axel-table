@@ -41,13 +41,13 @@ size_t NumberParser::skipZeros(ConstString& string) noexcept {
 
 size_t NumberParser::containsOnlyDigits(ConstString& string, const size_t offset) {
     size_t index = 0;
-    char symbol = string[index];
-    while(symbol != '\0') {
-        if(!isDigit(symbol)) {
-            throw parse_exception::InvalidSymbol{index + offset, symbol};
+    char currentSymbol = string[index];
+    while(currentSymbol != '\0') {
+        if(!isDigit(currentSymbol)) {
+            throw parse_exception::InvalidSymbol{index + offset, currentSymbol};
         }
         ++index;
-        symbol = string[index];
+        currentSymbol = string[index];
     }
 
     return index;
@@ -71,13 +71,13 @@ size_t NumberParser::getFirstNoneZeroDigitPosition() const {
 
 size_t NumberParser::getFloatingPointPosition() const noexcept {
     size_t index = 0;
-    char symbol = token[index];
-    while(symbol != '\0') {
-        if(isFloatingPoint(symbol)) {
+    char currentSymbol = token[index];
+    while(currentSymbol != '\0') {
+        if(isFloatingPoint(currentSymbol)) {
             return index;
         }
         ++index;
-        symbol = token[index];
+        currentSymbol = token[index];
     }
 
     return index;
@@ -87,16 +87,33 @@ long long NumberParser::parseInteger(ConstString& string) noexcept {
     const bool isNegative = isMinus(string[0]);
     const size_t firstDigit = (isNegative || isPlus(string[0])) ? 1 : 0;
     size_t index = firstDigit + skipZeros({string, firstDigit});
-    char symbol = string[index];
+    char currentSymbol = string[index];
     long long integer = 0;
-    while(symbol != '\0') {
+    while(currentSymbol != '\0') {
         integer *= 10;
-        integer += toDigit(symbol);
+        integer += toDigit(currentSymbol);
         ++index;
-        symbol = string[index];
+        currentSymbol = string[index];
     }
 
     return isNegative ? (-integer) : integer;
+}
+
+double NumberParser::parseFloatingPart(const ConstString& string) noexcept {
+    long long floatingPart = 0;
+    unsigned long long floatingExponent = 1;
+    size_t index = 0;
+    char currentSymbol = string[index];
+    while(currentSymbol != '\0') {
+        if((floatingPart != 0) || (!isZero(currentSymbol))) {
+            floatingPart *= 10;
+            floatingPart += toDigit(currentSymbol);
+        }
+        floatingExponent *= 10;
+        ++index;
+        currentSymbol = string[index];
+    }
+    return static_cast<double>(floatingPart) / static_cast<double>(floatingExponent);
 }
 
 NumberParser::NumberParser(ConstString& string) noexcept
@@ -108,13 +125,17 @@ Number NumberParser::typeParser() const {
     if(floatingPointPosition == tokenLength) {
         return {parseInteger(token)};
     }
-    const size_t countOfZerosAfterFloatingPoint = skipZeros({token, floatingPointPosition + 1});
+    const size_t positionAfterFloatingPoint = floatingPointPosition + 1;
+    const size_t countOfZerosAfterFloatingPoint = skipZeros({token, positionAfterFloatingPoint});
     long long integerPart = parseInteger({token.cString(), floatingPointPosition});
     if((floatingPointPosition + countOfZerosAfterFloatingPoint + 1) == tokenLength) {
         return {integerPart};
     }
-
-    return {};
+    double floatingPart = parseFloatingPart({token, positionAfterFloatingPoint});
+    if(isMinus(token[0])) {
+        floatingPart *= -1;
+    }
+    return {static_cast<double>(integerPart + floatingPart)};
 }
 
 void NumberParser::typeValidator() const {

@@ -41,6 +41,8 @@ private:
 
     static long long parseInteger(ConstString& string) noexcept;
 
+    static double parseFloatingPart(const ConstString& string) noexcept;
+
     size_t getFirstNoneZeroDigitPosition() const;
 
     size_t getFloatingPointPosition() const noexcept;

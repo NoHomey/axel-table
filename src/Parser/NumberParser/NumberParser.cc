@@ -81,10 +81,12 @@ void NumberParser::typeValidator() const {
         return;
     }
     ConstString tokenFromFirstDigit = {token, firstNoneZeroPosition};
-    size_t length;
+    size_t integerPartLength = 0;
+    size_t floatingPartLength = 0;
     try {
-        length = containsOnlyDigits(tokenFromFirstDigit, firstNoneZeroPosition);
+        integerPartLength = containsOnlyDigits(tokenFromFirstDigit, firstNoneZeroPosition);
     } catch(const parse_exception::InvalidSymbol& error) {
+        integerPartLength = error.getPosition() - firstNoneZeroPosition;
         if(!isFloatingPoint(error.getSymbol())) {
             throw error;
         }
@@ -92,5 +94,9 @@ void NumberParser::typeValidator() const {
         if(token[positionAfterFloatingPoint] == '\0') {
             throw parse_exception::IncompleteDouble{};
         }
+        floatingPartLength = containsOnlyDigits({token, positionAfterFloatingPoint}, positionAfterFloatingPoint);
+    }
+    if((integerPartLength + floatingPartLength) > 16) {
+        throw parse_exception::NumberIsTooLong{};
     }
 }

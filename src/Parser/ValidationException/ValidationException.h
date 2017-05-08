@@ -18,6 +18,8 @@ namespace parse_exception {
 
     class LossOfPrecision: public Limit { };
 
+    class NumberIsTooLong: public Invalid { };
+
     class DoubleHasNoIntegerPart: public Invalid { };
 
     class SingleFloatingPoint: public Invalid { };

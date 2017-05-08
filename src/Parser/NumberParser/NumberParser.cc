@@ -17,4 +17,8 @@ void NumberParser::typeValidator() const {
     } catch(const BadStringOffset& error) {
         throw parse_exception::SingleSign{};
     }
+    const bool isFirstDigitFloatingPoint = token[firstDigit] == '.';
+    if(isFirstDigitFloatingPoint && (token[firstDigit + 1] == '\0')) {
+        throw parse_exception::SingleFloatingPoint{};
+    }
 }

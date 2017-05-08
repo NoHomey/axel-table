@@ -38,7 +38,7 @@ template class TypeParserSpec<NumberParser>;
     }
 }*/
 
-TEST(Number, validateTypeWhenSingleSign) {
+TEST(NumberParser, validateTypeWhenSingleSign) {
     IT("should throw SingleSign if input is just a sign symbol (+ or -)");
     ConstString strPlus = {"+", 1};
     NumberParser plus = {strPlus};
@@ -46,4 +46,17 @@ TEST(Number, validateTypeWhenSingleSign) {
     ConstString strMinus = {"-", 1};
     NumberParser minus = {strMinus};
     EXPECT_THROW(minus.validateType(), parse_exception::SingleSign);
+}
+
+TEST(NumberParser, validateTypeWhenSingleFloatingPoint) {
+    IT("throws SingleFloatingPoint if is is parsing just a floating pint with no digits");
+    ConstString str = {".", 1};
+    NumberParser parser = {str};
+    EXPECT_THROW(parser.validateType(), parse_exception::SingleFloatingPoint);
+    ConstString strPlus = {"+.", 2};
+    NumberParser parserPlus = {strPlus};
+    EXPECT_THROW(parserPlus.validateType(), parse_exception::SingleFloatingPoint);
+    ConstString strMinus = {"-.", 2};
+    NumberParser parserMinus = {strMinus};
+    EXPECT_THROW(parserMinus.validateType(), parse_exception::SingleFloatingPoint);
 }

@@ -40,4 +40,6 @@ private:
     static size_t containsOnlyDigits(ConstString& string, const size_t offset);
 
     size_t getFirstNoneZeroDigitPosition() const;
+
+    static const size_t MAXIMUM_OF_DIGITS_COUNT = 16;
 };

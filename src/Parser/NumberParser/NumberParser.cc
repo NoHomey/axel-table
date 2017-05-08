@@ -76,17 +76,18 @@ size_t NumberParser::getFirstNoneZeroDigitPosition() const {
 }
 
 void NumberParser::typeValidator() const {
-    const size_t firstNoneZeroPosition = getFirstNoneZeroDigitPosition();
-    if(firstNoneZeroPosition == token.length()) {
+    const size_t firstNoneZeroDigitPosition = getFirstNoneZeroDigitPosition();
+    const size_t tokenLength = token.length();
+    if(firstNoneZeroDigitPosition == tokenLength) {
         return;
     }
-    ConstString tokenFromFirstDigit = {token, firstNoneZeroPosition};
+    ConstString tokenFromFirstDigit = {token, firstNoneZeroDigitPosition};
     size_t integerPartLength = 0;
     size_t floatingPartLength = 0;
     try {
-        integerPartLength = containsOnlyDigits(tokenFromFirstDigit, firstNoneZeroPosition);
+        integerPartLength = containsOnlyDigits(tokenFromFirstDigit, firstNoneZeroDigitPosition);
     } catch(const parse_exception::InvalidSymbol& error) {
-        integerPartLength = error.getPosition() - firstNoneZeroPosition;
+        integerPartLength = error.getPosition() - firstNoneZeroDigitPosition;
         if(!isFloatingPoint(error.getSymbol())) {
             throw error;
         }
@@ -94,9 +95,17 @@ void NumberParser::typeValidator() const {
         if(token[positionAfterFloatingPoint] == '\0') {
             throw parse_exception::IncompleteDouble{};
         }
-        floatingPartLength = containsOnlyDigits({token, positionAfterFloatingPoint}, positionAfterFloatingPoint);
+        const size_t countOfZerosAfterFloatingPoint = skipZeros({token, positionAfterFloatingPoint});
+        const size_t positionOfFirstNoneZeroDigitAfterFloatingPoint =
+                positionAfterFloatingPoint + countOfZerosAfterFloatingPoint;
+        if(positionOfFirstNoneZeroDigitAfterFloatingPoint < tokenLength) {
+            floatingPartLength = containsOnlyDigits(
+                {token, positionOfFirstNoneZeroDigitAfterFloatingPoint},
+                positionOfFirstNoneZeroDigitAfterFloatingPoint
+            ) + countOfZerosAfterFloatingPoint;
+        }
     }
-    if((integerPartLength + floatingPartLength) > 16) {
+    if((integerPartLength + floatingPartLength) > MAXIMUM_OF_DIGITS_COUNT) {
         throw parse_exception::NumberIsTooLong{};
     }
 }

@@ -147,13 +147,15 @@ TEST(NumberParser, validateTypeWhenNumberIsTooLong) {
         {"-92233702036857732", 18},
         {"-92433720368547723", 18},
         {"-0000092233720812312345", 23},
-        {"-92233720360000000", 18}
+        {"-92233720360000000", 18},
+        {"000000000.00000000000000001", 27},
+        {"19399439489374938.000000000", 27}
     };
 
-    for(size_t i = 0; i < 14; ++i) {
+    for(size_t i = 0; i < 16; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::NumberIsTooLong) << i;
+        EXPECT_THROW(parser.validateType(), parse_exception::NumberIsTooLong);
     }
 
     Test testNoThrow[] = {
@@ -170,12 +172,71 @@ TEST(NumberParser, validateTypeWhenNumberIsTooLong) {
         {"-9223370203685732", 17},
         {"-9243372038547723", 17},
         {"-000009223372082312345", 22},
-        {"-9233720360000000", 17}
+        {"-9233720360000000", 17},
+        {"000000000.0000000000000001", 26},
+        {"1939943948937493.000000000", 26},
+        {"00000000000000000000000000", 26},
+        {"+0000000000000000000000", 23},
+        {"00000000000.000000000000000", 27},
+        {"-00000000.00000000000000", 24}
     };
 
-    for(size_t i = 0; i < 14; ++i) {
+    for(size_t i = 0; i < 20; ++i) {
         ConstString str = {testNoThrow[i].string, testNoThrow[i].length};
         NumberParser parser = {str};
-        EXPECT_NO_THROW(parser.validateType()) << i;
+        EXPECT_NO_THROW(parser.validateType());
+    }
+}
+
+TEST(NumberParser, validateTypeWhenThereIsInvalidSymbol) {
+    IT("thorws InvalidSymbol - not a number building symbol");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+        const char expectSymbol;
+        const size_t expectPosition;
+    };
+
+    Test test[] = {
+        {"+-43153", 7, '-', 1},
+        {"+12342$", 7, '$', 6},
+        {"-1239/4", 7, '/', 5},
+        {"1234*10", 7, '*', 4},
+        {"+43535z03", 10, 'z', 6},
+        {"+-43.53", 7, '-', 1},
+        {"+1234..2", 8, '.', 6},
+        {"-123.!4", 7, '!', 5},
+        {"1234~.0", 7, '~', 4},
+        {"+43535a.3", 10, 'a', 6},
+        {"-4.^2", 5, '^', 3},
+        {"@0.23", 5, '@', 0},
+        {"+-43.53", 7, '-', 1},
+        {"+1234..2", 8, '.', 6},
+        {"-123.!4", 7, '!', 5},
+        {"1234~.0", 7, '~', 4},
+        {"+43535a.3", 10, 'a', 6},
+        {"-4.^2", 5, '^', 3},
+        {"@0.23", 5, '@', 0},
+        {"+)0.43", 6, ')', 1},
+        {"-0,34(", 6, ',', 2},
+        {"9477.5808#", 10, '#', 9},
+        {"++435.35", 8, '+', 1},
+        {"+000.&3535", 10, '&', 5},
+        {"-0000.0000.9", 12, '.', 10},
+        {"348.12$", 7, '$', 6},
+        {"3.14?4535.35", 12, '?', 4}
+    };
+
+    for(size_t i = 0; i < 20; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_THROW(parser.validateType(), parse_exception::InvalidSymbol);
+        try {
+            parser.validateType();
+        } catch(const parse_exception::InvalidSymbol& error) {
+            EXPECT_EQ(error.getPosition(), test[i].expectPosition);
+            EXPECT_EQ(error.getSymbol(), test[i].expectSymbol);
+        }
     }
 }

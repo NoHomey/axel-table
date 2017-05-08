@@ -9,7 +9,7 @@ TypeParser<Type>::TypeParser(ConstString& string) noexcept
 
 template<typename Type>
 void TypeParser<Type>::validateType() const {
-    if(!token.hasContent()) {
+    if(token.isEmpty()) {
         throw Empty{};
     }
     typeValidator();

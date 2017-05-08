@@ -2,16 +2,10 @@
 
 #include "../ImmutableString.h"
 
-#include "../../Exception.h"
-
-class BadStringOffset: public Exception { };
-
 template<typename CString>
 class BasicString: public ImmutableString {
 public:
     BasicString(CString cstring, const size_t cstrLength) noexcept;
-
-    BasicString(const BasicString& other, const size_t offsetFromBegging, const size_t offsetFromEnd = 0);
 
     virtual ~BasicString() noexcept;
     
@@ -23,11 +17,7 @@ public:
 
     BasicString& operator=(BasicString&&) = delete;
 
-    bool isNull() const noexcept override final;
-
     bool isEmpty() const noexcept override final;
-
-    bool hasContent() const noexcept override final;
 
     size_t length() const noexcept override final;
 
@@ -46,11 +36,9 @@ public:
 protected:
     static bool shouldBeNull(const char* cstring, const size_t cstrLength) noexcept;
 
-    void canBeParted(const size_t offsetFromBegging, const size_t offsetFromEnd) const;
+    CString string;
 
     size_t stringLength;
-
-    CString string;
 
 private:
     static bool constFalse(const char a, const char b) noexcept;

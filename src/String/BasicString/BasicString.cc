@@ -17,42 +17,16 @@ bool BasicString<CString>::lessThanOperator(const char a, const char b) noexcept
 
 template<typename CString>
 BasicString<CString>::BasicString(CString cstring, const size_t cstrLength) noexcept
-: ImmutableString{}, stringLength{0}, string{shouldBeNull(cstring, cstrLength) ? nullptr : cstring} {
-    if(!isNull()) {
-        stringLength = cstrLength;
-    }
-}
-
-template<typename CString>
-BasicString<CString>::BasicString(const BasicString& other, const size_t offsetFromBegging, const size_t offsetFromEnd)
-: BasicString{other.stringLength > 0 ? (other.string + offsetFromBegging) : nullptr,
-                other.stringLength - offsetFromBegging - offsetFromEnd} {
-    other.canBeParted(offsetFromBegging, offsetFromEnd);
-}
+: ImmutableString{},
+string{shouldBeNull(cstring, cstrLength) ? nullptr : cstring},
+stringLength{string == nullptr ? 0 : cstrLength} { }
 
 template<typename CString>
 BasicString<CString>::~BasicString() noexcept { }
 
 template<typename CString>
-void BasicString<CString>::canBeParted(const size_t offsetFromBegging, const size_t offsetFromEnd) const {
-    if((offsetFromBegging + offsetFromEnd) >= stringLength) {
-        throw BadStringOffset{};
-    }
-}
-
-template<typename CString>
-bool BasicString<CString>::isNull() const noexcept {
-    return string == nullptr;
-}
-
-template<typename CString>
 bool BasicString<CString>::isEmpty() const noexcept {
-    return isNull();
-}
-
-template<typename CString>
-bool BasicString<CString>::hasContent() const noexcept {
-    return !isEmpty();
+    return string == nullptr;
 }
 
 template<typename CString>

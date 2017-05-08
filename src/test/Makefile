@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = Number_spec ConstString_spec FixedSizeString_spec ValidationException_spec NumberParser_spec\
+TESTS = ConstString_spec #FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec TableCell_spec
 
 .PHONY: all clean test
@@ -89,16 +89,12 @@ It.o: $(call ownDeps,It)
 BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
 	$(COMPILE_COMPONENT)/String/BasicString/BasicString.cc $(COVER)
 
-ConstString_spec.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
-	$(COMPILE_COMPONENT)/String/ConstString/ConstString_spec.cc
-
-ConstString_spec: $(USER_DIR)/String/ConstString/ConstString.h gtest_main.a It.o BasicString.o ConstString_spec.o
-	$(COMPILER) $(COVER) -lpthread $^ -o $@
-
 NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
 	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
 
 $(eval $(call spec,Number,NumberHelper.o))
+
+$(eval $(call specInDir,String,ConstString,BasicString.o))
 
 $(eval $(call specInDir,String,FixedSizeString,BasicString.o))
 

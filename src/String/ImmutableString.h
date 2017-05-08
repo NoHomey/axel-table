@@ -16,11 +16,7 @@ public:
 
     ImmutableString& operator=(ImmutableString&&) = delete;
 
-    virtual bool isNull() const noexcept = 0;
-
     virtual bool isEmpty() const noexcept = 0;
-
-    virtual bool hasContent() const noexcept = 0;
 
     virtual size_t length() const noexcept = 0;
 

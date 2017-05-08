@@ -1,28 +1,8 @@
 #include "FixedSizeString.h"
 
-FixedSizeString::FixedSizeString() noexcept
-: BasicString<char*>{nullptr, 0}, filled{0} { }
 
 FixedSizeString::FixedSizeString(const size_t chars)
-: FixedSizeString{} {
-    stringLength = chars;
-    string = new char[chars + 1];
-}
-
-FixedSizeString::FixedSizeString(const char* cstring, const size_t chars)
-: FixedSizeString{} {
-    if(!shouldBeNull(cstring, chars)) {
-        stringLength = chars;
-        fill(cstring);
-    }
-}
-
-FixedSizeString::FixedSizeString(const FixedSizeString& other, const size_t offsetFromBegging, const size_t offsetFromEnd)
-: FixedSizeString{} {
-    other.canBeParted(offsetFromBegging, offsetFromEnd);
-    stringLength = other.stringLength - offsetFromBegging - offsetFromEnd;
-    fill(other.string + offsetFromBegging);
-}
+: BasicString<char*>{new char[chars + 1], chars} { }
 
 FixedSizeString::FixedSizeString(FixedSizeString&& other) noexcept
 : BasicString{other.string, other.stringLength}, filled{other.filled} {
@@ -45,14 +25,6 @@ FixedSizeString& FixedSizeString::operator=(FixedSizeString&& other) noexcept {
     return *this;
 }
 
-void FixedSizeString::fill(const char* cstring) noexcept {
-    string = new char[stringLength];
-    for(; filled < stringLength; ++filled) {
-        string[filled] = cstring[filled];
-    }
-    string[filled] = '\0';
-}
-
 bool FixedSizeString::isntFilled() const noexcept {
     return filled < stringLength;
 }
@@ -61,7 +33,7 @@ FixedSizeString& FixedSizeString::operator<<(const char symbol) noexcept {
     if(isntFilled()) {
         string[filled] = symbol;
         ++filled;
-        if(filled == stringLength) {
+        if(isFilled()) {
             string[stringLength] = '\0';
         }
     }
@@ -69,12 +41,6 @@ FixedSizeString& FixedSizeString::operator<<(const char symbol) noexcept {
     return *this;
 }
 
-FixedSizeString& FixedSizeString::operator<<(const char* symbols) noexcept {
-    size_t i = 0;
-    while(isntFilled() && (symbols[i] != '\0')) {
-        operator<<(symbols[i]);
-        ++i;
-    }
-
-    return *this;
+bool FixedSizeString::isFilled() const noexcept {
+    return filled == stringLength;
 }

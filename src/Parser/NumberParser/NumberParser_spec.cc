@@ -4,39 +4,57 @@
 
 template class TypeParserSpec<NumberParser>;
 
-/*TEST(NumberParser, validateTypeWhenValidInteger) {
+TEST(NumberParser, validateTypeWhenValidInteger) {
     IT("dose not throw when validating string which is valid integer");
 
     struct Test {
         const char* string;
         const size_t length;
+        const long long expect;
     };
 
     Test test[] = {
-        {"+922337203685477", 16},
-        {"-922337203685477", 16},
-        {"1234", 4},
-        {"+43535", 6}, 
-        {"-42", 3},
-        {"0", 1},
-        {"+0", 2},
-        {"-0", 2},
-        {"356245", 6},
-        {"-001234", 7},
-        {"0000001", 7},
-        {"-0000017", 8},
-        {"+000000234343", 13},
-        {"+099", 4},
-        {"+0000922337203685477", 20},
-        {"-00000922337203685477", 21}
+        {"+9223372036854778", 17, 9223372036854778},
+        {"-9223372036854778", 17, -9223372036854778},
+        {"1234", 4, 1234},
+        {"+43535", 6, 43535}, 
+        {"-42", 3, -42},
+        {"0", 1, 0},
+        {"+0", 2, 0},
+        {"-0", 2, 0},
+        {"356245", 6, 356245},
+        {"-001234", 7, -1234},
+        {"0000001", 7, 1},
+        {"-0000017", 8, -17},
+        {"+000000234343", 13, 234343},
+        {"+099", 4, 99},
+        {"+00009223372036854778", 21, 9223372036854778},
+        {"-000009223372036854778", 22, -9223372036854778},
+        {"+9223372036854778.0000", 22, 9223372036854778},
+        {"-9223372036854778.0000000", 25, -9223372036854778},
+        {"1234.00000000000000000000", 25, 1234},
+        {"+43535.0", 8, 43535}, 
+        {"-42.00000000000000000000000000000000000000", 42, -42},
+        {"0.0000000000000000000000000000000000000000000", 45, 0},
+        {"+0.0", 4, 0},
+        {"-0.00", 5, 0},
+        {"356245.000000", 13, 356245},
+        {"-001234.00", 10, -1234},
+        {"0000001.000000000000000000000000000", 35, 1},
+        {"-0000017.0000", 13, -17},
+        {"+000000234343.0", 15, 234343},
+        {"+099.000000000", 14, 99},
+        {"+00009223372036854778.0000000000000", 35, 9223372036854778},
+        {"-000009223372036854778.000000000000", 35, -9223372036854778}
     };
 
-    for(size_t i = 0; i < 16; ++i) {
+    for(size_t i = 0; i < 32; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
         EXPECT_NO_THROW(parser.validateType());
+        EXPECT_EQ(NumberHelper{parser.parseType()}.getInteger(), test[i].expect);
     }
-}*/
+}
 
 TEST(NumberParser, validateTypeWhenSingleSign) {
     IT("should throw SingleSign if input is just a sign symbol (+ or -)");
@@ -228,7 +246,7 @@ TEST(NumberParser, validateTypeWhenThereIsInvalidSymbol) {
         {"3.14?4535.35", 12, '?', 4}
     };
 
-    for(size_t i = 0; i < 20; ++i) {
+    for(size_t i = 0; i < 27; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
         EXPECT_THROW(parser.validateType(), parse_exception::InvalidSymbol);

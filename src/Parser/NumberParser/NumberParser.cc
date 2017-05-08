@@ -1,13 +1,6 @@
 #include "NumberParser.h"
 #include "../ValidationException/ValidationException.h"
 
-NumberParser::NumberParser(ConstString& string) noexcept
-: TypeParser<Number>{string} {}
-
-Number NumberParser::typeParser() const {
-    return {};
-}
-
 bool NumberParser::isMinus(const char symbol) noexcept {
     return symbol == '-';
 }
@@ -48,11 +41,13 @@ size_t NumberParser::skipZeros(ConstString& string) noexcept {
 
 size_t NumberParser::containsOnlyDigits(ConstString& string, const size_t offset) {
     size_t index = 0;
-    while(string[index] != '\0') {
-        if(!isDigit(string[index])) {
-            throw parse_exception::InvalidSymbol{index + offset, string[index]};
+    char symbol = string[index];
+    while(symbol != '\0') {
+        if(!isDigit(symbol)) {
+            throw parse_exception::InvalidSymbol{index + offset, symbol};
         }
         ++index;
+        symbol = string[index];
     }
 
     return index;
@@ -60,19 +55,66 @@ size_t NumberParser::containsOnlyDigits(ConstString& string, const size_t offset
 
 size_t NumberParser::getFirstNoneZeroDigitPosition() const {
     const size_t firstDigit = NumberParser::isPlusMinus(token[0]) ? 1 : 0;
-    if(token[firstDigit + 1] == '\0') {
-        if(isFloatingPoint(token[firstDigit])) {
+    const char firstDigitSymbol = token[firstDigit];
+    if(firstDigitSymbol == '\0') {
+        throw parse_exception::SingleSign{};
+    }
+    if(isFloatingPoint(firstDigitSymbol)) {
+        if(token[firstDigit + 1] == '\0') {
             throw parse_exception::SingleFloatingPoint{};
         }
-        if(firstDigit == 1) {
-            throw parse_exception::SingleSign{};
-        }
-    }
-    if(isFloatingPoint(token[firstDigit])) {
         throw parse_exception::DoubleHasNoIntegerPart{};
     }
 
     return firstDigit + skipZeros({token, firstDigit});
+}
+
+size_t NumberParser::getFloatingPointPosition() const noexcept {
+    size_t index = 0;
+    char symbol = token[index];
+    while(symbol != '\0') {
+        if(isFloatingPoint(symbol)) {
+            return index;
+        }
+        ++index;
+        symbol = token[index];
+    }
+
+    return index;
+}
+
+long long NumberParser::parseInteger(ConstString& string) noexcept {
+    const bool isNegative = isMinus(string[0]);
+    const size_t firstDigit = (isNegative || isPlus(string[0])) ? 1 : 0;
+    size_t index = firstDigit + skipZeros({string, firstDigit});
+    char symbol = string[index];
+    long long integer = 0;
+    while(symbol != '\0') {
+        integer *= 10;
+        integer += toDigit(symbol);
+        ++index;
+        symbol = string[index];
+    }
+
+    return isNegative ? (-integer) : integer;
+}
+
+NumberParser::NumberParser(ConstString& string) noexcept
+: TypeParser<Number>{string} {}
+
+Number NumberParser::typeParser() const {
+    const size_t floatingPointPosition = getFloatingPointPosition();
+    const size_t tokenLength = token.length();
+    if(floatingPointPosition == tokenLength) {
+        return {parseInteger(token)};
+    }
+    const size_t countOfZerosAfterFloatingPoint = skipZeros({token, floatingPointPosition + 1});
+    long long integerPart = parseInteger({token.cString(), floatingPointPosition});
+    if((floatingPointPosition + countOfZerosAfterFloatingPoint + 1) == tokenLength) {
+        return {integerPart};
+    }
+
+    return {};
 }
 
 void NumberParser::typeValidator() const {

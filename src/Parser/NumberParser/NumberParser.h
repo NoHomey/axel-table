@@ -39,7 +39,11 @@ private:
 
     static size_t containsOnlyDigits(ConstString& string, const size_t offset);
 
+    static long long parseInteger(ConstString& string) noexcept;
+
     size_t getFirstNoneZeroDigitPosition() const;
+
+    size_t getFloatingPointPosition() const noexcept;
 
     static const size_t MAXIMUM_OF_DIGITS_COUNT = 16;
 };

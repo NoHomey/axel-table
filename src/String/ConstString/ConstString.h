@@ -14,9 +14,11 @@ public:
     ConstCharString(const ConstCharString& other, const size_t offsetFromBegging, const size_t newLength);
 
 private:
-    static const char* currentString(const ConstCharString& other, const size_t offsetFromBegging, const bool extraCondition) noexcept;
+    static const char* currentString(const ConstCharString& other,const size_t offsetFromBegging,
+                                                                    const bool extraCondition) noexcept;
 
-    ConstCharString(const ConstCharString& other, const size_t offsetFromBegging, const bool extraCondition, const size_t newLength);
+    ConstCharString(const ConstCharString& other, const size_t offsetFromBegging,
+                                                    const bool extraCondition, const size_t newLength);
 };
 
 using ConstString = const ConstCharString;

@@ -138,10 +138,25 @@ Number NumberParser::typeParser() const {
     return {static_cast<double>(integerPart + floatingPart)};
 }
 
+size_t NumberParser::calculateFloatingPartLength(const size_t floatingPartBeginning) const {
+    if(token[floatingPartBeginning] == '\0') {
+        throw parse_exception::IncompleteDouble{};
+    }
+    const size_t countOfZerosAfterFloatingPoint = skipZeros({token, floatingPartBeginning});
+    const size_t positionOfFirstNoneZeroDigitAfterFloatingPoint =
+        floatingPartBeginning + countOfZerosAfterFloatingPoint;
+    if(positionOfFirstNoneZeroDigitAfterFloatingPoint < token.length()) {
+        return containsOnlyDigits(
+            {token, positionOfFirstNoneZeroDigitAfterFloatingPoint},
+            positionOfFirstNoneZeroDigitAfterFloatingPoint
+        ) + countOfZerosAfterFloatingPoint;
+    }
+    return 0;
+}
+
 void NumberParser::typeValidator() const {
     const size_t firstNoneZeroDigitPosition = getFirstNoneZeroDigitPosition();
-    const size_t tokenLength = token.length();
-    if(firstNoneZeroDigitPosition == tokenLength) {
+    if(firstNoneZeroDigitPosition == token.length()) {
         return;
     }
     ConstString tokenFromFirstDigit = {token, firstNoneZeroDigitPosition};
@@ -150,23 +165,12 @@ void NumberParser::typeValidator() const {
     try {
         integerPartLength = containsOnlyDigits(tokenFromFirstDigit, firstNoneZeroDigitPosition);
     } catch(const parse_exception::InvalidSymbol& error) {
-        integerPartLength = error.getPosition() - firstNoneZeroDigitPosition;
+        const size_t invalidPosition = error.getPosition();
+        integerPartLength = invalidPosition - firstNoneZeroDigitPosition;
         if(!isFloatingPoint(error.getSymbol())) {
             throw error;
         }
-        const size_t positionAfterFloatingPoint = error.getPosition() + 1;
-        if(token[positionAfterFloatingPoint] == '\0') {
-            throw parse_exception::IncompleteDouble{};
-        }
-        const size_t countOfZerosAfterFloatingPoint = skipZeros({token, positionAfterFloatingPoint});
-        const size_t positionOfFirstNoneZeroDigitAfterFloatingPoint =
-                positionAfterFloatingPoint + countOfZerosAfterFloatingPoint;
-        if(positionOfFirstNoneZeroDigitAfterFloatingPoint < tokenLength) {
-            floatingPartLength = containsOnlyDigits(
-                {token, positionOfFirstNoneZeroDigitAfterFloatingPoint},
-                positionOfFirstNoneZeroDigitAfterFloatingPoint
-            ) + countOfZerosAfterFloatingPoint;
-        }
+        floatingPartLength = calculateFloatingPartLength(invalidPosition + 1);
     }
     if((integerPartLength + floatingPartLength) > MAXIMUM_OF_DIGITS_COUNT) {
         throw parse_exception::NumberIsTooLong{};

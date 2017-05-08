@@ -2,10 +2,8 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = Number_spec ConstString_spec FixedSizeString_spec ValidationException_spec NumberParser_spec
-
-#TableCell_spec ConstString_spec FixedSizeString_spec ValidationException_spec\
-numberTextUtils_spec IntegerExtractor_spec IntegerParser_spec DoubleParser_spec StringParser_spec
+TESTS = Number_spec ConstString_spec FixedSizeString_spec ValidationException_spec NumberParser_spec\
+StringParser_spec TableCell_spec
 
 .PHONY: all clean test
 
@@ -97,6 +95,11 @@ ConstString_spec.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/Basi
 ConstString_spec: $(USER_DIR)/String/ConstString/ConstString.h gtest_main.a It.o BasicString.o ConstString_spec.o
 	$(COMPILER) $(COVER) -lpthread $^ -o $@
 
+NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
+	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
+
+$(eval $(call spec,Number,NumberHelper.o))
+
 $(eval $(call specInDir,String,FixedSizeString,BasicString.o))
 
 $(eval $(call spec,TableCell))
@@ -105,22 +108,9 @@ $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 
 $(eval $(call specInDir,Parser,NumberParser,BasicString.o TypeParser.o ValidationException.o Number.o NumberHelper.o))
 
-$(eval $(call specInDir,Parser,IntegerParser,BasicString.o TypeParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
+$(eval $(call specInDir,Parser,StringParser,BasicString.o FixedSizeString.o TypeParser.o ValidationException.o))
 
-$(eval $(call specInDir,Parser,DoubleParser,BasicString.o TypeParser.o IntegerParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
-
-$(eval $(call specInDir,Parser,StringParser,BasicString.o FixedSizeString.o TypeParser.o IntegerParser.o DoubleParser.o numberTextUtils.o ValidationException.o IntegerExtractor.o))
-
-$(eval $(call specInDir,Parser,ValidationException))
-
-$(eval $(call specInDir,Parser,numberTextUtils,BasicString.o ValidationException.o))	
-
-$(eval $(call specInDir,Parser,IntegerExtractor,numberTextUtils.o BasicString.o ValidationException.o))
-
-NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
-	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
-
-$(eval $(call spec,Number,NumberHelper.o))	
+$(eval $(call specInDir,Parser,ValidationException))	
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

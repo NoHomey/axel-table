@@ -106,23 +106,23 @@ TEST(NumberParser, validateTypeWhenSingleSign) {
     IT("should throw SingleSign if input is just a sign symbol (+ or -)");
     ConstString strPlus = {"+", 1};
     NumberParser plus = {strPlus};
-    EXPECT_THROW(plus.validateType(), parse_exception::SingleSign);
+    EXPECT_THROW(plus.validateType(), NumberParser::SingleSign);
     ConstString strMinus = {"-", 1};
     NumberParser minus = {strMinus};
-    EXPECT_THROW(minus.validateType(), parse_exception::SingleSign);
+    EXPECT_THROW(minus.validateType(), NumberParser::SingleSign);
 }
 
 TEST(NumberParser, validateTypeWhenSingleFloatingPoint) {
     IT("throws SingleFloatingPoint if is is parsing just a floating point with no digits");
     ConstString str = {".", 1};
     NumberParser parser = {str};
-    EXPECT_THROW(parser.validateType(), parse_exception::SingleFloatingPoint);
+    EXPECT_THROW(parser.validateType(), NumberParser::SingleFloatingPoint);
     ConstString strPlus = {"+.", 2};
     NumberParser parserPlus = {strPlus};
-    EXPECT_THROW(parserPlus.validateType(), parse_exception::SingleFloatingPoint);
+    EXPECT_THROW(parserPlus.validateType(), NumberParser::SingleFloatingPoint);
     ConstString strMinus = {"-.", 2};
     NumberParser parserMinus = {strMinus};
-    EXPECT_THROW(parserMinus.validateType(), parse_exception::SingleFloatingPoint);
+    EXPECT_THROW(parserMinus.validateType(), NumberParser::SingleFloatingPoint);
 }
 
 TEST(NumberParser, validateTypeWhenDoubleHasNoIntegerPart) {
@@ -153,7 +153,7 @@ TEST(NumberParser, validateTypeWhenDoubleHasNoIntegerPart) {
     for(size_t i = 0; i < 14; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::DoubleHasNoIntegerPart);
+        EXPECT_THROW(parser.validateType(), NumberParser::DoubleHasNoIntegerPart);
     }
 }
 
@@ -185,7 +185,7 @@ TEST(NumberParser, validateTypeWhenIncompleteDouble) {
     for(size_t i = 0; i < 14; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::IncompleteDouble);
+        EXPECT_THROW(parser.validateType(), NumberParser::IncompleteDouble);
     }
 }
 
@@ -219,7 +219,7 @@ TEST(NumberParser, validateTypeWhenNumberIsTooLong) {
     for(size_t i = 0; i < 16; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::NumberIsTooLong);
+        EXPECT_THROW(parser.validateType(), NumberParser::NumberIsTooLong);
     }
 
     Test testNoThrow[] = {
@@ -295,10 +295,10 @@ TEST(NumberParser, validateTypeWhenThereIsInvalidSymbol) {
     for(size_t i = 0; i < 27; ++i) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::InvalidSymbol);
+        EXPECT_THROW(parser.validateType(), InvalidSymbol);
         try {
             parser.validateType();
-        } catch(const parse_exception::InvalidSymbol& error) {
+        } catch(const InvalidSymbol& error) {
             EXPECT_EQ(error.getPosition(), test[i].expectPosition);
             EXPECT_EQ(error.getSymbol(), test[i].expectSymbol);
         }

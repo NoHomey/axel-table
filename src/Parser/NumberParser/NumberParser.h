@@ -2,9 +2,20 @@
 
 #include "../TypeParser/TypeParser.h"
 #include "../../Number/Number.h"
+#include "../ValidationException/ValidationException.h"
 
 class NumberParser: public TypeParser<Number> {
 public:
+    class SingleSign: public Invalid { };
+
+    class NumberIsTooLong: public Invalid { };
+
+    class DoubleHasNoIntegerPart: public Invalid { };
+
+    class SingleFloatingPoint: public Invalid { };
+
+    class IncompleteDouble: public Invalid { };
+
     NumberParser(ConstString& string) noexcept;
 
     NumberParser(const NumberParser&) = delete;

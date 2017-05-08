@@ -2,9 +2,28 @@
 
 #include "../TypeParser/TypeParser.h"
 #include "../../String/FixedSizeString/FixedSizeString.h"
+#include "../ValidationException/ValidationException.h"
 
 class StringParser: public TypeParser<FixedSizeString> {
 public:
+    class MissingQuotes: public Invalid { };
+
+    class MissingQuotesInTheBeginng: public MissingQuotes { };
+
+    class MissingQuotesInTheEnd: public MissingQuotes { };
+
+    class EmptyString: public Invalid { };
+
+    class NotEscapedQuotes: public InvalidSymbolAtPosition {
+    public:
+        NotEscapedQuotes(const size_t pos) noexcept;
+    };
+
+    class AloneBackslash: public InvalidSymbolAtPosition {
+    public:
+        AloneBackslash(const size_t pos) noexcept;
+    };
+
     StringParser(ConstString& string) noexcept;
 
     StringParser(const StringParser&) = delete;

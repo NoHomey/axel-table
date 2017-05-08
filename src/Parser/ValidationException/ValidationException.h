@@ -3,64 +3,26 @@
 #include <cstddef>
 #include "../../Exception.h"
 
-namespace parse_exception {
-    class Invalid: public Exception { };
+class Invalid: public Exception { };
 
-    class Empty: public Invalid { };
+class Empty: public Invalid { };
 
-    class SingleSign: public Invalid { };
+class InvalidSymbolAtPosition: public Invalid {
+public:
+    InvalidSymbolAtPosition(const size_t pos) noexcept;
 
-    class Limit: public Invalid { };
+    size_t getPosition() const noexcept;
 
-    class MinimumLimit: public Limit { };
+protected:
+    const size_t position;
+};
 
-    class MaximumLimit: public Limit { };
+class InvalidSymbol: public InvalidSymbolAtPosition {
+public:
+    InvalidSymbol(const size_t pos, const char sym) noexcept;
 
-    class LossOfPrecision: public Limit { };
+    char getSymbol() const noexcept;
 
-    class NumberIsTooLong: public Invalid { };
-
-    class DoubleHasNoIntegerPart: public Invalid { };
-
-    class SingleFloatingPoint: public Invalid { };
-
-    class IncompleteDouble: public Invalid { };
-
-    class MissingQuotes: public Invalid { };
-
-    class MissingQuotesInTheBeginng: public MissingQuotes { };
-
-    class MissingQuotesInTheEnd: public MissingQuotes { };
-
-    class EmptyString: public Invalid { };
-
-    class InvalidSymbolAtPosition: public Invalid {
-    public:
-        InvalidSymbolAtPosition(const size_t pos) noexcept;
-
-        size_t getPosition() const noexcept;
-
-    protected:
-        const size_t position;
-    };
-
-    class NotEscapedQuotes: public InvalidSymbolAtPosition {
-    public:
-        NotEscapedQuotes(const size_t pos) noexcept;
-    };
-
-    class AloneBackslash: public InvalidSymbolAtPosition {
-    public:
-        AloneBackslash(const size_t pos) noexcept;
-    };
-
-    class InvalidSymbol: public InvalidSymbolAtPosition {
-    public:
-        InvalidSymbol(const size_t pos, const char sym) noexcept;
-
-        char getSymbol() const noexcept;
-
-    protected:
-        const char symbol;
-    };
-}
+protected:
+    const char symbol;
+};

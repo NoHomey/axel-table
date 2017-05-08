@@ -3,6 +3,18 @@
 
 template class TypeParserSpec<StringParser>;
 
+TEST(NotEscapedQuotes, reportsNotEscapedQuotesAtTheGivenPosition) {
+    IT("store the position on which unescaped quotes symbol is found");
+    EXPECT_EQ(StringParser::NotEscapedQuotes{5}.getPosition(), 5);
+    EXPECT_EQ(StringParser::NotEscapedQuotes{6}.getPosition(), 6);
+}
+
+TEST(AloneBackslash, reportsAloneBackslashAtTheGivenPosition) {
+    IT("store the position on which alone backslash symbol is found");
+    EXPECT_EQ(StringParser::AloneBackslash{3}.getPosition(), 3);
+    EXPECT_EQ(StringParser::AloneBackslash{7}.getPosition(), 7);
+}
+
 TEST(StringParser, parseTypeWhenParsingValidString) {
     IT("parses valid string to FixedSizeString");
 
@@ -46,7 +58,7 @@ TEST(StringParser, validateTypeWhenParsingEmptyString) {
 TEST(StringParser, validateTypeWhenItIsEmptyString) {
     ConstString str = {"\"\"", 2};
     StringParser parser = {str};
-    EXPECT_THROW(parser.validateType(), parse_exception::EmptyString);
+    EXPECT_THROW(parser.validateType(), StringParser::EmptyString);
 }
 
 TEST(StringParser, validateTypeWhenParsingStringWhichIsNotANumberAndDoseNotStartWithQuotes) {
@@ -68,7 +80,7 @@ TEST(StringParser, validateTypeWhenParsingStringWhichIsNotANumberAndDoseNotStart
     for(size_t i = 0; i < 5; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::MissingQuotes);
+        EXPECT_THROW(parser.validateType(), StringParser::MissingQuotes);
     }
 }
 
@@ -97,13 +109,13 @@ TEST(StringParser, validateTypeWhenParsingStringWithUnbalancedQuotes) {
     for(size_t i = 0; i < 4; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::MissingQuotesInTheBeginng);
+        EXPECT_THROW(parser.validateType(), StringParser::MissingQuotesInTheBeginng);
     }
 
     for(size_t i = 5; i < 11; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::MissingQuotesInTheEnd);
+        EXPECT_THROW(parser.validateType(), StringParser::MissingQuotesInTheEnd);
     }
 }
 
@@ -128,10 +140,10 @@ TEST(StringParser, validateTypeWhenParsingStringWichHasBackslashThatDoseNotEscap
     for(size_t i = 0; i < 6; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::AloneBackslash);
+        EXPECT_THROW(parser.validateType(), StringParser::AloneBackslash);
         try {
             parser.validateType();
-        } catch(const parse_exception::AloneBackslash& error) {
+        } catch(const StringParser::AloneBackslash& error) {
             EXPECT_EQ(error.getPosition(), test[i].position);
         }
     }
@@ -159,10 +171,10 @@ TEST(StringParser, validateTypeWhenParsingStringIncludesUnEscapedQuotes) {
     for(size_t i = 0; i < 7; ++i) {
         ConstString str = {test[i].string, test[i].length};
         StringParser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::NotEscapedQuotes);
+        EXPECT_THROW(parser.validateType(), StringParser::NotEscapedQuotes);
         try {
             parser.validateType();
-        } catch(const parse_exception::NotEscapedQuotes& error) {
+        } catch(const StringParser::NotEscapedQuotes& error) {
             EXPECT_EQ(error.getPosition(), test[i].position);
         }
     }

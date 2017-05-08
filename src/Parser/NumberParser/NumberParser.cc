@@ -1,5 +1,4 @@
 #include "NumberParser.h"
-#include "../ValidationException/ValidationException.h"
 
 bool NumberParser::isMinus(const char symbol) noexcept {
     return symbol == '-';
@@ -44,7 +43,7 @@ size_t NumberParser::containsOnlyDigits(ConstString& string, const size_t offset
     char currentSymbol = string[index];
     while(currentSymbol != '\0') {
         if(!isDigit(currentSymbol)) {
-            throw parse_exception::InvalidSymbol{index + offset, currentSymbol};
+            throw InvalidSymbol{index + offset, currentSymbol};
         }
         ++index;
         currentSymbol = string[index];
@@ -57,13 +56,13 @@ size_t NumberParser::getFirstNoneZeroDigitPosition() const {
     const size_t firstDigit = NumberParser::isPlusMinus(token[0]) ? 1 : 0;
     const char firstDigitSymbol = token[firstDigit];
     if(firstDigitSymbol == '\0') {
-        throw parse_exception::SingleSign{};
+        throw SingleSign{};
     }
     if(isFloatingPoint(firstDigitSymbol)) {
         if(token[firstDigit + 1] == '\0') {
-            throw parse_exception::SingleFloatingPoint{};
+            throw SingleFloatingPoint{};
         }
-        throw parse_exception::DoubleHasNoIntegerPart{};
+        throw DoubleHasNoIntegerPart{};
     }
 
     return firstDigit + skipZeros({token, firstDigit});
@@ -140,7 +139,7 @@ Number NumberParser::typeParser() const {
 
 size_t NumberParser::calculateFloatingPartLength(const size_t floatingPartBeginning) const {
     if(token[floatingPartBeginning] == '\0') {
-        throw parse_exception::IncompleteDouble{};
+        throw IncompleteDouble{};
     }
     const size_t countOfZerosAfterFloatingPoint = skipZeros({token, floatingPartBeginning});
     const size_t positionOfFirstNoneZeroDigitAfterFloatingPoint =
@@ -164,7 +163,7 @@ void NumberParser::typeValidator() const {
     size_t floatingPartLength = 0;
     try {
         integerPartLength = containsOnlyDigits(tokenFromFirstDigit, firstNoneZeroDigitPosition);
-    } catch(const parse_exception::InvalidSymbol& error) {
+    } catch(const InvalidSymbol& error) {
         const size_t invalidPosition = error.getPosition();
         integerPartLength = invalidPosition - firstNoneZeroDigitPosition;
         if(!isFloatingPoint(error.getSymbol())) {
@@ -173,6 +172,6 @@ void NumberParser::typeValidator() const {
         floatingPartLength = calculateFloatingPartLength(invalidPosition + 1);
     }
     if((integerPartLength + floatingPartLength) > MAXIMUM_OF_DIGITS_COUNT) {
-        throw parse_exception::NumberIsTooLong{};
+        throw NumberIsTooLong{};
     }
 }

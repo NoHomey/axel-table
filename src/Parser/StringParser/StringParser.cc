@@ -1,5 +1,4 @@
 #include "StringParser.h"
-#include "../ValidationException/ValidationException.h"
 
 bool StringParser::isBackslash(const char symbol) noexcept {
     return symbol == '\\';
@@ -8,9 +7,6 @@ bool StringParser::isBackslash(const char symbol) noexcept {
 bool StringParser::isQuotes(const char symbol) noexcept {
     return symbol == '"';
 }
-
-StringParser::StringParser(ConstString& string) noexcept
-: TypeParser<FixedSizeString>{string} {}
 
 size_t StringParser::calculateParseResultStringLength() const noexcept {
     size_t index = 1;
@@ -25,6 +21,54 @@ size_t StringParser::calculateParseResultStringLength() const noexcept {
         }
     }
 }
+
+bool StringParser::isCountOfBackslashesOdd(const size_t from, const size_t to) noexcept {
+    return (to - from) % 2;
+}
+
+void StringParser::validateBackslashesBefore(const size_t lastChecked) const {
+    size_t position;
+    bool isBackslashesCountOdd;
+    for(size_t index = isQuotes(token[0]); index <= lastChecked; ++index) {
+        if(isQuotes(token[index])) {
+            throw NotEscapedQuotes{index};
+        }
+        if(isBackslash(token[index])) {
+            position = index;
+            do {
+                ++index;
+            } while(isBackslash(token[index]));
+            isBackslashesCountOdd = isCountOfBackslashesOdd(position, index);
+            if(isQuotes(token[index])) {
+                if(!isBackslashesCountOdd) {
+                    throw NotEscapedQuotes{index};
+                }
+            } else if(isBackslashesCountOdd) {
+                throw AloneBackslash{index - 1};
+            }
+        }
+    }
+}
+
+void StringParser::validateBackslashes(const size_t length) const {
+    size_t index = length - 2;
+    while(isBackslash(token[index])) {
+        --index;
+    }
+    if(isCountOfBackslashesOdd(index, length)) {
+        throw MissingQuotesInTheEnd{};
+    }
+    validateBackslashesBefore(index);
+}
+
+StringParser::StringParser(ConstString& string) noexcept
+: TypeParser<FixedSizeString>{string} {}
+
+StringParser::NotEscapedQuotes::NotEscapedQuotes(const size_t pos) noexcept
+: InvalidSymbolAtPosition{pos} {}
+
+StringParser::AloneBackslash::AloneBackslash(const size_t pos) noexcept
+: InvalidSymbolAtPosition{pos} {}
 
 FixedSizeString StringParser::typeParser() const {
     const size_t resultLength = calculateParseResultStringLength();
@@ -43,62 +87,23 @@ FixedSizeString StringParser::typeParser() const {
     return result;
 }
 
-bool StringParser::isCountOfBackslashesOdd(const size_t from, const size_t to) noexcept {
-    return (to - from) % 2;
-}
-
-void StringParser::validateBackslashesBefore(const size_t lastChecked) const {
-    size_t position;
-    bool isBackslashesCountOdd;
-    for(size_t index = isQuotes(token[0]); index <= lastChecked; ++index) {
-        if(isQuotes(token[index])) {
-            throw parse_exception::NotEscapedQuotes{index};
-        }
-        if(isBackslash(token[index])) {
-            position = index;
-            do {
-                ++index;
-            } while(isBackslash(token[index]));
-            isBackslashesCountOdd = isCountOfBackslashesOdd(position, index);
-            if(isQuotes(token[index])) {
-                if(!isBackslashesCountOdd) {
-                    throw parse_exception::NotEscapedQuotes{index};
-                }
-            } else if(isBackslashesCountOdd) {
-                throw parse_exception::AloneBackslash{index - 1};
-            }
-        }
-    }
-}
-
-void StringParser::validateBackslashes(const size_t length) const {
-    size_t index = length - 2;
-    while(isBackslash(token[index])) {
-        --index;
-    }
-    if(isCountOfBackslashesOdd(index, length)) {
-        throw parse_exception::MissingQuotesInTheEnd{};
-    }
-    validateBackslashesBefore(index);
-}
-
 void StringParser::typeValidator() const {
     const bool startsWithQuotes = isQuotes(token[0]);
     const size_t length = token.length();
     const bool endsWithQuotes = isQuotes(token[length - 1]);
     if(startsWithQuotes ^ endsWithQuotes) {
         if(startsWithQuotes) {
-            throw parse_exception::MissingQuotesInTheEnd{};
+            throw MissingQuotesInTheEnd{};
         }
         if(endsWithQuotes) {
-            throw parse_exception::MissingQuotesInTheBeginng{};
+            throw MissingQuotesInTheBeginng{};
         }
     }
     if(endsWithQuotes && (length == 2)) {
-        throw parse_exception::EmptyString{};
+        throw EmptyString{};
     }
     if(!startsWithQuotes) {
-        throw parse_exception::MissingQuotes{};
+        throw MissingQuotes{};
     }
     validateBackslashes(length);
 }

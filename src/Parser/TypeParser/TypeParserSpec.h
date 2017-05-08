@@ -12,10 +12,10 @@ public:
         IT("should throw Empty if and only if string is empty");
         ConstString str = {"", 0};
         Parser parser = {str};
-        EXPECT_THROW(parser.validateType(), parse_exception::Empty);
+        EXPECT_THROW(parser.validateType(), Empty);
         ConstString str2 = {nullptr, 0};
         Parser parser2 = {str2};
-        EXPECT_THROW(parser2.validateType(), parse_exception::Empty);
+        EXPECT_THROW(parser2.validateType(), Empty);
         Parser parserNoThrow = {noThrow};
         EXPECT_NO_THROW(parserNoThrow.validateType());
     }

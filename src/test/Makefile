@@ -3,7 +3,7 @@ GTEST_DIR = ../../googletest
 USER_DIR = ..
 
 TESTS = ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
-StringParser_spec TableCell_spec
+StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test
 
@@ -98,15 +98,19 @@ $(eval $(call specInDir,String,ConstString,BasicString.o))
 
 $(eval $(call specInDir,String,FixedSizeString,BasicString.o ConstString.o))
 
-$(eval $(call spec,TableCell))
-
 $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 
 $(eval $(call specInDir,Parser,NumberParser,BasicString.o ConstString.o TypeParser.o ValidationException.o Number.o NumberHelper.o))
 
 $(eval $(call specInDir,Parser,StringParser,BasicString.o ConstString.o FixedSizeString.o TypeParser.o ValidationException.o))
 
-$(eval $(call specInDir,Parser,ValidationException))	
+$(eval $(call specInDir,Parser,ValidationException))
+
+$(eval $(call specInDir,TableCell,NumberCell,Number.o NumberHelper.o))
+
+$(eval $(call specInDir,TableCell,StringNumberCell,NumberCell.o Number.o NumberHelper.o))
+
+$(eval $(call specInDir,TableCell,StringCell,Number.o BasicString.o ConstString.o FixedSizeString.o NumberHelper.o))	
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

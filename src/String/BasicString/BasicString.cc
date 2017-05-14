@@ -2,7 +2,7 @@
 
 template<typename CString>
 bool BasicString<CString>::shouldBeNull(const char* cstring, const size_t cstrLength) noexcept {
-    return (cstring == nullptr) || (cstrLength == 0) || (cstring[0] == '\0');
+    return (cstring == nullptr) || (cstrLength == 0);
 }
 
 template<typename CString>

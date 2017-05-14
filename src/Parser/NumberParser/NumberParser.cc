@@ -126,7 +126,7 @@ Number NumberParser::typeParser() const {
     }
     const size_t positionAfterFloatingPoint = floatingPointPosition + 1;
     const size_t countOfZerosAfterFloatingPoint = skipZeros({token, positionAfterFloatingPoint});
-    long long integerPart = parseInteger({token.cString(), floatingPointPosition});
+    long long integerPart = parseInteger({token, 0, floatingPointPosition});
     if((floatingPointPosition + countOfZerosAfterFloatingPoint + 1) == tokenLength) {
         return {integerPart};
     }

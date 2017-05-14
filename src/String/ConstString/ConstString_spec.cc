@@ -20,11 +20,11 @@ TEST(ConstString, throwingBadStringOffset) {
     EXPECT_THROW((ConstString{str3, 0, 2}), ConstString::BadStringOffset);
 
     ConstString str4 = {"\0 some text", 11};
-    EXPECT_THROW((ConstString{str4, 1}), ConstString::BadStringOffset);
-    EXPECT_THROW((ConstString{str4, 0, 1}), ConstString::BadStringOffset);
-    EXPECT_THROW((ConstString{str4, 1, 1}), ConstString::BadStringOffset);
-    EXPECT_THROW((ConstString{str4, 0}), ConstString::BadStringOffset);
     EXPECT_THROW((ConstString{str4, 0, 0}), ConstString::BadStringOffset);
+    EXPECT_NO_THROW((ConstString{str4, 1}));
+    EXPECT_NO_THROW((ConstString{str4, 0, 1}));
+    EXPECT_NO_THROW((ConstString{str4, 1, 1}));
+    EXPECT_NO_THROW((ConstString{str4, 0}));
 }
 
 TEST(ConstString, isEmpty) {
@@ -39,8 +39,8 @@ TEST(ConstString, isEmpty) {
 
     ConstString str3 = {"", 0};
     EXPECT_TRUE(str3.isEmpty());
-    EXPECT_TRUE((ConstString{"\0", 1}).isEmpty());
-    EXPECT_TRUE((ConstString{"\0sfdsda", 7}).isEmpty());
+    EXPECT_FALSE((ConstString{"\0", 1}).isEmpty());
+    EXPECT_FALSE((ConstString{"\0sfdsda", 7}).isEmpty());
 
     ConstString str4 = {"This is a \"ConstString\"!", 19};
     EXPECT_FALSE(str4.isEmpty());
@@ -61,7 +61,7 @@ TEST(ConstString, length) {
     EXPECT_EQ(str.length(), 0);
 
     ConstString str1 = {"\0 1234", 6};
-    EXPECT_EQ(str1.length(), 0);
+    EXPECT_EQ(str1.length(), 6);
 
     ConstString str2 = {"1234.56789", 10};
     EXPECT_EQ(str2.length(), 10);

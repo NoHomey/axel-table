@@ -1,8 +1,7 @@
 #include "FixedSizeString.h"
 
-
 FixedSizeString::FixedSizeString(const size_t chars)
-: BasicString<char*>{new char[chars + 1], chars} { }
+: BasicString<char*>{new char[chars + 1], chars}, filled{0} { }
 
 FixedSizeString::FixedSizeString(FixedSizeString&& other) noexcept
 : BasicString{other.string, other.stringLength}, filled{other.filled} {

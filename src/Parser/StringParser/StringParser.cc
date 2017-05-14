@@ -75,7 +75,7 @@ FixedSizeString StringParser::typeParser() const {
     FixedSizeString result{resultLength};
     size_t index = 1;
     char currentSymbol = token[index];
-    for(size_t counter = 0; counter < resultLength; ++counter) {
+    while(!result.isFilled()) {
         if(isBackslash(currentSymbol)) {
             ++index;
             currentSymbol = token[index];

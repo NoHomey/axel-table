@@ -7,6 +7,10 @@ DynamicArray<Element>::DynamicArray() noexcept
 : array{nullptr}, arraySize{0}, arrayCapacity{0} {}
 
 template<typename Element>
+DynamicArray<Element>::DynamicArray(size_t size)
+: array{new Element[size]}, arraySize{0}, arrayCapacity{size} {}
+
+template<typename Element>
 size_t DynamicArray<Element>::size() const noexcept {
     return 0;
 }

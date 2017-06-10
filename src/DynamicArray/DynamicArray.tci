@@ -17,7 +17,7 @@ size_t DynamicArray<Element>::size() const noexcept {
 
 template<typename Element>
 size_t DynamicArray<Element>::capacity() const noexcept {
-    return 0;
+    return arrayCapacity;
 }
 
 template<typename Element>

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cstddef>
+#include "../Exception.h"
+
+class EmptyDynamicArray: public Exception { };
 
 template<typename Element>
 class DynamicArray {
@@ -9,11 +12,40 @@ public:
     
     explicit DynamicArray(size_t size);
 
+    ~DynamicArray() noexcept;
+
+    DynamicArray(const DynamicArray& other);
+
+    DynamicArray(DynamicArray&& other) noexcept;
+
+    DynamicArray& operator=(const DynamicArray& other);
+
+    DynamicArray& operator=(DynamicArray&& other) noexcept;
+
     size_t size() const noexcept;
 
     size_t capacity() const noexcept;
 
     bool isEmpty() const noexcept;
+
+    bool isFull() const noexcept;
+
+    const Element& operator[](size_t index) const noexcept;
+
+    void push(const Element& element);
+
+    void pop();
+
+    void reserve(size_t size);
+    
+    void shrinkToFit();
+
+    void clear() noexcept;
+
+private:
+    void destroy() noexcept;
+
+    void copyOtherArrayElements(const DynamicArray& other) noexcept;
 
 private:
     Element* array;

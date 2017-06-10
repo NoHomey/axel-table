@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = DynamicArray_spec #ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = DynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test
@@ -34,7 +34,7 @@ LCOV_CURR_DIR = lcov --base-directory . --directory .
 
 COMPILE_COMPONENT = $(COMPILER) -c $(USER_DIR)
 
-ownDeps = $(USER_DIR)/$(1)/$(1).h $(USER_DIR)/$(1)/$(1).cc
+ownDeps = $(USER_DIR)/$(1)/$(1).h $(USER_DIR)/$(1)/$(1).cc $(USER_DIR)/$(1)/$(1)_spec.cc
 
 specDeps = $(GTEST_HEADERS) $(USER_DIR)/It/It.h
 
@@ -42,7 +42,7 @@ unitDeps = $(ownDeps) $(specDeps)
 
 objDeps = $(1).o $(1)_spec.o
 
-dirDeps = $(USER_DIR)/$(1)/$(2)/$(2).h $(USER_DIR)/$(1)/$(2)/$(2).cc
+dirDeps = $(USER_DIR)/$(1)/$(2)/$(2).h $(USER_DIR)/$(1)/$(2)/$(2).cc $(USER_DIR)/$(1)/$(2)/$(2)_spec.cc
 
 define spec
 $(1).o: $(call unitDeps,$(1)) $(2)
@@ -83,7 +83,7 @@ gtest.a: gtest-all.o
 gtest_main.a: gtest-all.o gtest_main.o
 	$(AR_GTEST)
 
-It.o: $(call ownDeps,It)
+It.o: $(USER_DIR)/It/It.h $(USER_DIR)/It/It.cc
 	$(COMPILE_COMPONENT)/It/It.cc
 
 BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
@@ -92,10 +92,13 @@ BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicStri
 NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
 	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
 
-DynamicArray_spec.o: $(USER_DIR)/DynamicArray/DynamicArray.htd $(USER_DIR)/DynamicArray/DynamicArray.tci $(specDeps)
-	$(COMPILE_COMPONENT)/DynamicArray/DynamicArray_spec.cc $(COVER)
+DynamicArray_eti.o: $(USER_DIR)/DynamicArray/DynamicArray.htd $(USER_DIR)/DynamicArray/DynamicArray.tci $(USER_DIR)/DynamicArray/DynamicArray_eti.cc $(specDeps)
+	$(COMPILE_COMPONENT)/DynamicArray/DynamicArray_eti.cc $(COVER)
 
-DynamicArray_spec: DynamicArray_spec.o gtest_main.a It.o
+DynamicArray_spec.o: $(USER_DIR)/DynamicArray/DynamicArray_spec.cc $(specDeps)
+	$(COMPILE_COMPONENT)/DynamicArray/DynamicArray_spec.cc
+
+DynamicArray_spec: DynamicArray_eti.o DynamicArray_spec.o gtest_main.a It.o
 	$(COMPILER) $(COVER) -lpthread $^ -o $@
 
 $(eval $(call spec,Number,NumberHelper.o))

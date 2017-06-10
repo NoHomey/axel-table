@@ -5,6 +5,8 @@
 
 class EmptyDynamicArray: public Exception { };
 
+class IndexNotFound: public Exception { };
+
 template<typename Element>
 class DynamicArray {
 public:
@@ -32,9 +34,13 @@ public:
 
     const Element& operator[](size_t index) const noexcept;
 
+    const Element& getElement(size_t index) const;
+
     void push(const Element& element);
 
     void pop();
+
+    void setElement(const Element& element, size_t index);
 
     void reserve(size_t size);
     

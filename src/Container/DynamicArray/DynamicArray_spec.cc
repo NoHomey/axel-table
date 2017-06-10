@@ -347,3 +347,38 @@ TEST(DynamicArray, MoveAssignOperator) {
     EXPECT_EQ(tmp.capacity(), 0);
     EXPECT_TRUE(tmp.isFull());
 }
+
+TEST(DynamicArray, getElement) {
+    IT("returns element at given index, checks for emptiness and invalid index");
+    TestArray array;
+    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
+    array.push(9);
+    EXPECT_NO_THROW(array.getElement(0));
+    EXPECT_EQ(array.getElement(0), 9);
+    EXPECT_THROW(array.getElement(1), ::IndexNotFound);
+    EXPECT_THROW(array.getElement(2), ::IndexNotFound);
+    array.push(7);
+    EXPECT_NO_THROW(array.getElement(1));
+    EXPECT_EQ(array.getElement(1), 7);
+    EXPECT_THROW(array.getElement(2), ::IndexNotFound);
+    array.clear();
+    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
+}
+
+TEST(DynamicArray, setElement) {
+    IT("sets element at given index if index is greater than DynamicArray size's throws exception");
+    TestArray array;
+    EXPECT_THROW(array.setElement(2, 1), ::IndexNotFound);
+    array.setElement(2, 0);
+    EXPECT_NO_THROW(array.getElement(0));
+    EXPECT_EQ(array.getElement(0), 2);
+    EXPECT_THROW(array.setElement(1, 2), ::IndexNotFound);
+    EXPECT_THROW(array.setElement(1, 3), ::IndexNotFound);
+    array.setElement(9, 1);
+    EXPECT_NO_THROW(array.getElement(1));
+    EXPECT_EQ(array.getElement(1), 9);
+    EXPECT_THROW(array.getElement(2), ::IndexNotFound);
+    array.setElement(9, 2);
+    EXPECT_NO_THROW(array.getElement(2));
+    EXPECT_EQ(array.getElement(2), 9);
+}

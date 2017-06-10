@@ -10,8 +10,6 @@ namespace {
     };
 }
 
-class IndexNotFound: public Exception { };
-
 template<typename Element>
 class IndexedDynamicArray: public DynamicArray<IndexedElement<Element>> {
 private:

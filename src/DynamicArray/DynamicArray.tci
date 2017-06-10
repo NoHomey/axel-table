@@ -9,7 +9,12 @@ DynamicArray<Element>::DynamicArray() noexcept
 
 template<typename Element>
 DynamicArray<Element>::DynamicArray(size_t size)
-: array{new Element[size]}, arraySize{0}, arrayCapacity{size} {}
+: DynamicArray{} {
+    if(size > 0) {
+        array = new Element[size];
+        arrayCapacity = size;
+    }
+}
 
 template<typename Element>
 DynamicArray<Element>::~DynamicArray() noexcept {
@@ -26,7 +31,7 @@ void DynamicArray<Element>::copyOtherArrayElements(const DynamicArray& other) no
 
 template<typename Element>
 DynamicArray<Element>::DynamicArray(const DynamicArray& other)
-: array{new Element[other.arraySize]}, arraySize{0}, arrayCapacity{other.arraySize} {
+: DynamicArray{other.arraySize} {
     copyOtherArrayElements(other);
 }
 
@@ -45,20 +50,32 @@ void DynamicArray<Element>::destroy() noexcept {
     arraySize = 0;
     arrayCapacity = 0;
 }
+
+template<typename Element>
+void DynamicArray<Element>::move(DynamicArray& other) noexcept {
+    delete[] array;
+    array = other.array;
+    arraySize = other.arraySize;
+    arrayCapacity = other.arrayCapacity;
+    other.destroy();
+}
+
 template<typename Element>
 DynamicArray<Element>::DynamicArray(DynamicArray&& other) noexcept
-: array{other.array}, arraySize{other.arraySize}, arrayCapacity{other.arrayCapacity} {
-    other.destroy();
+: DynamicArray{} {
+    if(!other.isEmpty()) {
+        move(other);       
+    }
 }
 
 template<typename Element>
 DynamicArray<Element>& DynamicArray<Element>::operator=(DynamicArray&& other) noexcept {
     if(this != &other) {
-        delete[] array;
-        array = other.array;
-        arraySize = other.arraySize;
-        arrayCapacity = other.arrayCapacity;
-        other.destroy();
+        if(other.arrayCapacity == 0) {
+            clear();
+        } else {
+            move(other);
+        }
     }
     return *this;
 }
@@ -108,9 +125,11 @@ void DynamicArray<Element>::pop() {
 
 template<typename Element>
 void DynamicArray<Element>::reserve(size_t size) {
-    DynamicArray temp{arrayCapacity + size};
-    temp.copyOtherArrayElements(*this);
-    operator=(std::move(temp));
+    if(size > 0) {
+        DynamicArray temp{arrayCapacity + size};
+        temp.copyOtherArrayElements(*this);
+        operator=(std::move(temp));
+    }
 }
 
 template<typename Element>

@@ -47,6 +47,8 @@ private:
 
     void copyOtherArrayElements(const DynamicArray& other) noexcept;
 
+    void move(DynamicArray& other) noexcept;
+
 private:
     Element* array;
     size_t arraySize;

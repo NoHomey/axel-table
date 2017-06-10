@@ -91,7 +91,7 @@ const Element& DynamicArray<Element>::operator[](size_t index) const noexcept {
 template<typename Element>
 void DynamicArray<Element>::push(const Element& element) {
     if(isFull()) {
-        reserve(arraySize);
+        reserve(arraySize + 2);
     }
     array[arraySize] = element;
     ++arraySize;
@@ -115,8 +115,10 @@ void DynamicArray<Element>::reserve(size_t size) {
 
 template<typename Element>
 void DynamicArray<Element>::shrinkToFit() {
-    DynamicArray copy = *this;
-    operator=(std::move(copy));
+    if(!isFull()) {
+        DynamicArray copy = *this;
+        operator=(std::move(copy));
+    }
 }
 
 template<typename Element>

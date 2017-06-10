@@ -1,0 +1,48 @@
+#pragma once
+
+#include "../DynamicArray/DynamicArray.htd"
+
+namespace {
+    template<typename Element>
+    struct IndexedElement {
+        size_t index;
+        Element element;
+    };
+}
+
+class IndexNotFound: public Exception { };
+
+template<typename Element>
+class IndexedDynamicArray: public DynamicArray<IndexedElement<Element>> {
+private:
+    void push(const Element& element);
+
+    void pop();
+
+    size_t findArrayIndexOfElementAtIndex(size_t index) const;
+
+    using Base = DynamicArray<IndexedElement<Element>>;
+
+public:
+    IndexedDynamicArray() noexcept = default;
+
+    explicit IndexedDynamicArray(size_t size);
+
+    ~IndexedDynamicArray() noexcept = default;
+
+    IndexedDynamicArray(const IndexedDynamicArray& other) = default;
+
+    IndexedDynamicArray(IndexedDynamicArray&& other) noexcept = default;
+
+    IndexedDynamicArray& operator=(const IndexedDynamicArray& other) = default;
+
+    IndexedDynamicArray& operator=(IndexedDynamicArray&& other) noexcept = default;
+
+    const Element& operator[](size_t index) const;
+
+    void addElement(const Element& element, size_t index);
+
+    void removeElement(size_t index);
+};
+
+#include "IndexedDynamicArray.tci"

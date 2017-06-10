@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = DynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = DynamicArray_spec IndexedDynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test
@@ -66,6 +66,17 @@ $(2)_spec: $(call objDeps,$(2)) gtest_main.a It.o $(3)
 	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
 endef
 
+define templateInDir
+$(2)_eti.o: $(USER_DIR)/$(1)/$(2)/$(2).htd $(USER_DIR)/$(1)/$(2)/$(2).tci $(USER_DIR)/$(1)/$(2)/$(2)_eti.cc $(specDeps) $(3)
+	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2)_eti.cc $(COVER)
+
+$(2)_spec.o: $(USER_DIR)/$(1)/$(2)/$(2)_spec.cc $(specDeps) $(3)
+	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2)_spec.cc
+
+$(2)_spec: $(2)_eti.o $(2)_spec.o gtest_main.a It.o $(3)
+	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
+endef
+
 define endl
 
 
@@ -92,14 +103,9 @@ BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicStri
 NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
 	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
 
-DynamicArray_eti.o: $(USER_DIR)/DynamicArray/DynamicArray.htd $(USER_DIR)/DynamicArray/DynamicArray.tci $(USER_DIR)/DynamicArray/DynamicArray_eti.cc $(specDeps)
-	$(COMPILE_COMPONENT)/DynamicArray/DynamicArray_eti.cc $(COVER)
+$(eval $(call templateInDir,Container,DynamicArray))
 
-DynamicArray_spec.o: $(USER_DIR)/DynamicArray/DynamicArray_spec.cc $(specDeps)
-	$(COMPILE_COMPONENT)/DynamicArray/DynamicArray_spec.cc
-
-DynamicArray_spec: DynamicArray_eti.o DynamicArray_spec.o gtest_main.a It.o
-	$(COMPILER) $(COVER) -lpthread $^ -o $@
+$(eval $(call templateInDir,Container,IndexedDynamicArray))
 
 $(eval $(call spec,Number,NumberHelper.o))
 

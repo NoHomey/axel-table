@@ -106,10 +106,15 @@ const Element& DynamicArray<Element>::operator[](size_t index) const noexcept {
 }
 
 template<typename Element>
-void DynamicArray<Element>::push(const Element& element) {
+void DynamicArray<Element>::ensureCapacity() {
     if(isFull()) {
         reserve(arraySize + 2);
     }
+}
+
+template<typename Element>
+void DynamicArray<Element>::push(const Element& element) {
+    ensureCapacity();
     array[arraySize] = element;
     ++arraySize;
 }

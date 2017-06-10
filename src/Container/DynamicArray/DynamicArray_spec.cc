@@ -1,6 +1,6 @@
 #include "DynamicArray.htd"
 #include "gtest/gtest.h"
-#include "../It/It.h"
+#include "../../It/It.h"
 
 using TestArray = DynamicArray<int>;
 

@@ -1,0 +1,24 @@
+#pragma once
+
+#include <cstddef>
+
+template<typename Element>
+class DynamicArray {
+public:
+    DynamicArray() noexcept;
+    
+    explicit DynamicArray(size_t size);
+
+    size_t size() const noexcept;
+
+    size_t capacity() const noexcept;
+
+    bool isEmpty() const noexcept;
+
+private:
+    Element* array;
+    size_t arraySize;
+    size_t arrayCapacity;
+};
+
+#include "DynamicArray.tci"

@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = DynamicArray_spec #ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test
@@ -91,6 +91,12 @@ BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicStri
 
 NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
 	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
+
+DynamicArray_spec.o: $(USER_DIR)/DynamicArray/DynamicArray.htd $(USER_DIR)/DynamicArray/DynamicArray.tci $(specDeps)
+	$(COMPILE_COMPONENT)/DynamicArray/DynamicArray_spec.cc $(COVER)
+
+DynamicArray_spec: DynamicArray_spec.o gtest_main.a It.o
+	$(COMPILER) $(COVER) -lpthread $^ -o $@
 
 $(eval $(call spec,Number,NumberHelper.o))
 

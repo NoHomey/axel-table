@@ -93,3 +93,29 @@ TEST(IndexDynamicArray, SizeConstructor) {
     EXPECT_TRUE(empty.isFull());
     EXPECT_THROW(empty.removeElement(2), ::EmptyDynamicArray);
 }
+
+TEST(IndexDynamicArray, getElement) {
+    IT("returns element at given index, checks for emptiness and invalid index");
+    TestArray array;
+    EXPECT_THROW(array.getElement(0), ::IndexNotFound);
+    array.addElement(9,7);
+    EXPECT_THROW(array.getElement(0), ::IndexNotFound);
+    EXPECT_EQ(array.getElement(7), 9);
+    EXPECT_THROW(array.getElement(1), ::IndexNotFound);
+    EXPECT_THROW(array.getElement(9), ::IndexNotFound);
+    EXPECT_THROW(array.getElement(2), ::IndexNotFound);
+    array.clear();
+    EXPECT_THROW(array.getElement(0), ::IndexNotFound);
+}
+
+TEST(IndexDynamicArray, setElement) {
+    IT("sets element at given index if index is greater than DynamicArray size's throws exception");
+    TestArray array;
+    array.setElement(2, 2);
+    EXPECT_NO_THROW(array.getElement(2));
+    EXPECT_EQ(array.getElement(2), 2);
+    array.setElement(5, 4);
+    array.setElement(1, 6);
+    EXPECT_NO_THROW(array.getElement(4));
+    EXPECT_NO_THROW(array.getElement(6));
+}

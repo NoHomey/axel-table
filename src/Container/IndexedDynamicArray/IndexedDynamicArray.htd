@@ -17,6 +17,8 @@ private:
 
     void pop();
 
+    void sort() noexcept;
+
     size_t findArrayIndexOfElementAtIndex(size_t index) const;
 
     using Base = DynamicArray<IndexedElement<Element>>;

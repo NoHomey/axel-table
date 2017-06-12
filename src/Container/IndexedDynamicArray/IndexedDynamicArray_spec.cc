@@ -97,7 +97,7 @@ TEST(IndexDynamicArray, SizeConstructor) {
 TEST(IndexDynamicArray, getElement) {
     IT("returns element at given index, checks for emptiness and invalid index");
     TestArray array;
-    EXPECT_THROW(array.getElement(0), ::IndexNotFound);
+    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
     array.addElement(9,7);
     EXPECT_THROW(array.getElement(0), ::IndexNotFound);
     EXPECT_EQ(array.getElement(7), 9);
@@ -105,7 +105,7 @@ TEST(IndexDynamicArray, getElement) {
     EXPECT_THROW(array.getElement(9), ::IndexNotFound);
     EXPECT_THROW(array.getElement(2), ::IndexNotFound);
     array.clear();
-    EXPECT_THROW(array.getElement(0), ::IndexNotFound);
+    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
 }
 
 TEST(IndexDynamicArray, setElement) {

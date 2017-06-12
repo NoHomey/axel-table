@@ -36,13 +36,12 @@ const Element& IndexedDynamicArray<Element>::getElement(size_t index) const {
         const size_t elementIndex = findArrayIndexOfElementAtIndex(index);
         return IndexedDynamicArray::Base::array[elementIndex].element;
     } else {
-        throw IndexNotFound{};
+        throw EmptyDynamicArray{};
     }
 }
 
 template<typename Element>
-void IndexedDynamicArray<Element>::addElement(const Element& element, size_t index) {
-    IndexedDynamicArray::Base::push({index, element});
+void IndexedDynamicArray<Element>::sort() noexcept {
     size_t i = 0;
     size_t j = 0;
     size_t minIndex = 0;
@@ -62,6 +61,12 @@ void IndexedDynamicArray<Element>::addElement(const Element& element, size_t ind
             IndexedDynamicArray::Base::array[i] = temp;
         }
     }
+}
+
+template<typename Element>
+void IndexedDynamicArray<Element>::addElement(const Element& element, size_t index) {
+    IndexedDynamicArray::Base::push({index, element});
+    sort();
 }
 
 template<typename Element>

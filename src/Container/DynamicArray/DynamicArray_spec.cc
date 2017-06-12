@@ -381,4 +381,8 @@ TEST(DynamicArray, setElement) {
     array.setElement(9, 2);
     EXPECT_NO_THROW(array.getElement(2));
     EXPECT_EQ(array.getElement(2), 9);
+    array.setElement(2, 2);
+    EXPECT_EQ(array.getElement(2), 2);
+    array.setElement(5, 2);
+    EXPECT_EQ(array.getElement(2), 5);
 }

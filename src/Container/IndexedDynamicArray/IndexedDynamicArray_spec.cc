@@ -118,4 +118,10 @@ TEST(IndexDynamicArray, setElement) {
     array.setElement(1, 6);
     EXPECT_NO_THROW(array.getElement(4));
     EXPECT_NO_THROW(array.getElement(6));
+    EXPECT_EQ(array.getElement(6), 1);
+    array.setElement(9, 6);
+    EXPECT_EQ(array.getElement(6), 9);
+    EXPECT_EQ(array.getElement(4), 5);
+    array.setElement(2, 4);
+    EXPECT_EQ(array.getElement(4), 2);
 }

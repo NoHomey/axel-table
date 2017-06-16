@@ -174,3 +174,11 @@ void DynamicArray<Element>::clear() noexcept {
     delete[] array;
     destroy();
 }
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void DynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const {
+    for(size_t index = 0; index < arraySize; ++index) {
+        function(array[index], index);
+    }
+}

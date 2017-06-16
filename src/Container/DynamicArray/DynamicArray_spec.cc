@@ -386,3 +386,37 @@ TEST(DynamicArray, setElement) {
     array.setElement(5, 2);
     EXPECT_EQ(array.getElement(2), 5);
 }
+
+TEST(DynamicArray, forEach) {
+    IT("makes a function like call to the given function-like passing element and it's index for each element");
+
+    class Expecter {
+    public:
+        Expecter(): position{0} { }
+
+        void operator()(int element, size_t index) {
+            EXPECT_EQ(element, data[position]);
+            EXPECT_EQ(index, indexes[position]);
+            ++position;
+        }
+    private:
+        size_t position;
+        const int data[10] = {1, 6, 3, 6, 22, 9549, -343, 123, 5, 971};
+        const size_t indexes[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    };
+
+    TestArray array{10};
+    array.push(1);
+    array.push(6);
+    array.push(3);
+    array.push(6);
+    array.push(22);
+    array.push(9549);
+    array.push(-343);
+    array.push(123);
+    array.push(5);
+    array.push(971);
+
+    Expecter expecter;
+    array.forEach(expecter);
+}

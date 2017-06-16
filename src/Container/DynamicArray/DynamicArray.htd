@@ -48,6 +48,9 @@ public:
 
     void clear() noexcept;
 
+    template<typename ForEachInDynamicArrayFunction>
+    void forEach(ForEachInDynamicArrayFunction& function) const;
+
 protected:
     Element* array;
     size_t arraySize;

@@ -2,7 +2,7 @@ GTEST_DIR = ../../googletest
 
 USER_DIR = ..
 
-TESTS = DynamicArray_spec IndexedDynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test
@@ -106,6 +106,8 @@ NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelpe
 $(eval $(call templateInDir,Container,DynamicArray))
 
 $(eval $(call templateInDir,Container,IndexedDynamicArray))
+
+$(eval $(call templateInDir,Container,FragmentedDynamicArray))
 
 $(eval $(call spec,Number,NumberHelper.o))
 

@@ -1,0 +1,52 @@
+#pragma once
+
+#include "../DynamicArray/DynamicArray.htd"
+#include "../IndexedDynamicArray/IndexedDynamicArray.htd"
+
+class OperationNotPermitted: public Exception { };
+
+template<typename Element>
+class FragmentedDynamicArray {
+public:
+    FragmentedDynamicArray() noexcept = default;
+
+    explicit FragmentedDynamicArray(size_t centerSize);
+
+    ~FragmentedDynamicArray() noexcept = default;
+
+    FragmentedDynamicArray(const FragmentedDynamicArray& other) = default;
+
+    FragmentedDynamicArray(FragmentedDynamicArray&& other) noexcept = default;
+
+    FragmentedDynamicArray& operator=(const FragmentedDynamicArray& other) = default;
+
+    FragmentedDynamicArray& operator=(FragmentedDynamicArray&& other) noexcept = default;
+
+    size_t size() const noexcept;
+
+    size_t capacity() const noexcept;
+
+    bool isEmpty() const noexcept;
+
+    bool isFull() const noexcept;
+
+    const Element& operator[](size_t index) const;
+
+    const Element& getElement(size_t index) const;
+
+    void addElement(const Element& element, size_t index);
+
+    void setElement(const Element& element, size_t index);
+
+    void removeElement(size_t index);
+
+    void shrinkToFit();
+
+    void clear() noexcept;
+
+private:
+    DynamicArray<Element> centeredElements;
+    IndexedDynamicArray<Element> peripheralElements;
+};
+
+#include "FragmentedDynamicArray.tci"

@@ -46,6 +46,8 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "cmath": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "*.htd": "cpp",
+        "*.tci": "cpp"
     }
 }

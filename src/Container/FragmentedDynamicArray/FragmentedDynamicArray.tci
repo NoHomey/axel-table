@@ -1,0 +1,78 @@
+#include "FragmentedDynamicArray.htd"
+
+template<typename Element>
+FragmentedDynamicArray<Element>::FragmentedDynamicArray(size_t centerSize)
+: centeredElements{centerSize}, peripheralElements{} { }
+
+template<typename Element>
+size_t FragmentedDynamicArray<Element>::size() const noexcept {
+    return centeredElements.size() + peripheralElements.size();
+}
+
+template<typename Element>
+size_t FragmentedDynamicArray<Element>::capacity() const noexcept {
+    return centeredElements.capacity() + peripheralElements.capacity();
+}
+
+template<typename Element>
+bool FragmentedDynamicArray<Element>::isEmpty() const noexcept {
+    return centeredElements.isEmpty() && peripheralElements.isEmpty();
+}
+
+template<typename Element>
+bool FragmentedDynamicArray<Element>::isFull() const noexcept {
+    return centeredElements.isFull() && peripheralElements.isFull();
+}
+
+template<typename Element>
+const Element& FragmentedDynamicArray<Element>::operator[](size_t index) const {
+    return index < centeredElements.size() ? centeredElements[index] : peripheralElements[index];
+}
+
+template<typename Element>
+const Element& FragmentedDynamicArray<Element>::getElement(size_t index) const {
+    return index < centeredElements.size() ? centeredElements[index] : peripheralElements.getElement(index);
+}
+
+template<typename Element>
+void FragmentedDynamicArray<Element>::addElement(const Element& element, size_t index) {
+    if((index == centeredElements.size()) && (!centeredElements.isFull())){
+        centeredElements.push(element);
+    } else {
+        peripheralElements.addElement(element, index);
+    }
+}
+
+template<typename Element>
+void FragmentedDynamicArray<Element>::setElement(const Element& element, size_t index) {
+    try {
+        centeredElements.setElement(element, index);
+    } catch(IndexNotFound& error) {
+        peripheralElements.setElement(element, index);
+    }
+}
+
+template<typename Element>
+void FragmentedDynamicArray<Element>::removeElement(size_t index) {
+    const size_t centeredElementsSize = centeredElements.size();
+    if(index <= centeredElementsSize) {
+        if(index == centeredElementsSize) {
+            centeredElements.pop();
+        } else {
+            throw OperationNotPermitted{};
+        }
+    }
+    peripheralElements.removeElement(index);
+}
+
+template<typename Element>
+void FragmentedDynamicArray<Element>::shrinkToFit() {
+    centeredElements.shrinkToFit();
+    peripheralElements.shrinkToFit();
+}
+
+template<typename Element>
+void FragmentedDynamicArray<Element>::clear() noexcept {
+    centeredElements.clear();
+    peripheralElements.clear();
+}

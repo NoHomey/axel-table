@@ -34,6 +34,8 @@ public:
 
     const Element& getElement(size_t index) const;
 
+    void addElement(const Element& element);
+
     void addElement(const Element& element, size_t index);
 
     void setElement(const Element& element, size_t index);

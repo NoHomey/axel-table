@@ -23,6 +23,7 @@ TEST(DynamicArray, SizeConstructor) {
     EXPECT_FALSE(array.isFull());
     EXPECT_THROW(array.pop(), ::EmptyDynamicArray);
     TestArray empty{0};
+    EXPECT_TRUE(empty.isEmpty());
     EXPECT_EQ(empty.size(), 0);
     EXPECT_EQ(empty.capacity(), 0);
     EXPECT_TRUE(empty.isFull());
@@ -44,6 +45,10 @@ TEST(DynamicArray, isFull) {
     array.push(9);
     EXPECT_FALSE(array.isFull());
     EXPECT_EQ(array.size(), 1);
+    EXPECT_EQ(array.capacity(), 2);
+    array.push(3);
+    EXPECT_TRUE(array.isFull());
+    EXPECT_EQ(array.size(), 2);
     EXPECT_EQ(array.capacity(), 2);
 }
 
@@ -188,7 +193,7 @@ TEST(DynamicArray, clear) {
     EXPECT_TRUE(array.isEmpty());
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
-    EXPECT_TRUE(array.isFull());;
+    EXPECT_TRUE(array.isFull());
 }
 
 TEST(DynamicArray, reserve) {
@@ -239,6 +244,15 @@ TEST(DynamicArray, CopyConstructor) {
     EXPECT_EQ(copy[0], 2);
     EXPECT_EQ(copy[1], 9);
     EXPECT_EQ(copy[2], 7);
+    copy.push(213);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 3);
+    EXPECT_EQ(array.capacity(), 6);
+    EXPECT_FALSE(array.isFull());
+    EXPECT_FALSE(copy.isEmpty());
+    EXPECT_EQ(copy.size(), 4);
+    EXPECT_EQ(copy.capacity(), 8);
+    EXPECT_FALSE(copy.isFull());
 }
 
 TEST(DynamicArray, MoveConstructor) {
@@ -303,6 +317,15 @@ TEST(DynamicArray, AssignOperator) {
     EXPECT_EQ(tmp[0], 2);
     EXPECT_EQ(tmp[1], 9);
     EXPECT_EQ(tmp[2], 7);
+    tmp.push(213);
+    EXPECT_TRUE(array.isEmpty());
+    EXPECT_EQ(array.size(), 0);
+    EXPECT_EQ(array.capacity(), 0);
+    EXPECT_TRUE(array.isFull());
+    EXPECT_FALSE(tmp.isEmpty());
+    EXPECT_EQ(tmp.size(), 4);
+    EXPECT_EQ(tmp.capacity(), 8);
+    EXPECT_FALSE(tmp.isFull());
 }
 
 TEST(DynamicArray, MoveAssignOperator) {

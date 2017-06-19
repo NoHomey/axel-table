@@ -119,7 +119,7 @@ const Element& DynamicArray<Element>::getElement(size_t index) const {
 template<typename Element>
 void DynamicArray<Element>::ensureCapacity() {
     if(isFull()) {
-        reserve(arraySize + 2);
+        reserve(arrayCapacity + 2);
     }
 }
 

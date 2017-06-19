@@ -326,6 +326,65 @@ TEST(FragmentedDynamicArray, clear) {
     EXPECT_TRUE(array.isFull());
 }
 
+TEST(FragmentedDynamicArray, shrinkToFit) {
+    IT("if not full allocates new FragmentedDynamicArray with capacity equal to size the copy all elements, dealocates old memory and moves assigns it");
+    TestArray array;
+    EXPECT_TRUE(array.isEmpty());
+    array.setElement(9, 0);
+    EXPECT_EQ(array.capacity(), 2);
+    EXPECT_EQ(array.size(), 1);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_FALSE(array.isFull());
+    array.shrinkToFit();
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 1);
+    EXPECT_EQ(array.capacity(), 1);
+    EXPECT_TRUE(array.isFull());
+    array.setElement(4, 0);
+    array.setElement(2, 1);
+    array.setElement(1, 2);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 3);
+    EXPECT_EQ(array.capacity(), 4);
+    EXPECT_FALSE(array.isFull());
+    array.setElement(9, 3);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 4);
+    EXPECT_EQ(array.capacity(), 4);
+    EXPECT_TRUE(array.isFull());
+    array.shrinkToFit();
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 4);
+    EXPECT_EQ(array.capacity(), 4);
+    EXPECT_TRUE(array.isFull());
+    array.setElement(-1, 1999);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 5);
+    EXPECT_EQ(array.capacity(), 6);
+    EXPECT_FALSE(array.isFull());
+    array.shrinkToFit();
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 5);
+    EXPECT_EQ(array.capacity(), 5);
+    EXPECT_TRUE(array.isFull());
+    array.setElement(123, 321);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 6);
+    EXPECT_EQ(array.capacity(), 8);
+    EXPECT_FALSE(array.isFull());
+    array.shrinkToFit();
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 6);
+    EXPECT_EQ(array.capacity(), 6);
+    EXPECT_TRUE(array.isFull());
+    EXPECT_EQ(array[0], 4);
+    EXPECT_EQ(array[1], 2);
+    EXPECT_EQ(array[2], 1);
+    EXPECT_EQ(array[3], 9);
+    EXPECT_EQ(array[1999], -1);
+    EXPECT_EQ(array[321], 123);
+}
+
 TEST(FragmentedDynamicArray, CopyConstructor) {
     IT("should copy other FragmentedDynamicArray and sets capacity and size of the copy equal to other's size");
     TestArray empty;

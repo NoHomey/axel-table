@@ -52,6 +52,7 @@ void FragmentedDynamicArray<Element>::removeElement(size_t index) {
     if(index < centeredElementsSize) {
         if(index == (centeredElementsSize - 1)) {
             centeredElements.pop();
+            return;
         } else {
             throw OperationNotPermitted{};
         }

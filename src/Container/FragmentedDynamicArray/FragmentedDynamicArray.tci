@@ -40,18 +40,12 @@ void FragmentedDynamicArray<Element>::addElement(const Element& element) {
 }
 
 template<typename Element>
-void FragmentedDynamicArray<Element>::addElement(const Element& element, size_t index) {
-    if((index == centeredElements.size()) && (!centeredElements.isFull())){
-        centeredElements.push(element);
-    } else {
-        peripheralElements.addElement(element, index);
-    }
-}
-
-template<typename Element>
 void FragmentedDynamicArray<Element>::setElement(const Element& element, size_t index) {
     try {
         centeredElements.setElement(element, index);
+        try {
+            peripheralElements.removeElement(index);
+        } catch(Exception& error) { }
     } catch(IndexNotFound& error) {
         peripheralElements.setElement(element, index);
     }

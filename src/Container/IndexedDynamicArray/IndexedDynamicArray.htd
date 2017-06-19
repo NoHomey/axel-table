@@ -10,8 +10,6 @@ namespace {
     };
 }
 
-class IndexFound: public Exception { };
-
 template<typename Element>
 class IndexedDynamicArray: public DynamicArray<IndexedElement<Element>> {
 private:
@@ -45,8 +43,6 @@ public:
     const Element& operator[](size_t index) const;
 
     const Element& getElement(size_t index) const;
-
-    void addElement(const Element& element, size_t index);
 
     void setElement(const Element& element, size_t index);
 

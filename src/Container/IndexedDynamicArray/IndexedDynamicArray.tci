@@ -70,16 +70,6 @@ void IndexedDynamicArray<Element>::addNewElement(const Element& element, size_t 
 }
 
 template<typename Element>
-void IndexedDynamicArray<Element>::addElement(const Element& element, size_t index) {
-    try {
-        findArrayIndexOfElementAtIndex(index);
-    } catch(::Exception& error) {
-        return addNewElement(element, index);
-    }
-    throw IndexFound{};
-}
-
-template<typename Element>
 void IndexedDynamicArray<Element>::setElement(const Element& element, size_t index) {
     size_t elementIndex;
     try {

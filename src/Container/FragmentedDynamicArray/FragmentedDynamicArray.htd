@@ -36,8 +36,6 @@ public:
 
     void addElement(const Element& element);
 
-    void addElement(const Element& element, size_t index);
-
     void setElement(const Element& element, size_t index);
 
     void removeElement(size_t index);

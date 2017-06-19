@@ -264,6 +264,44 @@ TEST(FragmentedDynamicArray, removeElement) {
     EXPECT_THROW(array.removeElement(0), ::EmptyDynamicArray);
 }
 
+TEST(FragmentedDynamicArray, indexOperator) {
+    IT("returns element at the given index, checks for emptiness and invalid index");
+    TestArray array;
+    EXPECT_THROW(array[0], ::EmptyDynamicArray);
+    EXPECT_THROW(array[100], ::EmptyDynamicArray);
+    for(size_t i = 0; i < 9; ++i) {
+        array.setElement(i, i);
+    }
+    for(size_t i = 0; i < 9; ++i) {
+        EXPECT_EQ(array[i], i);
+    }
+    EXPECT_THROW(array[99], ::IndexNotFound);
+    EXPECT_THROW(array[100], ::IndexNotFound);
+    array.setElement(100, 99);
+    array.setElement(99, 100);
+    EXPECT_EQ(array[99], 100);
+    EXPECT_EQ(array[100], 99);
+}
+
+TEST(FragmentedDynamicArray, getElement) {
+    IT("returns element at given index, checks for emptiness and invalid index");
+    TestArray array;
+    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
+    EXPECT_THROW(array.getElement(100), ::EmptyDynamicArray);
+    for(size_t i = 0; i < 9; ++i) {
+        array.setElement(i, i);
+    }
+    for(size_t i = 0; i < 9; ++i) {
+        EXPECT_EQ(array.getElement(i), i);
+    }
+    EXPECT_THROW(array.getElement(99), ::IndexNotFound);
+    EXPECT_THROW(array.getElement(100), ::IndexNotFound);
+    array.setElement(100, 99);
+    array.setElement(99, 100);
+    EXPECT_EQ(array.getElement(99), 100);
+    EXPECT_EQ(array.getElement(100), 99);
+}
+
 TEST(FragmentedDynamicArray, clear) {
     IT("clears the FragmentedDynamicArray content and resets size and capacity");
     TestArray array;
@@ -571,4 +609,44 @@ TEST(FragmentedDynamicArray, MoveAssignOperator) {
     EXPECT_EQ(doubleMoved[3944], -10);
     EXPECT_EQ(doubleMoved[10000], 100);
     EXPECT_EQ(doubleMoved[99], 99);
+}
+
+TEST(FragmentedDynamicArray, forEach) {
+    IT("makes a function like call to the given function-like passing element and it's index for each element");
+
+    class Expecter {
+    public:
+        Expecter(): position{0} { }
+
+        void operator()(int element, size_t index) {
+            EXPECT_EQ(element, data[position]);
+            EXPECT_EQ(index, indexes[position]);
+            ++position;
+        }
+    private:
+        size_t position;
+        const int data[16] = {-1, 0, 111, 325, 357, 16, 3, 6, 123, 22, 1, 9549, 5, 6, -343, 971};
+        const size_t indexes[16] = {0, 1, 2, 3, 4, 5, 6, 13, 17, 42, 45, 53, 81, 454, 678, 9999};
+    };
+
+    TestArray array;
+    array.setElement(1, 45);
+    array.setElement(6, 454);
+    array.setElement(3, 6);
+    array.setElement(6, 13);
+    array.setElement(22, 42);
+    array.setElement(9549, 53);
+    array.setElement(-343, 678);
+    array.setElement(123, 17);
+    array.setElement(5, 81);
+    array.setElement(971, 9999);
+    array.setElement(-1, 0);
+    array.setElement(0, 1);
+    array.setElement(111, 2);
+    array.setElement(325, 3);
+    array.setElement(357, 4);
+    array.setElement(16, 5);
+
+    Expecter expecter;
+    array.forEach(expecter);
 }

@@ -375,6 +375,7 @@ TEST(DynamicArray, getElement) {
     IT("returns element at given index, checks for emptiness and invalid index");
     TestArray array;
     EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
+    EXPECT_THROW(array.getElement(100), ::EmptyDynamicArray);
     array.push(9);
     EXPECT_NO_THROW(array.getElement(0));
     EXPECT_EQ(array.getElement(0), 9);

@@ -26,12 +26,23 @@ bool FragmentedDynamicArray<Element>::isFull() const noexcept {
 
 template<typename Element>
 const Element& FragmentedDynamicArray<Element>::operator[](size_t index) const {
-    return index < centeredElements.size() ? centeredElements[index] : peripheralElements[index];
+    return getElement(index);
 }
 
 template<typename Element>
 const Element& FragmentedDynamicArray<Element>::getElement(size_t index) const {
-    return index < centeredElements.size() ? centeredElements[index] : peripheralElements.getElement(index);
+    if(index < centeredElements.size()) {
+        return centeredElements.getElement(index);
+    }
+    try {
+        return peripheralElements.getElement(index);
+    } catch(EmptyDynamicArray& error) {
+        if(centeredElements.isEmpty()) {
+            throw error;
+        } else {
+            throw IndexNotFound{};
+        }
+    }
 }
 
 template<typename Element>

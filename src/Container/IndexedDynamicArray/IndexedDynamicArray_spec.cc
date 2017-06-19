@@ -181,7 +181,7 @@ TEST(IndexedDynamicArray, getElement) {
 }
 
 TEST(IndexedDynamicArray, setElement) {
-    IT("sets element at given index if index is greater than DynamicArray size's throws exception");
+    IT("sets element at given index if index is found element is replaced else new element is added and array is sorted by element's index");
     TestArray array;
     array.setElement(2, 2);
     EXPECT_NO_THROW(array.getElement(2));

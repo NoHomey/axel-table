@@ -35,11 +35,6 @@ const Element& FragmentedDynamicArray<Element>::getElement(size_t index) const {
 }
 
 template<typename Element>
-void FragmentedDynamicArray<Element>::addElement(const Element& element) {
-    centeredElements.push(element);
-}
-
-template<typename Element>
 void FragmentedDynamicArray<Element>::setElement(const Element& element, size_t index) {
     try {
         centeredElements.setElement(element, index);
@@ -74,4 +69,11 @@ template<typename Element>
 void FragmentedDynamicArray<Element>::clear() noexcept {
     centeredElements.clear();
     peripheralElements.clear();
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void FragmentedDynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const {
+    centeredElements.forEach(function);
+    peripheralElements.forEach(function);
 }

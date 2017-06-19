@@ -31,15 +31,15 @@ TEST(FragmentedDynamicArray, isEmpty) {
     IT("returns true if FragmentedDynamicArray's size is equal to 0");
     TestArray array;
     EXPECT_TRUE(array.isEmpty());
-    array.addElement(9);
+    array.setElement(9, 0);
     EXPECT_FALSE(array.isEmpty());
-    array.addElement(-823);
+    array.setElement(-823, 1);
     EXPECT_FALSE(array.isEmpty());
     TestArray array2;
     EXPECT_TRUE(array2.isEmpty());
     array2.setElement(9, 999);
     EXPECT_FALSE(array2.isEmpty());
-    array2.addElement(1823);
+    array2.setElement(1823, 2);
     EXPECT_FALSE(array2.isEmpty());
 }
 
@@ -47,15 +47,15 @@ TEST(FragmentedDynamicArray, isFull) {
     IT("returns true if FragmentedDynamicArray's size is equal to it's capacity");
     TestArray array;
     EXPECT_TRUE(array.isFull());
-    array.addElement(9);
+    array.setElement(9, 0);
     EXPECT_FALSE(array.isFull());
     EXPECT_EQ(array.size(), 1);
     EXPECT_EQ(array.capacity(), 2);
-    array.addElement(3);
+    array.setElement(3, 1);
     EXPECT_TRUE(array.isFull());
     EXPECT_EQ(array.size(), 2);
     EXPECT_EQ(array.capacity(), 2);
-    array.addElement(100);
+    array.setElement(100, 2);
     EXPECT_FALSE(array.isFull());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -65,12 +65,12 @@ TEST(FragmentedDynamicArray, size) {
     IT("returns the count of elements in the FragmentedDynamicArray");
     TestArray array;
     EXPECT_EQ(array.size(), 0);
-    array.addElement(9);
+    array.setElement(9, 0);
     EXPECT_EQ(array.size(), 1);
-    array.addElement(4);
+    array.setElement(4, 1);
     EXPECT_EQ(array.size(), 2);
     for(size_t i = 0; i < 9; ++i) {
-        array.addElement(i);
+        array.setElement(i, i + 2);
     }
     EXPECT_EQ(array.size(), 11);
     array.setElement(12, 100);
@@ -87,12 +87,12 @@ TEST(FragmentedDynamicArray, capacity) {
     IT("returns the size of dynamically allocated memory for the FragmentedDynamicArray's elements");
     TestArray array;
     EXPECT_EQ(array.capacity(), 0);
-    array.addElement(9);
+    array.setElement(9, 0);
     EXPECT_EQ(array.capacity(), 2);
-    array.addElement(4);
+    array.setElement(4, 1);
     EXPECT_EQ(array.capacity(), 2);
     for(size_t i = 0; i < 9; ++i) {
-        array.addElement(i);
+        array.setElement(i, i + 2);
     }
     EXPECT_EQ(array.capacity(), 14);
     array.setElement(12, 100);
@@ -105,37 +105,91 @@ TEST(FragmentedDynamicArray, capacity) {
     EXPECT_EQ(array.capacity(), 20);
 }
 
-/*TEST(FragmentedDynamicArray, addElementWithoutIndex) {
-    IT("adds new element to the FragmentedDynamicArray if it is full it will also resize it to capacity equal to [2 x size]");
+TEST(FragmentedDynamicArray, setElement) {
+    IT("sets element at given index if index is found element is replaced else new element is added and array is sorted by element's index");
     TestArray array;
-    array.addElement(9);
+    array.setElement(7, 0);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 1);
     EXPECT_EQ(array.capacity(), 2);
     EXPECT_FALSE(array.isFull());
-    for(size_t i = 0; i < 13; ++i) {
-        array.addElement(i);
-    }
+    EXPECT_EQ(array[0], 7);
+    array.setElement(9, 1);
     EXPECT_FALSE(array.isEmpty());
-    EXPECT_EQ(array.size(), 14);
-    EXPECT_EQ(array.capacity(), 14);
+    EXPECT_EQ(array.size(), 2);
+    EXPECT_EQ(array.capacity(), 2);
     EXPECT_TRUE(array.isFull());
-    for(size_t i = 42; i < 47; ++i) {
-        array.addElement(i);
-    }
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 9);
+    array.setElement(9, 1);
     EXPECT_FALSE(array.isEmpty());
-    EXPECT_EQ(array.size(), 19);
-    EXPECT_EQ(array.capacity(), 30);
+    EXPECT_EQ(array.size(), 2);
+    EXPECT_EQ(array.capacity(), 2);
+    EXPECT_TRUE(array.isFull());
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 9);
+    array.setElement(100, 3);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 3);
+    EXPECT_EQ(array.capacity(), 4);
     EXPECT_FALSE(array.isFull());
-    array.addElement(22);
-    EXPECT_EQ(array.size(), 20);
-    EXPECT_EQ(array.capacity(), 30);
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 9);
+    EXPECT_THROW(array[2], ::IndexNotFound);
+    EXPECT_EQ(array[3], 100);
+    array.setElement(99, 2);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 4);
+    EXPECT_EQ(array.capacity(), 8);
     EXPECT_FALSE(array.isFull());
-    array.addElement(23);
-    EXPECT_EQ(array.size(), 21);
-    EXPECT_EQ(array.capacity(), 30);
-    EXPECT_FALx`SE(array.isFull());
-}*/
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 9);
+    EXPECT_EQ(array[2], 99);
+    EXPECT_EQ(array[3], 100);
+    array.setElement(8, 7);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 5);
+    EXPECT_EQ(array.capacity(), 8);
+    EXPECT_FALSE(array.isFull());
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 9);
+    EXPECT_EQ(array[2], 99);
+    EXPECT_EQ(array[3], 100);
+    EXPECT_THROW(array[4], ::IndexNotFound);
+    EXPECT_THROW(array[5], ::IndexNotFound);
+    EXPECT_THROW(array[6], ::IndexNotFound);
+    EXPECT_EQ(array[7], 8);
+    array.setElement(-344, 4);
+    array.setElement(-23445, 5);
+    array.setElement(9341, 6);
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 9);
+    EXPECT_EQ(array[2], 99);
+    EXPECT_EQ(array[3], 100);
+    EXPECT_EQ(array[4], -344);
+    EXPECT_EQ(array[5], -23445);
+    EXPECT_EQ(array[6], 9341);
+    EXPECT_EQ(array[7], 8);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 8);
+    EXPECT_EQ(array.capacity(), 12);
+    EXPECT_FALSE(array.isFull());
+    array.setElement(0, 1);
+    array.setElement(991, 4);
+    array.setElement(111456, 7);
+    EXPECT_EQ(array[0], 7);
+    EXPECT_EQ(array[1], 0);
+    EXPECT_EQ(array[2], 99);
+    EXPECT_EQ(array[3], 100);
+    EXPECT_EQ(array[4], 991);
+    EXPECT_EQ(array[5], -23445);
+    EXPECT_EQ(array[6], 9341);
+    EXPECT_EQ(array[7], 111456);
+    EXPECT_FALSE(array.isEmpty());
+    EXPECT_EQ(array.size(), 8);
+    EXPECT_EQ(array.capacity(), 12);
+    EXPECT_FALSE(array.isFull());
+}
 
 TEST(FragmentedDynamicArray, CopyConstructor) {
     IT("should copy other FragmentedDynamicArray and sets capacity and size of the copy equal to other's size");
@@ -145,9 +199,9 @@ TEST(FragmentedDynamicArray, CopyConstructor) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.addElement(2);
-    array.addElement(9);
-    array.addElement(7);
+    array.setElement(2, 0);
+    array.setElement(9, 1);
+    array.setElement(7, 2);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -190,9 +244,9 @@ TEST(FragmentedDynamicArray, MoveConstructor) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.addElement(2);
-    array.addElement(9);
-    array.addElement(7);
+    array.setElement(2, 0);
+    array.setElement(9, 1);
+    array.setElement(7, 2);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -237,9 +291,9 @@ TEST(FragmentedDynamicArray, AssignOperator) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.addElement(2);
-    array.addElement(9);
-    array.addElement(7);
+    array.setElement(2, 0);
+    array.setElement(9, 1);
+    array.setElement(7, 2);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -288,9 +342,9 @@ TEST(FragmentedDynamicArray, MoveAssignOperator) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.addElement(2);
-    array.addElement(9);
-    array.addElement(7);
+    array.setElement(2, 0);
+    array.setElement(9, 1);
+    array.setElement(7, 2);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);

@@ -64,9 +64,19 @@ void IndexedDynamicArray<Element>::sort() noexcept {
 }
 
 template<typename Element>
-void IndexedDynamicArray<Element>::addElement(const Element& element, size_t index) {
+void IndexedDynamicArray<Element>::addNewElement(const Element& element, size_t index) {
     IndexedDynamicArray::Base::push({index, element});
     sort();
+}
+
+template<typename Element>
+void IndexedDynamicArray<Element>::addElement(const Element& element, size_t index) {
+    try {
+        findArrayIndexOfElementAtIndex(index);
+    } catch(::Exception& error) {
+        return addNewElement(element, index);
+    }
+    throw IndexFound{};
 }
 
 template<typename Element>
@@ -76,9 +86,8 @@ void IndexedDynamicArray<Element>::setElement(const Element& element, size_t ind
         elementIndex = findArrayIndexOfElementAtIndex(index);
         IndexedDynamicArray::Base::array[elementIndex].element = element;
     } catch(::Exception& error) {
-        addElement(element, index);
-    }
-    
+        addNewElement(element, index);
+    }   
 }
 
 template<typename Element>
@@ -100,5 +109,15 @@ void IndexedDynamicArray<Element>::removeElement(size_t index) {
         --IndexedDynamicArray::Base::arraySize;
     } else {
         throw EmptyDynamicArray{};
+    }
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void IndexedDynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const {
+    IndexedElement<Element> entry;
+    for(size_t index = 0; index < IndexedDynamicArray::Base::arraySize; ++index) {
+        entry = IndexedDynamicArray::Base::array[index];
+        function(entry.element, entry.index);
     }
 }

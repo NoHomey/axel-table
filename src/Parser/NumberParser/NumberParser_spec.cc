@@ -1,6 +1,5 @@
 #include "NumberParser.h"
 #include "../TypeParser/TypeParserSpec.h"
-#include "../../Number/NumberHelper.h"
 
 template class TypeParserSpec<NumberParser>;
 
@@ -52,7 +51,7 @@ TEST(NumberParser, validatingAndParsingValidInteger) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
         EXPECT_NO_THROW(parser.validateType());
-        EXPECT_EQ(NumberHelper{parser.parseType()}.getInteger(), test[i].expect);
+        EXPECT_EQ(parser.parseType().getInteger(), test[i].expect);
     }
 }
 TEST(NumberParser, validatingAndParsingValidRealNumber) {
@@ -94,7 +93,7 @@ TEST(NumberParser, validatingAndParsingValidRealNumber) {
         ConstString str = {test[i].string, test[i].length};
         NumberParser parser = {str};
         EXPECT_NO_THROW(parser.validateType());
-        EXPECT_DOUBLE_EQ(NumberHelper{parser.parseType()}.getReal(), test[i].expect);
+        EXPECT_DOUBLE_EQ(parser.parseType().getReal(), test[i].expect);
     }
 }
 

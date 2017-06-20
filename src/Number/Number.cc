@@ -37,16 +37,21 @@ bool Number::isReal() const noexcept {
     return numberType == NumberType::Real;
 }
 
+template<typename ReturnType>
+ReturnType Number::getValueAs() const noexcept {
+    return isInteger() ? numberValue.integerValue : numberValue.realValue;
+}
+
 long long Number::getInteger() const noexcept {
-    return numberValue.integerValue;
+    return getValueAs<long long>();
 }
 
 double Number::getReal() const noexcept {
-    return numberValue.realValue;
+    return getValueAs<double>();
 }
 
 double Number::Number::getValue() const noexcept {
-    return isReal() ? getReal() : getInteger();
+    return getReal();
 }
 
 bool Number::isRealZero(const double number) noexcept {

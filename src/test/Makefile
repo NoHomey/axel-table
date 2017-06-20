@@ -6,7 +6,7 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-TESTS = DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test
@@ -109,16 +109,13 @@ It.o: $(USER_DIR)/It/It.h $(USER_DIR)/It/It.cc
 BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
 	$(COMPILE_COMPONENT)/String/BasicString/BasicString.cc $(COVER)
 
-NumberHelper.o: $(USER_DIR)/Number/NumberHelper.h $(USER_DIR)/Number/NumberHelper.cc
-	$(COMPILE_COMPONENT)/Number/NumberHelper.cc
-
 $(eval $(call templateInDir,Container,DynamicArray))
 
 $(eval $(call templateInDir,Container,IndexedDynamicArray))
 
 $(eval $(call templateInDir,Container,FragmentedDynamicArray))
 
-$(eval $(call spec,Number,NumberHelper.o))
+$(eval $(call spec,Number))
 
 $(eval $(call specInDir,String,ConstString,BasicString.o))
 
@@ -126,17 +123,17 @@ $(eval $(call specInDir,String,FixedSizeString,BasicString.o ConstString.o))
 
 $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 
-$(eval $(call specInDir,Parser,NumberParser,BasicString.o ConstString.o TypeParser.o ValidationException.o Number.o NumberHelper.o))
+$(eval $(call specInDir,Parser,NumberParser,BasicString.o ConstString.o TypeParser.o ValidationException.o Number.o))
 
 $(eval $(call specInDir,Parser,StringParser,BasicString.o ConstString.o FixedSizeString.o TypeParser.o ValidationException.o))
 
 $(eval $(call specInDir,Parser,ValidationException))
 
-$(eval $(call specInDir,TableCell,NumberCell,Number.o NumberHelper.o))
+$(eval $(call specInDir,TableCell,NumberCell,Number.o))
 
-$(eval $(call specInDir,TableCell,StringNumberCell,NumberCell.o Number.o NumberHelper.o))
+$(eval $(call specInDir,TableCell,StringNumberCell,NumberCell.o Number.o))
 
-$(eval $(call specInDir,TableCell,StringCell,Number.o BasicString.o ConstString.o FixedSizeString.o NumberHelper.o))	
+$(eval $(call specInDir,TableCell,StringCell,Number.o BasicString.o ConstString.o FixedSizeString.o))	
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

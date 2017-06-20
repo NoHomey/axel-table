@@ -14,6 +14,16 @@ public:
 
     Number(const double real) noexcept;
 
+    bool isInteger() const noexcept;
+
+    bool isReal() const noexcept;
+
+    long long getInteger() const noexcept;
+
+    double getReal() const noexcept;
+
+    double getValue() const noexcept;
+
     Number operator-() const noexcept;
 
     Number& operator+=(const Number& number) noexcept;
@@ -42,16 +52,6 @@ protected:
         double realValue;
     };
 
-    bool isInteger() const noexcept;
-
-    bool isReal() const noexcept;
-
-    long long getInteger() const noexcept;
-
-    double getReal() const noexcept;
-
-    double getValue() const noexcept;
-
 private:
     template<typename BaseType>
     static BaseType positiveIntegerExponent(const BaseType base, const long long exponent) noexcept; 
@@ -59,6 +59,9 @@ private:
     static double realOnIntegerExponent(const double base, const long long exponent) noexcept;
 
     static bool isRealZero(const double number) noexcept;
+
+    template<typename ReturnType>
+    ReturnType getValueAs() const noexcept;
 
     Number& integerOnIntegerExponent(const long long exponent);
 

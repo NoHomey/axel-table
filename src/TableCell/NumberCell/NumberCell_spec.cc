@@ -32,8 +32,8 @@ TEST(NumberCell, calculateLengthsWhenIntegerWithLessThan17Digits) {
     }
 }
 
-TEST(NumberCell, calculateLengthsWhenIntegerWithMoreThan15Digits) {
-    IT("should return the length of Number's value string representation");
+TEST(NumberCell, calculateLengthsWhenIntegerWithMoreThan16Digits) {
+    IT("should return the length of Number's value string representation limited to 16 digits");
     
     const long long values[] = {39334929429329410, -39334929402932942, 12345678901123453, -12223456789012345,
     922337203685477580, -9223372036854775807, 712327203685467384, -712327203685467384};
@@ -66,10 +66,10 @@ TEST(NumberCell, calculateLengthsWhenRealWithLessThan17Digits) {
     }
 }
 
-TEST(NumberCell, calculateLengthsWhenRealWithMoreThan15Digits) {
-    IT("should return the length of Number's value string representation");
+TEST(NumberCell, calculateLengthsWhenRealWithMoreThan16Digits) {
+    IT("should return the length of Number's value string representation limited to 16 digits");
     
-    double values[] = {3933492429.941012, -391.4929402932942, 1234567.01123453, -1223.456789012345,
+    double values[] = {3933492429.9410121, -391.4929402932942, 1234567.01123453, -1223.456789012345,
     9223372.85477580, -922337.854775807, 71232720.5467384, -71232720368.67384};
 
     const size_t expects[] = {17, 18, 17 , 18, 17, 18, 17, 18};

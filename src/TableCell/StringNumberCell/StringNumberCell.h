@@ -5,4 +5,6 @@
 class StringNumberCell: public NumberCell {
 public:
     StringNumberCell(const Number& number) noexcept;
+
+    size_t calculateOutputLength() const noexcept final;
 };

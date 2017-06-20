@@ -180,6 +180,57 @@ TEST(IndexedDynamicArray, getElement) {
     EXPECT_THROW(array.getElement(7624), ::IndexNotFound);
 }
 
+TEST(IndexedDynamicArray, getFirstElementIndex) {
+    IT("returns the first element index if IndexDynamicArray is not empty else throws proper exception");
+    TestArray array;
+    EXPECT_THROW(array.getFirstElementIndex(), ::EmptyDynamicArray);
+    array.setElement(9, 9);
+    EXPECT_EQ(array.getFirstElementIndex(), 9);
+    array.setElement(-9, 9991);
+    EXPECT_EQ(array.getFirstElementIndex(), 9);
+    array.removeElement(9991);
+    EXPECT_EQ(array.getFirstElementIndex(), 9);
+    array.removeElement(9);
+    EXPECT_THROW(array.getFirstElementIndex(), ::EmptyDynamicArray);
+    array.setElement(3, 2);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.setElement(9, 3);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.setElement(1, 1001);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.removeElement(2);
+    EXPECT_EQ(array.getFirstElementIndex(), 3);
+    array.removeElement(3);
+    EXPECT_EQ(array.getFirstElementIndex(), 1001);
+}
+
+TEST(IndexedDynamicArray, getLastElementIndex) {
+    IT("returns the last element index if IndexDynamicArray is not empty else throws proper exception");
+    TestArray array;
+    EXPECT_THROW(array.getLastElementIndex(), ::EmptyDynamicArray);
+    array.setElement(9, 9);
+    EXPECT_EQ(array.getLastElementIndex(), 9);
+    array.setElement(-9, 9991);
+    EXPECT_EQ(array.getLastElementIndex(), 9991);
+    array.setElement(9001, 9990);
+    EXPECT_EQ(array.getLastElementIndex(), 9991);
+    array.removeElement(9991);
+    EXPECT_EQ(array.getLastElementIndex(), 9990);
+    array.removeElement(9);
+    array.removeElement(9990);
+    EXPECT_THROW(array.getLastElementIndex(), ::EmptyDynamicArray);
+    array.setElement(3, 2);
+    EXPECT_EQ(array.getLastElementIndex(), 2);
+    array.setElement(9, 3);
+    EXPECT_EQ(array.getLastElementIndex(), 3);
+    array.setElement(1, 1001);
+    EXPECT_EQ(array.getLastElementIndex(), 1001);
+    array.setElement(0, 0);
+    EXPECT_EQ(array.getLastElementIndex(), 1001);
+    array.setElement(0, 1002);
+    EXPECT_EQ(array.getLastElementIndex(), 1002);
+}
+
 TEST(IndexedDynamicArray, setElement) {
     IT("sets element at given index if index is found element is replaced else new element is added and array is sorted by element's index");
     TestArray array;

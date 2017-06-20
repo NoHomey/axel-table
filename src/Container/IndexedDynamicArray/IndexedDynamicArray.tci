@@ -41,6 +41,22 @@ const Element& IndexedDynamicArray<Element>::getElement(size_t index) const {
 }
 
 template<typename Element>
+size_t IndexedDynamicArray<Element>::getFirstElementIndex() const {
+    if(!Base::isEmpty()) {
+        return Base::array[0].index;
+    }
+    throw EmptyDynamicArray{};
+}
+
+template<typename Element>
+size_t IndexedDynamicArray<Element>::getLastElementIndex() const {
+    if(!Base::isEmpty()) {
+        return Base::array[Base::arraySize - 1].index;
+    }
+    throw EmptyDynamicArray{};
+}
+
+template<typename Element>
 void IndexedDynamicArray<Element>::sort() noexcept {
     size_t i = 0;
     size_t j = 0;

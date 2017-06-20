@@ -44,6 +44,10 @@ public:
 
     const Element& getElement(size_t index) const;
 
+    size_t getFirstElementIndex() const;
+
+    size_t getLastElementIndex() const;
+
     void setElement(const Element& element, size_t index);
 
     void removeElement(size_t index);

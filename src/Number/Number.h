@@ -42,11 +42,6 @@ public:
     Number operator^(const Number& number) const;
 
 protected:
-    enum NumberType {
-        Integer,
-        Real
-    };
-
     union NumberValue {
         long long integerValue;
         double realValue;
@@ -74,6 +69,6 @@ private:
     static const double EPSILON; 
 
 protected:
-    NumberType numberType;
+    bool isValueInteger;
     NumberValue numberValue;
 };

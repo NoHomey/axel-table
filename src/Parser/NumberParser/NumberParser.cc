@@ -1,4 +1,5 @@
 #include "NumberParser.h"
+#include "../../shared_constants.h"
 
 bool NumberParser::isMinus(const char symbol) noexcept {
     return symbol == '-';
@@ -53,7 +54,7 @@ size_t NumberParser::containsOnlyDigits(ConstString& string, const size_t offset
 }
 
 size_t NumberParser::getFirstNoneZeroDigitPosition() const {
-    const size_t firstDigit = NumberParser::isPlusMinus(token[0]) ? 1 : 0;
+    const size_t firstDigit = NumberParser::isPlusMinus(token[0]);
     const char firstDigitSymbol = token[firstDigit];
     if(firstDigitSymbol == '\0') {
         throw SingleSign{};
@@ -84,7 +85,7 @@ size_t NumberParser::getFloatingPointPosition() const noexcept {
 
 long long NumberParser::parseInteger(ConstString& string) noexcept {
     const bool isNegative = isMinus(string[0]);
-    const size_t firstDigit = (isNegative || isPlus(string[0])) ? 1 : 0;
+    const size_t firstDigit = (isNegative || isPlus(string[0]));
     size_t index = firstDigit + skipZeros({string, firstDigit});
     char currentSymbol = string[index];
     long long integer = 0;

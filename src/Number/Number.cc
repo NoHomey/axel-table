@@ -8,7 +8,7 @@ if(isInteger() && number.isInteger()) {                 \
 } else {                                                \
     if(isInteger()) {                                   \
         numberValue.realValue = getInteger();           \
-        numberType = NumberType::Real;                  \
+        isValueInteger = false;                         \
     }                                                   \
     numberValue.realValue opt number.getValue();        \
 }                                                       \
@@ -22,19 +22,19 @@ return result
 const double Number::EPSILON = 1e-15;
 
 Number::Number(const long long integer) noexcept
-: numberType{NumberType::Integer}, numberValue{integer} {}
+: isValueInteger{true}, numberValue{integer} {}
 
 Number::Number(const double real) noexcept
-: numberType{NumberType::Real}, numberValue{0} {
+: isValueInteger{false}, numberValue{0} {
     numberValue.realValue = real;
 }
 
 bool Number::isInteger() const noexcept {
-    return numberType == NumberType::Integer;
+    return isValueInteger;
 }
 
 bool Number::isReal() const noexcept {
-    return numberType == NumberType::Real;
+    return !isInteger();
 }
 
 template<typename ReturnType>
@@ -109,7 +109,7 @@ Number& Number::operator/=(const Number& number) {
         const double nominator = getValue();
         const double denominator = number.getValue();
         numberValue.realValue = nominator / denominator;
-        numberType = NumberType::Real;
+        isValueInteger = false;
     }
     return *this;
 }
@@ -156,7 +156,7 @@ Number& Number::integerOnIntegerExponent(const long long exponent) {
     if(exponent < 0) {
         const long long thisValueOnPositiveExponent = positiveIntegerExponent(thisValue, -exponent);
         numberValue.realValue = 1.0 / static_cast<double>(thisValueOnPositiveExponent);
-        numberType = NumberType::Real;
+        isValueInteger = false;
     } else {
         numberValue.integerValue = positiveIntegerExponent(thisValue, exponent);
     }
@@ -177,7 +177,7 @@ Number& Number::integerExponent(const long long exponent) {
 Number& Number::realExponent(const double exponent) {
     std::feclearexcept(FE_ALL_EXCEPT);
     numberValue.realValue = std::pow(getValue(), exponent);
-    numberType = NumberType::Real;
+    isValueInteger = false;
     if(std::fetestexcept(FE_DIVBYZERO)) {
         throw DivisionByZero{};
     }
@@ -196,7 +196,7 @@ Number& Number::operator^=(const Number& number) {
             throw ZeroRaisedOnZero{};
         }
         numberValue.integerValue = 1;
-        numberType = NumberType::Integer;
+        isValueInteger = true;
         return *this;
     }
     if(number.isInteger()) {

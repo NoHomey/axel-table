@@ -59,6 +59,4 @@ private:
     size_t calculateFloatingPartLength(const size_t floatingPartBeginning) const;
 
     size_t getFloatingPointPosition() const noexcept;
-
-    static const size_t MAXIMUM_OF_DIGITS_COUNT = 16;
 };

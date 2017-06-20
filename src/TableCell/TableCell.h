@@ -8,4 +8,8 @@ public:
     TableCell() noexcept = default;
 
     virtual const Number& getValueAsNumber() const noexcept = 0;
+
+    virtual size_t calculateOutputLength() const noexcept = 0;
+
+    virtual size_t calculateSerializedLength() const noexcept = 0;
 };

@@ -28,9 +28,10 @@
 *.out
 *.app
 
-#googletest/mock
-googletest
-googlemock
+#dependencies
+dependencies/googletest
+dependencies/googlemock
+dependencies/fpconv
 
 #gcov
 *.gcda

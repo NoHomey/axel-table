@@ -1,4 +1,8 @@
-GTEST_DIR = ../../googletest
+DEPS_DIR = ../../dependencies
+
+GTEST_DIR = $(DEPS_DIR)/googletest
+
+FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
@@ -16,7 +20,9 @@ GTEST_INCLUDE = $(GTEST_DIR)/include
 
 CPPFLAGS += -isystem $(GTEST_INCLUDE)
 
-CXXFLAGS += -g -std=c++14 -Wall -Wextra -Wpedantic -pthread -O -O0
+CXXBASEFLAGS = -g -std=c++14 -Wall -Wextra -Wpedantic -O -O0
+
+CXXFLAGS += $(CXXBASEFLAGS) -pthread
 
 COVER = --coverage
 
@@ -93,6 +99,9 @@ gtest.a: gtest-all.o
 
 gtest_main.a: gtest-all.o gtest_main.o
 	$(AR_GTEST)
+
+fpconv.o: $(FPCONV_DIR)/powers.h $(FPCONV_DIR)/fpconv.h $(FPCONV_DIR)/fpconv.c
+	$(CXX) $(CXXBASEFLAGS) -c $(FPCONV_DIR)/fpconv.c
 
 It.o: $(USER_DIR)/It/It.h $(USER_DIR)/It/It.cc
 	$(COMPILE_COMPONENT)/It/It.cc

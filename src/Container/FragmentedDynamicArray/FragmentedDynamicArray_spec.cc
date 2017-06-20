@@ -302,6 +302,126 @@ TEST(FragmentedDynamicArray, getElement) {
     EXPECT_EQ(array.getElement(100), 99);
 }
 
+TEST(FragmentedDynamicArray, getFirstElementIndexWhenCenterIsNotEmpty) {
+    IT("returns 0");
+
+    TestArray array;
+    array.setElement(1, 0);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+    array.setElement(-1, 1);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+    array.setElement(3, 2);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+    array.setElement(1, 10);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+    array.setElement(1, 98);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+    array.setElement(1, 89);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+    array.setElement(1, 3);
+    EXPECT_EQ(array.getFirstElementIndex(), 0);
+}
+
+TEST(FragmentedDynamicArray, getFirstElementIndexWhenCenterIsEmpty) {
+    IT("returns first element index in peripheral if it is empty throws exception");
+
+    TestArray array;
+    EXPECT_THROW(array.getFirstElementIndex(), ::EmptyDynamicArray);
+    array.setElement(-1, 1);
+    EXPECT_EQ(array.getFirstElementIndex(), 1);
+    array.setElement(3, 2);
+    EXPECT_EQ(array.getFirstElementIndex(), 1);
+    array.removeElement(1);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.setElement(1, 98);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.setElement(1, 89);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.setElement(1, 3);
+    EXPECT_EQ(array.getFirstElementIndex(), 2);
+    array.removeElement(2);
+    EXPECT_EQ(array.getFirstElementIndex(), 3);
+    array.removeElement(3);
+    EXPECT_EQ(array.getFirstElementIndex(), 89);
+    array.removeElement(89);
+    EXPECT_EQ(array.getFirstElementIndex(), 98);
+    array.removeElement(98);
+    EXPECT_THROW(array.getFirstElementIndex(), ::EmptyDynamicArray);
+}
+
+TEST(FragmentedDynamicArray, getLastElementIndexWhenPeripheralIsNotEmpty) {
+    IT("returns peripheralElements.getLastElementIndex()");
+    TestArray array;
+    array.setElement(1, 10);
+    EXPECT_EQ(array.getLastElementIndex(), 10);
+    array.setElement(-1, 3);
+    EXPECT_EQ(array.getLastElementIndex(), 10);
+    array.setElement(1, 0);
+    array.setElement(-1, 1);
+    array.setElement(2, 2);
+    array.setElement(3, 3);
+    array.setElement(4, 4);
+    array.setElement(3, 2000);
+    EXPECT_EQ(array.getLastElementIndex(), 2000);
+    array.setElement(1, 10000);
+    EXPECT_EQ(array.getLastElementIndex(), 10000);
+    array.setElement(1, 9881);
+    EXPECT_EQ(array.getLastElementIndex(), 10000);
+    array.removeElement(10000);
+    EXPECT_EQ(array.getLastElementIndex(), 9881);
+    array.removeElement(9881);
+    EXPECT_EQ(array.getLastElementIndex(), 2000);
+    array.setElement(3, 2001);
+    EXPECT_EQ(array.getLastElementIndex(), 2001);
+    array.removeElement(2001);
+    EXPECT_EQ(array.getLastElementIndex(), 2000);
+    array.removeElement(2000);
+    EXPECT_EQ(array.getLastElementIndex(), 10);
+    array.removeElement(10);
+    EXPECT_EQ(array.getLastElementIndex(), 4);
+}
+
+TEST(FragmentedDynamicArray, getLastElementIndexWhenPeripheralIsEmpty) {
+    IT("returns size() - 1 if it is empty throws exception");
+
+    TestArray array;
+    EXPECT_THROW(array.getLastElementIndex(), ::EmptyDynamicArray);
+    array.setElement(-1, 0);
+    EXPECT_EQ(array.size(), 1);
+    EXPECT_EQ(array.getLastElementIndex(), 0);
+    array.setElement(3, 1);
+    EXPECT_EQ(array.size(), 2);
+    EXPECT_EQ(array.getLastElementIndex(), 1);
+    array.removeElement(1);
+    EXPECT_EQ(array.size(), 1);
+    EXPECT_EQ(array.getLastElementIndex(), 0);
+    array.setElement(1, 1);
+    array.setElement(1, 2);
+    EXPECT_EQ(array.size(), 3);
+    EXPECT_EQ(array.getLastElementIndex(), 2);
+    array.setElement(-344, 3);
+    array.setElement(-3414, 4);
+    array.setElement(-3442, 5);
+    EXPECT_EQ(array.size(), 6);
+    EXPECT_EQ(array.getLastElementIndex(), 5);
+    array.setElement(31, 6);
+    EXPECT_EQ(array.size(), 7);
+    EXPECT_EQ(array.getLastElementIndex(), 6);
+    array.removeElement(6);
+    EXPECT_EQ(array.size(), 6);
+    EXPECT_EQ(array.getLastElementIndex(), 5);
+    EXPECT_EQ(array.getLastElementIndex(), 5);
+    array.removeElement(5);
+    EXPECT_EQ(array.size(), 5);
+    EXPECT_EQ(array.getLastElementIndex(), 4);
+    array.removeElement(4);
+    array.removeElement(3);
+    EXPECT_EQ(array.size(), 3);
+    EXPECT_EQ(array.getLastElementIndex(), 2);
+    array.clear();
+    EXPECT_THROW(array.getLastElementIndex(), ::EmptyDynamicArray);
+}
+
 TEST(FragmentedDynamicArray, clear) {
     IT("clears the FragmentedDynamicArray content and resets size and capacity");
     TestArray array;

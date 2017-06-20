@@ -46,6 +46,23 @@ const Element& FragmentedDynamicArray<Element>::getElement(size_t index) const {
 }
 
 template<typename Element>
+size_t FragmentedDynamicArray<Element>::getFirstElementIndex() const {
+    return !centeredElements.isEmpty() ? 0 : peripheralElements.getFirstElementIndex();
+}
+
+template<typename Element>
+size_t FragmentedDynamicArray<Element>::getLastElementIndex() const {
+    if(!peripheralElements.isEmpty()) {
+        return peripheralElements.getLastElementIndex();
+    } else {
+        if(!centeredElements.isEmpty()) {
+            return centeredElements.size() - 1;
+        }
+        throw EmptyDynamicArray{};
+    }
+}
+
+template<typename Element>
 void FragmentedDynamicArray<Element>::setElement(const Element& element, size_t index) {
     try {
         centeredElements.setElement(element, index);

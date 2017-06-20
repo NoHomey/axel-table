@@ -6,7 +6,7 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-TESTS = NumberCell_spec StringNumberCell_spec#DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = NumberCell_spec StringNumberCell_spec StringCell_spec#DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec
 
 .PHONY: all clean test

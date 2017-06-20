@@ -9,8 +9,16 @@ public:
     
     const Number& getValueAsNumber() const noexcept final;
 
+    size_t calculateOutputLength() const noexcept final;
+
+    size_t calculateSerializedLength() const noexcept final;
+
 private:
+    static bool shouldBeEscaped(char symbol) noexcept;
+
     static const Number stringNumberValue;
+
+    size_t calculateNumberOfCharsToBeEscaped() const noexcept;
 
     FixedSizeString value;
 };

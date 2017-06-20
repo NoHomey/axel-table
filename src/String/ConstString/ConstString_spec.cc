@@ -2,6 +2,13 @@
 #include "gtest/gtest.h"
 #include "../../It/It.h"
 
+TEST(ConstString, forceDynamics) {
+    BasicString<const char*>* basePtr = new BasicString<const char*>{"Ivo", 3};
+    delete basePtr;
+    const ImmutableString* ptr = new ConstString{"ivo", 3};
+    delete ptr;
+}
+
 TEST(ConstString, throwingBadStringOffset) {
     IT("should throw BadStringOffset if offset constructor is used and offset is bigger than length");
     ConstString str = {nullptr, 0};

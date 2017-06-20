@@ -3,6 +3,14 @@
 #include "gtest/gtest.h"
 #include "../../It/It.h"
 
+TEST(FixedSizeString, forceDynamics) {
+    char str[4] = "Ivo";
+    BasicString<char*>* basePtr = new BasicString<char*>{str, 3};
+    delete basePtr;
+    const ImmutableString* ptr = new FixedSizeString{3};
+    delete ptr;
+}
+
 TEST(FixedSizeString, isEmpty) {
     FixedSizeString str{3};
     EXPECT_FALSE(str.isEmpty());

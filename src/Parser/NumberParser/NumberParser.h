@@ -16,6 +16,8 @@ public:
 
     class IncompleteDouble: public Invalid { };
 
+    class IntegerZero: public Invalid { };
+
     NumberParser(ConstString& string) noexcept;
 
     NumberParser(const NumberParser&) = delete;
@@ -25,6 +27,10 @@ public:
     NumberParser& operator=(const NumberParser&) = delete;
 
     NumberParser& operator=(NumberParser&&) = delete;
+
+    size_t parseNaturalNumber() const;
+
+    void validateNaturalNumber() const;
     
 protected:
     void typeValidator() const override final;
@@ -49,6 +55,8 @@ private:
     static size_t skipZeros(ConstString& string) noexcept;
 
     static size_t containsOnlyDigits(ConstString& string, const size_t offset);
+
+    static size_t parseDigitSequence(ConstString& string) noexcept;
 
     static long long parseInteger(ConstString& string) noexcept;
 

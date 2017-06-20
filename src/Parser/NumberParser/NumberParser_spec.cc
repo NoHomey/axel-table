@@ -252,7 +252,7 @@ TEST(NumberParser, validateTypeWhenNumberIsTooLong) {
 }
 
 TEST(NumberParser, validateTypeWhenThereIsInvalidSymbol) {
-    IT("thorws InvalidSymbol - not a number building symbol");
+    IT("throws InvalidSymbol - not a number building symbol");
 
     struct Test {
         const char* string;
@@ -301,5 +301,176 @@ TEST(NumberParser, validateTypeWhenThereIsInvalidSymbol) {
             EXPECT_EQ(error.getPosition(), test[i].expectPosition);
             EXPECT_EQ(error.getSymbol(), test[i].expectSymbol);
         }
+    }
+}
+
+TEST(NumberParser, parseNaturalNumber) {
+    IT("parses a natural number with maximum of 16 digits");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+        const size_t expect;
+    };
+
+    Test test[] = {
+        {"1", 1,  1},
+        {"2", 1,  2},
+        {"9", 1,  9},
+        {"10", 2,  10},
+        {"42", 2,  42},
+        {"73", 2,  73},
+        {"100", 3,  100},
+        {"123", 3,  123},
+        {"456", 3,  456},
+        {"987", 3,  987},
+        {"999", 3,  999},
+        {"1000", 4,  1000},
+        {"1001", 4,  1001},
+        {"2397", 4,  2397},
+        {"12000", 5,  12000},
+        {"14139", 5,  14139},
+        {"93838", 5,  93838},
+        {"120007", 6,  120007},
+        {"141398", 6,  141398},
+        {"938389", 6,  938389},
+        {"1200073", 7,  1200073},
+        {"1413984", 7,  1413984},
+        {"9383895", 7,  9383895},
+        {"51200073", 8,  51200073},
+        {"61413984", 8,  61413984},
+        {"79383895", 8,  79383895},
+        {"351200073", 9,  351200073},
+        {"261413984", 9,  261413984},
+        {"179383895", 9,  179383895},
+        {"3512050073", 10,  3512050073},
+        {"2614143984", 10,  2614143984},
+        {"1793833895", 10,  1793833895},
+        {"35120500731", 11,  35120500731},
+        {"261414398411", 12,  261414398411},
+        {"1793833895111", 13,  1793833895111},
+        {"35120500731333", 14,  35120500731333},
+        {"261414398411333", 15,  261414398411333},
+        {"1793833895111333", 16,  1793833895111333},
+        {"231484392412333", 15,  231484392412333},
+        {"1793833895811383", 16,  1793833895811383},
+        {"8393493428899234", 16,  8393493428899234},
+        {"9392038053420294", 16,  9392038053420294},
+    };
+
+    for(size_t i = 0; i < 42; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_NO_THROW(parser.validateNaturalNumber());
+        EXPECT_EQ(parser.parseNaturalNumber(), test[i].expect) << i;
+    }
+}
+
+TEST(NumberParser, validateNaturalNumberWhenThereIsInvalidSymbol) {
+    IT("throws InvalidSymbol");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+        const char expectSymbol;
+        const size_t expectPosition;
+    };
+
+    Test test[] = {
+        {"+-43153", 7, '-', 1},
+        {"+12342$", 7, '$', 6},
+        {"11239/4", 7, '/', 5},
+        {"1234*10", 7, '*', 4},
+        {"+43535z03", 10, 'z', 6},
+        {"+-43.53", 7, '-', 1},
+        {"+1234..2", 8, '.', 5},
+        {"2123.!4", 7, '.', 4},
+        {"1234~.0", 7, '~', 4},
+        {"+43535a.3", 10, 'a', 6},
+        {"24.^2", 5, '.', 2},
+        {"@0.23", 5, '@', 0},
+        {"+-43.53", 7, '-', 1},
+        {"+1234..2", 8, '.', 5},
+        {"3123!14", 7, '!', 4},
+        {"1234~.0", 7, '~', 4},
+        {"+43535a.3", 10, 'a', 6},
+        {"341.^2", 6, '.', 3},
+        {"@0.23", 5, '@', 0},
+        {"+)0.43", 6, ')', 1},
+        {"90,34(", 6, ',', 2},
+        {"9477.5808#", 10, '.', 4},
+        {"++435.35", 8, '+', 1},
+        {"+0000.&3535", 11, '.', 5},
+        {"00000.0000.9", 12, '.', 5},
+        {"348$12$", 7, '$', 3},
+        {"3.14?4535.35", 12, '.', 1},
+        {"--43.53", 7, '-', 0},
+        {"-1234..2", 8, '-', 0},
+        {"-3123!4", 7, '-', 0},
+        {"-1234~0", 7, '-', 0},
+        {"-43535a.3", 10, '-', 0},
+    };
+
+    for(size_t i = 0; i < 32; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_THROW(parser.validateNaturalNumber(), InvalidSymbol);
+        try {
+            parser.validateNaturalNumber();
+        } catch(const InvalidSymbol& error) {
+            EXPECT_EQ(error.getPosition(), test[i].expectPosition) << i;
+            EXPECT_EQ(error.getSymbol(), test[i].expectSymbol);
+        }
+    }
+}
+
+TEST(NumberParser, validateNaturalNumberWhenTokenIsIntegerZero) {
+    IT("throws IntegerZero");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+    };
+
+    Test test[] = {
+        {"+00000000000000", 15},
+        {"+00000000000", 12},
+        {"00000000000", 11},
+        {"0", 1},
+        {"+0000000", 8}
+    };
+
+    for(size_t i = 0; i < 5; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_THROW(parser.validateNaturalNumber(), NumberParser::IntegerZero);
+    }
+}
+
+TEST(NumberParser, validateNaturalNumberWhenTokenIsToLongNumber) {
+    IT("throws NumberIsTooLong");
+
+    struct Test {
+        const char* string;
+        const size_t length;
+    };
+
+    Test test[] = {
+        {"12345678901234567", 17},
+        {"123456789012345678", 18},
+        {"1234567890123456719", 19},
+        {"93939493299329994", 17},
+        {"127245678901234567", 18},
+        {"44994949292293949", 17},
+        {"199202020494493930", 18},
+        {"9383038394091022456", 19},
+        {"81911101003030399392", 17},
+        {"4040030283940550383", 18},
+    };
+
+    for(size_t i = 0; i < 10; ++i) {
+        ConstString str = {test[i].string, test[i].length};
+        NumberParser parser = {str};
+        EXPECT_THROW(parser.validateNaturalNumber(), NumberParser::NumberIsTooLong) << i;
     }
 }

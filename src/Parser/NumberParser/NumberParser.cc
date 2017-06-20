@@ -83,19 +83,24 @@ size_t NumberParser::getFloatingPointPosition() const noexcept {
     return index;
 }
 
-long long NumberParser::parseInteger(ConstString& string) noexcept {
-    const bool isNegative = isMinus(string[0]);
-    const size_t firstDigit = (isNegative || isPlus(string[0]));
-    size_t index = firstDigit + skipZeros({string, firstDigit});
+size_t NumberParser::parseDigitSequence(ConstString& string) noexcept {
+    size_t index = 0;
     char currentSymbol = string[index];
-    long long integer = 0;
+    size_t number = 0;
     while(currentSymbol != '\0') {
-        integer *= 10;
-        integer += toDigit(currentSymbol);
+        number *= 10;
+        number += toDigit(currentSymbol);
         ++index;
         currentSymbol = string[index];
     }
 
+    return number;
+}
+
+long long NumberParser::parseInteger(ConstString& string) noexcept {
+    const bool isNegative = isMinus(string[0]);
+    const bool hasSign = (isNegative || isPlus(string[0]));
+    const long long integer = parseDigitSequence({string, hasSign});
     return isNegative ? (-integer) : integer;
 }
 
@@ -173,6 +178,25 @@ void NumberParser::typeValidator() const {
         floatingPartLength = calculateFloatingPartLength(invalidPosition + 1);
     }
     if((integerPartLength + floatingPartLength) > MAXIMUM_OF_DIGITS_COUNT) {
+        throw NumberIsTooLong{};
+    }
+}
+
+size_t NumberParser::parseNaturalNumber() const {
+    return parseDigitSequence(token);
+}
+
+void NumberParser::validateNaturalNumber() const {
+    if(token[0] == '-') {
+        throw InvalidSymbol{0, '-'};
+    }
+    const bool isFirstSymbolPlus = isPlus(token[0]);
+    const size_t index = isFirstSymbolPlus + skipZeros({token, isFirstSymbolPlus});
+    if(index == token.length()) {
+        throw IntegerZero{};
+    }
+    const size_t digitsCount = containsOnlyDigits({token, index}, index);
+    if(digitsCount > MAXIMUM_OF_DIGITS_COUNT) {
         throw NumberIsTooLong{};
     }
 }

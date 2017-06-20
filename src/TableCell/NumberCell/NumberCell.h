@@ -6,7 +6,7 @@ class NumberCell: public TableCell {
 public:
     NumberCell(const Number& number) noexcept;
     
-    operator Number() const noexcept final;
+    const Number& getValueAsNumber() const noexcept final;
 
 private:
     Number value;

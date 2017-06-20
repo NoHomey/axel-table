@@ -7,8 +7,10 @@ class StringCell: public TableCell {
 public:
     StringCell(FixedSizeString&& string) noexcept;
     
-    operator Number() const noexcept final;
+    const Number& getValueAsNumber() const noexcept final;
 
 private:
+    static const Number stringNumberValue;
+
     FixedSizeString value;
 };

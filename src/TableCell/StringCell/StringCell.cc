@@ -1,9 +1,11 @@
 #include "StringCell.h"
 #include <utility>
 
+const Number StringCell::stringNumberValue = {};
+
 StringCell::StringCell(FixedSizeString&& string) noexcept
 : value{std::move(string)} {}
 
-StringCell::operator Number() const noexcept {
-    return {};
+const Number& StringCell::getValueAsNumber() const noexcept {
+    return stringNumberValue;
 }

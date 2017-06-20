@@ -1,10 +1,11 @@
 #pragma once
 
+#include <cstddef>
 #include "../Number/Number.h"
 
 class TableCell {
 public:
     TableCell() noexcept = default;
 
-    virtual operator Number() const noexcept = 0;
+    virtual const Number& getValueAsNumber() const noexcept = 0;
 };

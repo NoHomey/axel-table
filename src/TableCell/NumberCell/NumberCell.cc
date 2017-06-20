@@ -3,6 +3,6 @@
 NumberCell::NumberCell(const Number& number) noexcept
 : value{number} {}
 
-NumberCell::operator Number() const noexcept {
+const Number& NumberCell::getValueAsNumber() const noexcept {
     return value;
 }

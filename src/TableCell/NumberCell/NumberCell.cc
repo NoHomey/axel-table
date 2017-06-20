@@ -5,7 +5,7 @@
 char NumberCell::fpconv_buffer[24];
 
 NumberCell::NumberCell(const Number& number) noexcept
-: value{number} {}
+: TableCell{}, value{number} {}
 
 const Number& NumberCell::getValueAsNumber() const noexcept {
     return value;

@@ -12,7 +12,8 @@ public:
     cell5{std::move(str5())},
     cell6{std::move(str6())},
     cell7{std::move(str7())},
-    cell8{std::move(str8())}
+    cell8{std::move(str8())},
+    cell9{std::move(FixedSizeString{0})}
     { }
 
 protected:
@@ -24,6 +25,7 @@ protected:
     StringCell cell6;
     StringCell cell7;
     StringCell cell8;
+    StringCell cell9;
 
 private:
     static FixedSizeString str1() {
@@ -85,6 +87,7 @@ TEST_F(StringCellTest, getValueAsNumber) {
     EXPECT_EQ(cell6.getValueAsNumber().getInteger(), 0);
     EXPECT_EQ(cell7.getValueAsNumber().getInteger(), 0);
     EXPECT_EQ(cell8.getValueAsNumber().getInteger(), 0);
+    EXPECT_EQ(cell9.getValueAsNumber().getInteger(), 0);
 }
 
 TEST_F(StringCellTest, calculateOutputLength) {
@@ -97,6 +100,7 @@ TEST_F(StringCellTest, calculateOutputLength) {
     EXPECT_EQ(cell6.calculateOutputLength(), 6);
     EXPECT_EQ(cell7.calculateOutputLength(), 7);
     EXPECT_EQ(cell8.calculateOutputLength(), 16);
+    EXPECT_EQ(cell9.calculateOutputLength(), 0);
 }
 
 TEST_F(StringCellTest, calculateSerializedLength) {
@@ -109,6 +113,7 @@ TEST_F(StringCellTest, calculateSerializedLength) {
     EXPECT_EQ(cell6.calculateSerializedLength(), 12);
     EXPECT_EQ(cell7.calculateSerializedLength(), 11);
     EXPECT_EQ(cell8.calculateSerializedLength(), 25);
+    EXPECT_EQ(cell9.calculateSerializedLength(), 2);
 }
 
 TEST_F(StringCellTest, isDeletable) {
@@ -121,4 +126,5 @@ TEST_F(StringCellTest, isDeletable) {
     EXPECT_TRUE(cell6.isDeletable());
     EXPECT_TRUE(cell7.isDeletable());
     EXPECT_TRUE(cell8.isDeletable());
+    EXPECT_TRUE(cell9.isDeletable());
 }

@@ -9,7 +9,7 @@ USER_DIR = ..
 #TESTS = DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
-TESTS = NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
+TESTS = TableCellParser_spec #NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
 .PHONY: all clean test
 
@@ -153,6 +153,8 @@ $(eval $(call specInDir,TableCell,RootOfNegNumCell,TableCell.o Number.o BasicStr
 $(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
 $(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o))
+
+$(eval $(call specInDir,Parser,TableCellParser,Number.o BasicString.o ConstString.o TableCell.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o TypeParser.o NumberParser.o StringParser.o ValidationException.o))
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

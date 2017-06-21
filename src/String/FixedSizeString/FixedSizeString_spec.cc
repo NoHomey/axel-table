@@ -11,6 +11,14 @@ TEST(FixedSizeString, forceDynamics) {
     delete ptr;
 }
 
+TEST(FixedSizeString, withZeroLength) {
+    FixedSizeString str{0};
+    EXPECT_TRUE(str.isEmpty());
+    EXPECT_TRUE(str.isFilled());
+    EXPECT_EQ(str.length(), 0);
+    EXPECT_EQ(str.cString(), nullptr);
+}
+
 TEST(FixedSizeString, isEmpty) {
     FixedSizeString str{3};
     EXPECT_FALSE(str.isEmpty());
@@ -40,6 +48,8 @@ TEST(FixedSizeString, length) {
     EXPECT_FALSE(str2.isFilled());
     str2 << 'd';
     EXPECT_TRUE(str2.isFilled());
+    FixedSizeString empty{0};
+    EXPECT_EQ(empty.length(), 0);
 }
 
 TEST(FixedSizeString, cString) {
@@ -52,6 +62,8 @@ TEST(FixedSizeString, cString) {
     str1 << 'c';
     EXPECT_EQ(data[2], 'c');
     EXPECT_EQ(data[3], '\0');
+    FixedSizeString empty{0};
+    EXPECT_EQ(empty.cString(), nullptr);
 }
 
 TEST(FixedSizeString, indexOperator) {
@@ -61,6 +73,10 @@ TEST(FixedSizeString, indexOperator) {
     EXPECT_EQ(str1[1], 'b');
     EXPECT_EQ(str1[2], 'c');
     EXPECT_EQ(str1[3], '\0');
+    FixedSizeString empty{0};
+    EXPECT_EQ(empty[0], '\0');
+    EXPECT_EQ(empty[1], '\0');
+    EXPECT_EQ(empty[2], '\0');
 }
 
 TEST(FixedSizeString, equalityOperators) {
@@ -71,6 +87,7 @@ TEST(FixedSizeString, equalityOperators) {
     FixedSizeString str3{3};
     str2 << 'a' << 'b' << 'd';
     ConstString str = {"abc", 3};
+    FixedSizeString empty{0};
     EXPECT_TRUE(str1 == str2);
     EXPECT_TRUE(str1 == str);
     EXPECT_TRUE(str2 == str);
@@ -83,6 +100,8 @@ TEST(FixedSizeString, equalityOperators) {
     EXPECT_TRUE(str3 != str1);
     EXPECT_TRUE(str3 != str2);
     EXPECT_TRUE(str3 != str);
+    EXPECT_TRUE(str != empty);
+    EXPECT_EQ(empty, (ConstString{"", 0}));
 }
 
 TEST(FixedSizeString, lessThanOperator) {

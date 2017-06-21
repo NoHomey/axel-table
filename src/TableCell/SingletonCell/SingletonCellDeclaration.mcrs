@@ -1,0 +1,12 @@
+#pragma once
+
+#define SINGLETON_CELL_DECLARATION(type)        \
+public:                                         \
+static const type& obtainRef() noexcept;        \
+                                                \
+static const type* obtainPtr() noexcept;        \
+                                                \
+private:                                        \
+type() noexcept;                                \
+                                                \
+static const type instance

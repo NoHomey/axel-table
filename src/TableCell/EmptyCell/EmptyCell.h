@@ -1,8 +1,11 @@
 #pragma once
 
 #include "../TableCell.h"
+#include "../SingletonCell/SingletonCellDeclaration.mcrs"
 
 class EmptyCell: public TableCell {
+SINGLETON_CELL_DECLARATION(EmptyCell);
+
 public:
     const Number& getValueAsNumber() const noexcept final;
 
@@ -10,16 +13,6 @@ public:
 
     size_t calculateSerializedLength() const noexcept final;
 
-    static const EmptyCell& obtainEmptyCellRef() noexcept;
-
-    static const EmptyCell* obtainEmptyCellConstPtr() noexcept;
-
-    static EmptyCell* obtainEmptyCellPtr() noexcept;
-
 private:
-    EmptyCell() noexcept;
-
     static const Number emptyCellNumberValue;
-
-    static EmptyCell instance;
 };

@@ -1,0 +1,10 @@
+#pragma once
+
+#include "../SingletonCell/SingletonCellDefinition.mcrs"
+
+#define EROR_CELL_CHILD_DEFINITION(child, str, length)      \
+const char* child::valueString = str;                       \
+child::child() noexcept                                     \
+: ErrorCell{valueString, length} {}                         \
+                                                            \
+SINGLETON_CELL_DEFINITION(child)

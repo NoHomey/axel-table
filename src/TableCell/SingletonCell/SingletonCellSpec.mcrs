@@ -1,0 +1,40 @@
+#pragma once
+
+#include "gtest/gtest.h"
+
+#define TEST_COUNT 1000
+
+#define SINGLETON_CELL_SPEC(type, length, lengthOf)                         \
+TEST(type, Singletoness) {                                                  \
+    IT("should be none lazy Singletone");                                   \
+                                                                            \
+    EXPECT_EQ(&type::obtainRef(), &type::obtainRef());                      \
+    EXPECT_EQ(type::obtainPtr(), type::obtainPtr());                        \
+                                                                            \
+    EXPECT_EQ(&type::obtainRef(), type::obtainPtr());                       \
+    EXPECT_EQ(type::obtainPtr(), &type::obtainRef());                       \
+}                                                                           \
+                                                                            \
+TEST(type, getValueAsNumber) {                                              \
+    IT("constantly return Number instance with Value integer 0");           \
+                                                                            \
+    for(size_t i = 0; i < TEST_COUNT; ++i) {                                \
+        EXPECT_EQ(type::obtainRef().getValueAsNumber().getInteger(), 0);    \
+    }                                                                       \
+}                                                                           \
+                                                                            \
+TEST(type, calculateOutputLength) {                                         \
+    IT(lengthOf);                                                           \
+                                                                            \
+    for(size_t i = 0; i < TEST_COUNT; ++i) {                                \
+        EXPECT_EQ(type::obtainRef().calculateOutputLength(), length);       \
+    }                                                                       \
+}                                                                           \
+                                                                            \
+TEST(type, calculateSerializedLength) {                                     \
+    IT(lengthOf);                                                           \
+                                                                            \
+    for(size_t i = 0; i < TEST_COUNT; ++i) {                                \
+        EXPECT_EQ(type::obtainRef().calculateSerializedLength(), length);   \
+    }                                                                       \
+}

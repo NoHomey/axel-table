@@ -1,0 +1,12 @@
+#pragma once
+
+#include "ErrorCell.h"
+#include "../SingletonCell/SingletonCellDeclaration.mcrs"
+
+#define EROR_CELL_CHILD_DECLARATION(child)      \
+class child: public ErrorCell {                 \
+SINGLETON_CELL_DECLARATION(child);              \
+                                                \
+private:                                        \
+    static const char* valueString;             \
+}

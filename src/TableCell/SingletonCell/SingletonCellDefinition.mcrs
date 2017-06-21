@@ -1,0 +1,12 @@
+#pragma once
+
+#define SINGLETON_CELL_DEFINITION(type)     \
+const type& type::obtainRef() noexcept {    \
+    return instance;                        \
+}                                           \
+                                            \
+const type* type::obtainPtr() noexcept {    \
+    return &instance;                       \
+}                                           \
+                                            \
+const type type::instance = {}

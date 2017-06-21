@@ -35,6 +35,7 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "*.htd": "cpp",
-        "*.tci": "cpp"
+        "*.tci": "cpp",
+        "*.mcrs": "cpp"
     }
 }

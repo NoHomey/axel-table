@@ -48,6 +48,7 @@
         "cmath": "cpp",
         "cfenv": "cpp",
         "*.htd": "cpp",
-        "*.tci": "cpp"
+        "*.tci": "cpp",
+        "*.mcrs": "cpp"
     }
 }

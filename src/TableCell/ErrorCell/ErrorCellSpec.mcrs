@@ -1,0 +1,12 @@
+#pragma once
+
+#include "gtest/gtest.h"
+
+#define ERROR_CELL_SPEC(type)                                                               \
+TEST(type, getValueAsNumber) {                                                              \
+    IT("throws exception to notify that this type of cell has no number value");            \
+                                                                                            \
+    for(size_t i = 0; i < 10; ++i) {                                                        \
+        EXPECT_THROW(type::obtainRef().getValueAsNumber(), type::type##HasNoNumberValue);   \
+    }                                                                                       \
+}

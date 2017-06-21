@@ -3,12 +3,15 @@
 #include "../TableCell.h"
 #include "../../String/ConstString/ConstString.h"
 #include "../SingletonCell/SingletonCellDeclaration.mcrs"
+#include "../../Exception.h"
 
 class ErrorCell: public TableCell {
 SINGLETON_CELL_DECLARATION(ErrorCell);
 
 public:
-    const Number& getValueAsNumber() const noexcept final;
+    class ErrorCellHasNoNumberValue : public Exception { };
+
+    const Number& getValueAsNumber() const override;
 
     size_t calculateOutputLength() const noexcept final;
 

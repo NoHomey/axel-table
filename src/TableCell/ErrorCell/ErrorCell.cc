@@ -12,8 +12,8 @@ ErrorCell::ErrorCell(const char* string, size_t length) noexcept
 ErrorCell::ErrorCell() noexcept
 : ErrorCell{valueString, 7} {}
 
-const Number& ErrorCell::getValueAsNumber() const noexcept {
-    return Number::getAdditionNeutralElement();
+const Number& ErrorCell::getValueAsNumber() const {
+    throw ErrorCellHasNoNumberValue{};
 }
 
 size_t ErrorCell::calculateOutputLength() const noexcept {

@@ -2,10 +2,17 @@
 
 #include "ErrorCell.h"
 #include "../SingletonCell/SingletonCellDeclaration.mcrs"
+#include "../../Exception.h"
 
 #define EROR_CELL_CHILD_DECLARATION(child)      \
 class child: public ErrorCell {                 \
 SINGLETON_CELL_DECLARATION(child);              \
+                                                \
+public:                                         \
+class child##HasNoNumberValue                   \
+: public ErrorCellHasNoNumberValue { };         \
+                                                \
+const Number& getValueAsNumber() const final;   \
                                                 \
 private:                                        \
     static const char* valueString;             \

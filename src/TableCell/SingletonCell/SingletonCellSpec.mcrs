@@ -15,14 +15,6 @@ TEST(type, Singletoness) {                                                  \
     EXPECT_EQ(type::obtainPtr(), &type::obtainRef());                       \
 }                                                                           \
                                                                             \
-TEST(type, getValueAsNumber) {                                              \
-    IT("constantly return Number instance with Value integer 0");           \
-                                                                            \
-    for(size_t i = 0; i < TEST_COUNT; ++i) {                                \
-        EXPECT_EQ(type::obtainRef().getValueAsNumber().getInteger(), 0);    \
-    }                                                                       \
-}                                                                           \
-                                                                            \
 TEST(type, calculateOutputLength) {                                         \
     IT(lengthOf);                                                           \
                                                                             \

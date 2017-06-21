@@ -7,4 +7,8 @@ const char* child::valueString = str;                       \
 child::child() noexcept                                     \
 : ErrorCell{valueString, length} {}                         \
                                                             \
+const Number& child::getValueAsNumber() const {             \
+    throw child##HasNoNumberValue{};                        \
+}                                                           \
+                                                            \
 SINGLETON_CELL_DEFINITION(child)

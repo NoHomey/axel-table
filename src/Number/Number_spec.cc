@@ -819,3 +819,17 @@ TEST(Number, raisingZeroOnRealZeroPower) {
     EXPECT_THROW(intZero ^ zero, Number::ZeroRaisedOnZero);
     EXPECT_THROW(zero ^ zero, Number::ZeroRaisedOnZero);
 }
+
+TEST(Number, getAdditionNeutralElement) {
+    IT("returns reference to a Number with value - integer 0");
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_EQ(Number::getAdditionNeutralElement().getInteger(), 0);
+    }
+}
+
+TEST(Number, getMultiplicationNeutralElement) {
+    IT("returns reference to a Number with value - integer 1");
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_EQ(Number::getMultiplicationNeutralElement().getInteger(), 1);
+    }
+}

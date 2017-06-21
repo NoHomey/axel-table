@@ -16,8 +16,6 @@ public:
 private:
     static bool shouldBeEscaped(char symbol) noexcept;
 
-    static const Number stringNumberValue;
-
     size_t calculateNumberOfCharsToBeEscaped() const noexcept;
 
     FixedSizeString value;

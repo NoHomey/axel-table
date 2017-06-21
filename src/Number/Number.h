@@ -8,7 +8,11 @@ public:
 
     class ZeroRaisedOnZero: public Exception { };
 
-    class NegativeNumberRaisedOnNoneIntegerPower: public Exception { }; 
+    class NegativeNumberRaisedOnNoneIntegerPower: public Exception { };
+
+    static const Number& getAdditionNeutralElement() noexcept;
+
+    static const Number& getMultiplicationNeutralElement() noexcept;
 
     Number(const long long integer = 0) noexcept;
 
@@ -54,6 +58,10 @@ private:
     static double realOnIntegerExponent(const double base, const long long exponent) noexcept;
 
     static bool isRealZero(const double number) noexcept;
+
+    static const Number additionNeutralElement;
+
+    static const Number multiplicationNeutralElement;
 
     template<typename ReturnType>
     ReturnType getValueAs() const noexcept;

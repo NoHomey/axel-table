@@ -3,8 +3,6 @@
 
 SINGLETON_CELL_DEFINITION(ErrorCell);
 
-const Number ErrorCell::errorCellNumberValue = {};
-
 const char* ErrorCell::valueString = "#ERROR!";
 
 ErrorCell::ErrorCell(const char* string, size_t length) noexcept
@@ -15,7 +13,7 @@ ErrorCell::ErrorCell() noexcept
 : ErrorCell{valueString, 7} {}
 
 const Number& ErrorCell::getValueAsNumber() const noexcept {
-    return errorCellNumberValue;
+    return Number::getAdditionNeutralElement();
 }
 
 size_t ErrorCell::calculateOutputLength() const noexcept {

@@ -12,7 +12,4 @@ public:
     size_t calculateOutputLength() const noexcept final;
 
     size_t calculateSerializedLength() const noexcept final;
-
-private:
-    static const Number emptyCellNumberValue;
 };

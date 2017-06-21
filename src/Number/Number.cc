@@ -21,6 +21,10 @@ return result
 
 const double Number::EPSILON = 1e-15;
 
+const Number Number::additionNeutralElement = {(const long long)0};
+
+const Number Number::multiplicationNeutralElement = {(const long long)1};
+
 Number::Number(const long long integer) noexcept
 : isValueInteger{true}, numberValue{integer} {}
 
@@ -207,6 +211,14 @@ Number& Number::operator^=(const Number& number) {
 
 Number Number::operator^(const Number& number) const {
     COMMON_VALUE_OPERATOR(^=);
+}
+
+const Number& Number::getAdditionNeutralElement() noexcept {
+    return additionNeutralElement;
+}
+
+const Number& Number::getMultiplicationNeutralElement() noexcept {
+    return multiplicationNeutralElement;
 }
 
 #undef COMMON_ASSIGN_OPERATOR

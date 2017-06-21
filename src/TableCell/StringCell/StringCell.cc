@@ -1,13 +1,11 @@
 #include "StringCell.h"
 #include <utility>
 
-const Number StringCell::stringNumberValue = {};
-
 StringCell::StringCell(FixedSizeString&& string) noexcept
 : TableCell{}, value{std::move(string)} {}
 
 const Number& StringCell::getValueAsNumber() const noexcept {
-    return stringNumberValue;
+    return Number::getAdditionNeutralElement();
 }
 
 size_t StringCell::calculateOutputLength() const noexcept {

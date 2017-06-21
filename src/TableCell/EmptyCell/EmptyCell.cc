@@ -3,13 +3,11 @@
 
 SINGLETON_CELL_DEFINITION(EmptyCell);
 
-const Number EmptyCell::emptyCellNumberValue = {};
-
 EmptyCell::EmptyCell() noexcept
 : TableCell{} {}
 
 const Number& EmptyCell::getValueAsNumber() const noexcept {
-    return emptyCellNumberValue;
+    return Number::getAdditionNeutralElement();
 }
 
 size_t EmptyCell::calculateOutputLength() const noexcept {

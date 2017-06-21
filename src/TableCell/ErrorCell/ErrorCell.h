@@ -20,7 +20,5 @@ protected:
 private:
     static const char* valueString;
 
-    static const Number errorCellNumberValue;
-
     ConstString value;
 };

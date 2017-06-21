@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 
-#define ERROR_CELL_SPEC(type)                                                               \
+#define ERROR_CELL_SPEC(type, getCellValueDesc, cellValue, length)                          \
 TEST(type, getValueAsNumber) {                                                              \
     IT("throws exception to notify that this type of cell has no number value");            \
                                                                                             \
@@ -16,5 +16,13 @@ TEST(type, isDeletable) {                                                       
                                                                                             \
     for(size_t i = 0; i < 10; ++i) {                                                        \
         EXPECT_FALSE(type::obtainRef().isDeletable());                                      \
+    }                                                                                       \
+}                                                                                           \
+                                                                                            \
+TEST(type, getCellValue) {                                                                  \
+    IT(getCellValueDesc);                                                                   \
+                                                                                            \
+    for(size_t i = 0; i < 10; ++i) {                                                        \
+        EXPECT_EQ(type::obtainRef().getCellValue(), (ConstString{cellValue, length}));      \
     }                                                                                       \
 }

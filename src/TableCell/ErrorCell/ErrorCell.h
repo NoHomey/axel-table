@@ -19,6 +19,8 @@ public:
 
     bool isDeletable() const noexcept final;
 
+    ConstString& getCellValue() const noexcept;
+
 protected:
     ErrorCell(const char* string, size_t length) noexcept;
 

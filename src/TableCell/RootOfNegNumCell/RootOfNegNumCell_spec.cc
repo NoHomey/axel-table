@@ -5,4 +5,4 @@
 
 SINGLETON_CELL_SPEC(RootOfNegNumCell, 13, "constantly returns 13 (length of \"#\\ROOT(-num)!\")")
 
-ERROR_CELL_SPEC(RootOfNegNumCell)
+ERROR_CELL_SPEC(RootOfNegNumCell, "constantly returns \"#\\ROOT(-num)!\"", "#\\ROOT(-num)!", 13)

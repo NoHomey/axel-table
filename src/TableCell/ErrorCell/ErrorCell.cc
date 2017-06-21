@@ -27,3 +27,7 @@ size_t ErrorCell::calculateSerializedLength() const noexcept {
 bool ErrorCell::isDeletable() const noexcept {
     return false;
 }
+
+ConstString& ErrorCell::getCellValue() const noexcept {
+    return value;
+}

@@ -9,7 +9,7 @@ USER_DIR = ..
 #TESTS = DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
-TESTS = NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
+TESTS = Table_spec#NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
 .PHONY: all clean test
 
@@ -151,6 +151,8 @@ $(eval $(call specInDir,TableCell,DivByZeroCell,TableCell.o Number.o BasicString
 $(eval $(call specInDir,TableCell,RootOfNegNumCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
 $(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
+
+$(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o))
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

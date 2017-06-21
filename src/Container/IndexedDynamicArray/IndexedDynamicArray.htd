@@ -2,13 +2,11 @@
 
 #include "../DynamicArray/DynamicArray.htd"
 
-namespace {
-    template<typename Element>
-    struct IndexedElement {
-        size_t index;
-        Element element;
-    };
-}
+template<typename Element>
+struct IndexedElement {
+    size_t index;
+    Element element;
+};
 
 template<typename Element>
 class IndexedDynamicArray: public DynamicArray<IndexedElement<Element>> {

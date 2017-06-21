@@ -2,4 +2,4 @@
 
 #include "../ErrorCell/ErrorCellChildDeclaration.mcrs"
 
-EROR_CELL_CHILD_DECLARATION(ZeroRaisedOnZero);
+EROR_CELL_CHILD_DECLARATION(ZeroRaisedOnZeroCell);

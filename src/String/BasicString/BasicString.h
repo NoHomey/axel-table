@@ -7,7 +7,7 @@ class BasicString: public ImmutableString {
 public:
     BasicString(CString cstring, const size_t cstrLength) noexcept;
 
-    virtual ~BasicString() noexcept;
+    virtual ~BasicString() noexcept = default;
     
     BasicString(const BasicString&) = delete;
 

@@ -5,6 +5,8 @@
 class NumberCell: public TableCell {
 public:
     NumberCell(const Number& number) noexcept;
+
+    virtual ~NumberCell() noexcept = default;
     
     const Number& getValueAsNumber() const noexcept final;
 

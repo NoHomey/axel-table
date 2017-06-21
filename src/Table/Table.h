@@ -26,10 +26,18 @@ public:
 
     Table() noexcept = default;
 
+    ~Table() noexcept;
+
     void edit(const TableIndex& index, CellPtr cellValue);
 
     const TableCell& operator[](const TableIndex& index) const;
 
 private:
+    static void deleteCellsInRow(CellPtr cellPtr, size_t) noexcept;
+
+    static void deleteRow(const RowPtr rowPtr, size_t) noexcept;
+
+    static void clean(const RowPtr rowPtr, size_t index) noexcept;
+
     Rows rows;
 };

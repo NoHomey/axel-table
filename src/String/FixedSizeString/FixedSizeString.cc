@@ -8,7 +8,7 @@ FixedSizeString::FixedSizeString(FixedSizeString&& other) noexcept
     other.string = nullptr;
 }
 
-FixedSizeString::~FixedSizeString() {
+FixedSizeString::~FixedSizeString() noexcept {
     delete[] string;
     string = nullptr;
 }

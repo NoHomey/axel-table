@@ -6,7 +6,7 @@ class FixedSizeString: public BasicString<char*> {
 public:
     explicit FixedSizeString(const size_t chars);
 
-    ~FixedSizeString();
+    ~FixedSizeString() noexcept;
 
     FixedSizeString(const FixedSizeString&) = delete;
 

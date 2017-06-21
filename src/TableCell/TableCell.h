@@ -7,6 +7,8 @@ class TableCell {
 public:
     TableCell() noexcept = default;
 
+    virtual ~TableCell() noexcept = default; 
+
     virtual const Number& getValueAsNumber() const = 0;
 
     virtual size_t calculateOutputLength() const noexcept = 0;

@@ -22,9 +22,6 @@ string{shouldBeNull(cstring, cstrLength) ? nullptr : cstring},
 stringLength{string == nullptr ? 0 : cstrLength} { }
 
 template<typename CString>
-BasicString<CString>::~BasicString() noexcept { }
-
-template<typename CString>
 bool BasicString<CString>::isEmpty() const noexcept {
     return string == nullptr;
 }

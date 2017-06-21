@@ -152,7 +152,7 @@ $(eval $(call specInDir,TableCell,RootOfNegNumCell,TableCell.o Number.o BasicStr
 
 $(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
-$(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o))
+$(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o))
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

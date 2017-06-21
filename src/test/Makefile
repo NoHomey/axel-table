@@ -9,7 +9,7 @@ USER_DIR = ..
 #TESTS = DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
-TESTS = Number_spec NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
+TESTS = NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
 .PHONY: all clean test
 
@@ -111,6 +111,9 @@ It.o: $(USER_DIR)/It/It.h $(USER_DIR)/It/It.cc
 BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
 	$(COMPILE_COMPONENT)/String/BasicString/BasicString.cc $(COVER)
 
+TableCell.o: $(USER_DIR)/TableCell/TableCell.h $(USER_DIR)/TableCell/TableCell.cc
+	$(COMPILE_COMPONENT)/TableCell/TableCell.cc
+
 $(eval $(call templateInDir,Container,DynamicArray))
 
 $(eval $(call templateInDir,Container,IndexedDynamicArray))
@@ -131,23 +134,23 @@ $(eval $(call specInDir,Parser,StringParser,BasicString.o ConstString.o FixedSiz
 
 $(eval $(call specInDir,Parser,ValidationException))
 
-$(eval $(call specInDir,TableCell,EmptyCell,Number.o))
+$(eval $(call specInDir,TableCell,EmptyCell,TableCell.o Number.o))
 
-$(eval $(call specInDir,TableCell,NumberCell,Number.o fpconv.o))
+$(eval $(call specInDir,TableCell,NumberCell,TableCell.o Number.o fpconv.o))
 
-$(eval $(call specInDir,TableCell,StringNumberCell,NumberCell.o Number.o fpconv.o))
+$(eval $(call specInDir,TableCell,StringNumberCell,TableCell.o NumberCell.o Number.o fpconv.o))
 
-$(eval $(call specInDir,TableCell,StringCell,Number.o BasicString.o ConstString.o FixedSizeString.o))	
+$(eval $(call specInDir,TableCell,StringCell,TableCell.o Number.o BasicString.o ConstString.o FixedSizeString.o))	
 
-$(eval $(call specInDir,TableCell,ErrorCell,Number.o BasicString.o ConstString.o))
+$(eval $(call specInDir,TableCell,ErrorCell,TableCell.o Number.o BasicString.o ConstString.o))
 
-$(eval $(call specInDir,TableCell,CircRefCell,Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,CircRefCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
-$(eval $(call specInDir,TableCell,DivByZeroCell,Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,DivByZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
-$(eval $(call specInDir,TableCell,RootOfNegNumCell,Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,RootOfNegNumCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
-$(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

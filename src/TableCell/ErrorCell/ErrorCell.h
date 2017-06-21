@@ -17,6 +17,8 @@ public:
 
     size_t calculateSerializedLength() const noexcept final;
 
+    bool isDeletable() const noexcept final;
+
 protected:
     ErrorCell(const char* string, size_t length) noexcept;
 

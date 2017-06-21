@@ -11,3 +11,11 @@ TEST(EmptyCell, getValueAsNumber) {
         EXPECT_EQ(EmptyCell::obtainRef().getValueAsNumber().getInteger(), 0);
     }
 }
+
+TEST(EmptyCell, isDeletable) {
+    IT("returns false");
+
+    for(size_t i = 0; i < 10; ++i) {
+        EXPECT_FALSE(EmptyCell::obtainRef().isDeletable());
+    }
+}

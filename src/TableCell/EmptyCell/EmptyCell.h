@@ -12,4 +12,6 @@ public:
     size_t calculateOutputLength() const noexcept final;
 
     size_t calculateSerializedLength() const noexcept final;
+
+    bool isDeletable() const noexcept final;
 };

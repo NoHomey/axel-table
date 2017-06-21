@@ -23,3 +23,7 @@ size_t ErrorCell::calculateOutputLength() const noexcept {
 size_t ErrorCell::calculateSerializedLength() const noexcept {
     return calculateOutputLength();
 }
+
+bool ErrorCell::isDeletable() const noexcept {
+    return false;
+}

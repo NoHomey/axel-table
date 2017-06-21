@@ -17,3 +17,7 @@ size_t EmptyCell::calculateOutputLength() const noexcept {
 size_t EmptyCell::calculateSerializedLength() const noexcept {
     return 0;
 }
+
+bool EmptyCell::isDeletable() const noexcept {
+    return false;
+}

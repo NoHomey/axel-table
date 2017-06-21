@@ -9,4 +9,12 @@ TEST(type, getValueAsNumber) {                                                  
     for(size_t i = 0; i < 10; ++i) {                                                        \
         EXPECT_THROW(type::obtainRef().getValueAsNumber(), type::type##HasNoNumberValue);   \
     }                                                                                       \
+}                                                                                           \
+                                                                                            \
+TEST(type, isDeletable) {                                                                   \
+    IT("returns false");                                                                    \
+                                                                                            \
+    for(size_t i = 0; i < 10; ++i) {                                                        \
+        EXPECT_FALSE(type::obtainRef().isDeletable());                                      \
+    }                                                                                       \
 }

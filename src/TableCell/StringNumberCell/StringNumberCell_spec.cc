@@ -80,3 +80,33 @@ TEST(StringNumberCell, calculateLengthsWhenRealWithMoreThan16Digits) {
         EXPECT_EQ(cell.calculateSerializedLength(), expects[i]);
     }
 }
+
+TEST(StringNumberCell, isDeletable) {
+    IT("returns true");
+
+    {
+        const long long values[] = {0, 1, 2, -1, -2, 10, 304, -443, 12434, -34344,
+        304349, -19283848, 1202329, 83438414, 38438823, -349384381889, -2323434143413,
+        393349294293294, -393349294293294, 123456789012345, -123456789012345,
+        3933492942932941, -3933492942932942, 1234567890123453, -1223456789012345};
+
+        for(int i = 0; i < 25; ++i) {
+            StringNumberCell cell = {(const long long)values[i]};
+            EXPECT_TRUE(cell.isDeletable());
+        }
+
+    }
+
+    {
+        const double values[] = {0.3, 1.12, 2.01, -1.343, -2.34, 10.4545,
+        304.334, -443.34313, 12434.3244, -34344.32424,
+        304349.3434, -19283848.23, 1202329.0, 834.8414, -3843.23, -349384381889.000, -2323434143413,
+        -39.4929402932942, -39334.294224, 12345789.112345, -12345678.012345,
+        3933492942.32941, -1111.0429123442, 123.567890123453, -122345678901.345};
+
+        for(int i = 0; i < 25; ++i) {
+            StringNumberCell cell = {values[i]};
+            EXPECT_TRUE(cell.isDeletable());
+        }
+    }
+}

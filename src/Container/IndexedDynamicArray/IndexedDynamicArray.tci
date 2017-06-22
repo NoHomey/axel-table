@@ -120,10 +120,22 @@ void IndexedDynamicArray<Element>::removeElement(size_t index) {
 
 template<typename Element>
 template<typename ForEachInDynamicArrayFunction>
-void IndexedDynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const {
+void IndexedDynamicArray<Element>::forEachElement(ForEachInDynamicArrayFunction function) const noexcept {
     IndexedElement<Element> entry;
     for(size_t index = 0; index < IndexedDynamicArray::Base::arraySize; ++index) {
         entry = IndexedDynamicArray::Base::array[index];
         function(entry.element, entry.index);
     }
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void IndexedDynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const noexcept {
+    forEachElement<ForEachInDynamicArrayFunction&>(function);
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void IndexedDynamicArray<Element>::forEach(const ForEachInDynamicArrayFunction& function) const noexcept {
+    forEachElement<const ForEachInDynamicArrayFunction&>(function);
 }

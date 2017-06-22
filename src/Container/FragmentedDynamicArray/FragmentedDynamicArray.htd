@@ -47,9 +47,15 @@ public:
     void clear() noexcept;
 
     template<typename ForEachInDynamicArrayFunction>
-    void forEach(ForEachInDynamicArrayFunction& function) const;
+    void forEach(ForEachInDynamicArrayFunction& function) const noexcept;
+
+    template<typename ForEachInDynamicArrayFunction>
+    void forEach(const ForEachInDynamicArrayFunction& function) const noexcept;
 
 private:
+    template<typename ForEachInDynamicArrayFunction>
+    void forEachElement(ForEachInDynamicArrayFunction function) const noexcept;
+
     DynamicArray<Element> centeredElements;
     IndexedDynamicArray<Element> peripheralElements;
 };

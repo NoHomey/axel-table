@@ -177,8 +177,20 @@ void DynamicArray<Element>::clear() noexcept {
 
 template<typename Element>
 template<typename ForEachInDynamicArrayFunction>
-void DynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const {
+void DynamicArray<Element>::forEachElement(ForEachInDynamicArrayFunction function) const noexcept {
     for(size_t index = 0; index < arraySize; ++index) {
         function(array[index], index);
     }
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void DynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const noexcept {
+    forEachElement<ForEachInDynamicArrayFunction&>(function);
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void DynamicArray<Element>::forEach(const ForEachInDynamicArrayFunction& function) const noexcept {
+    forEachElement<const ForEachInDynamicArrayFunction&>(function);
 }

@@ -2,6 +2,11 @@
 #include "gtest/gtest.h"
 #include "../../It/It.h"
 
+TEST(NumberCell, Dynamics) {
+    const TableCell* ptr = new NumberCell{12.3431};
+    delete ptr;
+}
+
 TEST(NumberCell, getValueAsNumber) {
     IT("should return the Number with which it was created");
     EXPECT_EQ(NumberCell{{}}.getValueAsNumber().getInteger(), 0);

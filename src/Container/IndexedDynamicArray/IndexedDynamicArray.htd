@@ -23,6 +23,9 @@ private:
 
     using Base = DynamicArray<IndexedElement<Element>>;
 
+    template<typename ForEachInDynamicArrayFunction>
+    void forEachElement(ForEachInDynamicArrayFunction function) const noexcept;
+
 public:
     IndexedDynamicArray() noexcept = default;
 
@@ -51,7 +54,10 @@ public:
     void removeElement(size_t index);
 
     template<typename ForEachInDynamicArrayFunction>
-    void forEach(ForEachInDynamicArrayFunction& function) const;
+    void forEach(ForEachInDynamicArrayFunction& function) const noexcept;
+
+    template<typename ForEachInDynamicArrayFunction>
+    void forEach(const ForEachInDynamicArrayFunction& function) const noexcept;
 };
 
 #include "IndexedDynamicArray.tci"

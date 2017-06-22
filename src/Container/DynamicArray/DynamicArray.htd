@@ -49,9 +49,15 @@ public:
     void clear() noexcept;
 
     template<typename ForEachInDynamicArrayFunction>
-    void forEach(ForEachInDynamicArrayFunction& function) const;
+    void forEach(ForEachInDynamicArrayFunction& function) const noexcept;
+
+    template<typename ForEachInDynamicArrayFunction>
+    void forEach(const ForEachInDynamicArrayFunction& function) const noexcept;
 
 protected:
+    template<typename ForEachInDynamicArrayFunction>
+    void forEachElement(ForEachInDynamicArrayFunction function) const noexcept;
+
     Element* array;
     size_t arraySize;
     size_t arrayCapacity;

@@ -102,7 +102,19 @@ void FragmentedDynamicArray<Element>::clear() noexcept {
 
 template<typename Element>
 template<typename ForEachInDynamicArrayFunction>
-void FragmentedDynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const {
+void FragmentedDynamicArray<Element>::forEachElement(ForEachInDynamicArrayFunction function) const noexcept {
     centeredElements.forEach(function);
     peripheralElements.forEach(function);
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void FragmentedDynamicArray<Element>::forEach(ForEachInDynamicArrayFunction& function) const noexcept {
+    forEachElement<ForEachInDynamicArrayFunction&>(function);
+}
+
+template<typename Element>
+template<typename ForEachInDynamicArrayFunction>
+void FragmentedDynamicArray<Element>::forEach(const ForEachInDynamicArrayFunction& function) const noexcept {
+    forEachElement<const ForEachInDynamicArrayFunction&>(function);
 }

@@ -77,6 +77,12 @@ private:
     }
 };
 
+TEST(StringCel, Dynamics) {
+    FixedSizeString str{0};
+    const TableCell* ptr = new StringCell{std::move(str)};
+    delete ptr;
+}
+
 TEST_F(StringCellTest, getValueAsNumber) {
     IT("constantly return Number instance with Value integer 0");
     EXPECT_EQ(cell1.getValueAsNumber().getInteger(), 0);

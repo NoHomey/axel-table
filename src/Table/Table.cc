@@ -7,17 +7,13 @@ void Table::deleteIfDeletable(CellPtr cellPtr) noexcept {
     }
 }
 
-void Table::deleteCellsInRow(CellPtr cellPtr, size_t) noexcept {
-    deleteIfDeletable(cellPtr);
-}
-
-void Table::deleteRow(const RowPtr rowPtr, size_t) noexcept {
-    rowPtr->forEach(deleteCellsInRow);
-    delete rowPtr;
-}
-
 Table::~Table() noexcept {
-    tableRows.forEach(deleteRow);
+    tableRows.forEach([](const RowPtr rowPtr, size_t) noexcept {
+        rowPtr->forEach([](CellPtr cellPtr, size_t) noexcept {
+            deleteIfDeletable(cellPtr);
+        });
+        delete rowPtr;
+    });
 }
 
 Table::TableIndex::TableIndex(size_t row, size_t col) noexcept
@@ -31,34 +27,35 @@ size_t Table::TableIndex::getColumn() const noexcept {
     return columnIndex;
 }
 
-Table::ColumnsCountFinder::ColumnsCountFinder() noexcept
-: maxRowIndex{0} { }
-
-void Table::ColumnsCountFinder::operator()(const RowPtr rowPtr, size_t) noexcept {
-    const size_t lastRowIndex = rowPtr->getLastElementIndex();
-    if(lastRowIndex > maxRowIndex) {
-        maxRowIndex = lastRowIndex;
-    }
-}
-
-size_t Table::ColumnsCountFinder::getColumnsCount() const noexcept {
-    return maxRowIndex + 1;
-}
-
 size_t Table::getRowsCount() const noexcept {
     if(!tableRows.isEmpty()) {
-        return tableRows.getLastElementIndex() + 1;
+        bool containsNoneEmptyCell = false;
+        tableRows.forEach([&containsNoneEmptyCell](const RowPtr rowPtr, size_t) noexcept {
+            if(containsNoneEmptyCell) {
+                return;
+            }
+            if(!rowPtr->isEmpty()) {
+                containsNoneEmptyCell = true;
+            }
+        });
+        if(containsNoneEmptyCell) {
+            return tableRows.getLastElementIndex() + 1;
+        }
     }
     return 0;
 }
 
 size_t Table::getColumnsCount() const noexcept {
-    if(getRowsCount() > 0) {
-        ColumnsCountFinder columnsCountFinder;
-        tableRows.forEach(columnsCountFinder);
-        return columnsCountFinder.getColumnsCount();
-    }
-    return 0;
+    size_t columnsCount = 0;
+    tableRows.forEach([&columnsCount](const RowPtr rowPtr, size_t) noexcept {
+        if(!rowPtr->isEmpty()) {
+            const size_t lastRowIndex = rowPtr->getLastElementIndex() + 1;
+            if(lastRowIndex > columnsCount) {
+                columnsCount = lastRowIndex;
+            }
+        }
+    });
+    return columnsCount;
 }
 
 bool Table::isEmptyCell(CellPtr cellPtr) noexcept {
@@ -77,10 +74,12 @@ bool Table::clean(const RowPtr rowPtr, size_t index) noexcept {
 }
 
 void Table::removeEmptyCells(const RowPtr rowPtr) noexcept {
-    size_t index = rowPtr->getLastElementIndex();
-    while(isEmptyCell(rowPtr->getElement(index))) {
-        rowPtr->removeElement(index);
-        index = rowPtr->getLastElementIndex();
+    if(!rowPtr->isEmpty()) {
+        size_t index = rowPtr->getLastElementIndex();
+        while(isEmptyCell(rowPtr->getElement(index))) {
+            rowPtr->removeElement(index);
+            index = rowPtr->getLastElementIndex();
+        }
     }
 }
 

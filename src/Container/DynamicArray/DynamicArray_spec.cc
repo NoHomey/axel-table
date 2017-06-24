@@ -414,21 +414,6 @@ TEST(DynamicArray, setElement) {
 TEST(DynamicArray, forEach) {
     IT("makes a function like call to the given function-like passing element and it's index for each element");
 
-    class Expecter {
-    public:
-        Expecter(): position{0} { }
-
-        void operator()(int element, size_t index) {
-            EXPECT_EQ(element, data[position]);
-            EXPECT_EQ(index, indexes[position]);
-            ++position;
-        }
-    private:
-        size_t position;
-        const int data[10] = {1, 6, 3, 6, 22, 9549, -343, 123, 5, 971};
-        const size_t indexes[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    };
-
     TestArray array{10};
     array.push(1);
     array.push(6);
@@ -441,6 +426,14 @@ TEST(DynamicArray, forEach) {
     array.push(5);
     array.push(971);
 
-    Expecter expecter;
-    array.forEach(expecter);
+    const int data[10] = {1, 6, 3, 6, 22, 9549, -343, 123, 5, 971};
+    const size_t indexes[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    size_t position = 0;
+
+    array.forEach([&data, &indexes, &position](int element, size_t index) {
+        EXPECT_EQ(element, data[position]);
+        EXPECT_EQ(index, indexes[position]);
+        ++position;
+    });
+    EXPECT_EQ(position, 10);
 }

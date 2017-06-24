@@ -10,18 +10,6 @@ using Row = FragmentedDynamicArray<CellPtr>;
 using RowPtr = Row*;
 using Rows = FragmentedDynamicArray<RowPtr>;
 
-class ColumnsCountFinder {
-public:
-    ColumnsCountFinder() noexcept;
-
-    void operator()(const RowPtr rowPtr, size_t) noexcept;
-
-    size_t getColumnsCount() const noexcept;
-
-private:
-    size_t maxRowIndex;
-};
-
 public:
     class TableIndex {
     public:
@@ -56,10 +44,6 @@ public:
 
 private:
     static void deleteIfDeletable(CellPtr cellPtr) noexcept;
-
-    static void deleteCellsInRow(CellPtr cellPtr, size_t) noexcept;
-
-    static void deleteRow(const RowPtr rowPtr, size_t) noexcept;
 
     static bool isEmptyCell(CellPtr cellPtr) noexcept;
 

@@ -426,21 +426,6 @@ TEST(IndexedDynamicArray, MoveAssignOperator) {
 TEST(IndexedDynamicArray, forEach) {
     IT("makes a function like call to the given function-like passing element and it's index for each element");
 
-    class Expecter {
-    public:
-        Expecter(): position{0} { }
-
-        void operator()(int element, size_t index) {
-            EXPECT_EQ(element, data[position]);
-            EXPECT_EQ(index, indexes[position]);
-            ++position;
-        }
-    private:
-        size_t position;
-        const int data[10] = {3, 6, 123, 22, 1, 9549, 5, 6, -343, 971};
-        const size_t indexes[10] = {2, 13, 17, 42, 45, 53, 81, 454, 678, 9999};
-    };
-
     TestArray array{10};
     array.setElement(1, 45);
     array.setElement(6, 454);
@@ -453,6 +438,14 @@ TEST(IndexedDynamicArray, forEach) {
     array.setElement(5, 81);
     array.setElement(971, 9999);
 
-    Expecter expecter;
-    array.forEach(expecter);
+    size_t position = 0;
+    const int data[10] = {3, 6, 123, 22, 1, 9549, 5, 6, -343, 971};
+    const size_t indexes[10] = {2, 13, 17, 42, 45, 53, 81, 454, 678, 9999};
+
+    array.forEach([&data, &indexes, &position](int element, size_t index) {
+        EXPECT_EQ(element, data[position]);
+        EXPECT_EQ(index, indexes[position]);
+        ++position;
+    });
+    EXPECT_EQ(position, 10);
 }

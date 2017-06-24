@@ -33,15 +33,23 @@ TEST(TableIndex, getters) {
     EXPECT_EQ(index4.getColumn(), 234234);
 }
 
-#include <iostream>
-
 class TableObserver {
 public:
     TableObserver(const Table& observedTable): table{observedTable} {}
 
     template<typename Functor>
     void _forEachCellIndexInTable(Functor& functor) const noexcept {
-        std::cout << "table rows " << table.getRows().size() << std::endl;
+        forEachCellIndexInTable<Functor&>(functor);
+    }
+
+    template<typename Functor>
+    void _forEachCellIndexInTable(const Functor& functor) const noexcept {
+        forEachCellIndexInTable<const Functor&>(functor);
+    }
+
+private:
+    template<typename Functor>
+    void forEachCellIndexInTable(Functor functor) const noexcept {
         table.getRows().forEach([&functor](const FragmentedDynamicArray<const TableCell*>* rowPtr, size_t row) {
             rowPtr->forEach([row, &functor](const TableCell*, size_t col) {
                 functor(row, col);
@@ -49,7 +57,6 @@ public:
         });
     }
 
-private:
     const Table& table;
 };
 
@@ -359,4 +366,46 @@ TEST(Table, editWhenAddingNewEmptyCells) {
         observer._forEachCellIndexInTable(emptyChecker);
         EXPECT_FALSE(emptyChecker.isEmpty());
     }
+}
+
+TEST(Table, editingWhenOverwritngNoneEmptyCellsWithEmptyCell) {
+    IT("should remove the EmptyCell unless is in the 'center' of the table");
+    Table table;
+
+    {
+        TableObserver observer{table};
+        TableEmptyChecker emptyChecker;
+        observer._forEachCellIndexInTable(emptyChecker);
+        EXPECT_TRUE(emptyChecker.isEmpty());
+    }
+
+    table.edit({0, 0}, ErrorCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 1);
+    {
+        TableObserver observer{table};
+        TableEmptyChecker emptyChecker;
+        observer._forEachCellIndexInTable(emptyChecker);
+        EXPECT_FALSE(emptyChecker.isEmpty());
+    }
+
+    {
+        TableObserver observer{table};
+        observer._forEachCellIndexInTable([](size_t row, size_t col) {
+            EXPECT_EQ(row, 0);
+            EXPECT_EQ(col, 0);
+        });
+    }
+
+    table.edit({0, 0}, EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 0);
+    EXPECT_EQ(table.getColumnsCount(), 0);
+    {
+        TableObserver observer{table};
+        TableEmptyChecker emptyChecker;
+        observer._forEachCellIndexInTable(emptyChecker);
+        EXPECT_TRUE(emptyChecker.isEmpty());
+    }
+
+
 }

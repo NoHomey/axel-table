@@ -8,5 +8,7 @@ public:
 
     char* obtainBufferForInput() noexcept;
 
-    void syncSize(size_t size) noexcept; 
+    void syncSize(size_t size) noexcept;
+
+    size_t getIndexOfLastNewline() const noexcept;
 };

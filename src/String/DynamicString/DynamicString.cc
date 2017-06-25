@@ -13,16 +13,18 @@ size_t DynamicString::stringLength(const char* string) noexcept {
     return length;
 }
 
-size_t DynamicString::stringInitialLength(const char* string) noexcept {
-    size_t length = stringLength(string);
-    if(length > 0) {
-        ++length;
+size_t DynamicString::stringInitialLength(size_t bufferSize) noexcept {
+    if(bufferSize > 0) {
+        ++bufferSize;
     }
-    return length;
+    return bufferSize;
 }
 
+DynamicString::DynamicString(size_t bufferSize)
+: string{stringInitialLength(bufferSize)} { }
+
 DynamicString::DynamicString(const char* str)
-: string{stringInitialLength(str)} {
+: DynamicString{stringLength(str)} {
     const size_t capacity = string.capacity();
     if(capacity > 0) {
         const size_t size = capacity - 1;

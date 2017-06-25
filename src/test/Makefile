@@ -6,7 +6,7 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-TESTS = DynamicString_spec# DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+TESTS = DynamicString_spec InputString_spec# DynamicArray_spec IndexedDynamicArray_spec FragmentedDynamicArray_spec# ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
 
 #TESTS = TableCellParser_spec# NumberCell_spec StringNumberCell_spec StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec
@@ -127,6 +127,8 @@ $(eval $(call specInDir,String,ConstString,BasicString.o))
 $(eval $(call specInDir,String,FixedSizeString,BasicString.o ConstString.o))
 
 $(eval $(call specInDir,String,DynamicString,BasicString.o ConstString.o))
+
+$(eval $(call specInDir,String,InputString,BasicString.o ConstString.o DynamicString.o))
 
 $(eval $(call specInDir,Parser,TypeParser,BasicString.o ValidationException.o))
 

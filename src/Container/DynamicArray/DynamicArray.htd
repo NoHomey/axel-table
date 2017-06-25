@@ -7,8 +7,13 @@ class EmptyDynamicArray: public Exception { };
 
 class IndexNotFound: public Exception { };
 
+class InputString;
+
 template<typename Element>
 class DynamicArray {
+private:
+    friend class InputString;
+
 public:
     DynamicArray() noexcept;
     

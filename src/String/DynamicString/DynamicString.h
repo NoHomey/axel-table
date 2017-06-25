@@ -4,11 +4,13 @@
 #include "../../Container/DynamicArray/DynamicArray.htd"
 
 class DynamicString: public ImmutableString {
-private:
+protected:
     using StringBuffer = DynamicArray<char>;
 
 public:
     DynamicString() noexcept = default;
+
+    explicit DynamicString(size_t bufferSize);
 
     DynamicString(const char* str);
 
@@ -50,10 +52,11 @@ public:
 
     void clear() noexcept;
 
+protected:
+    StringBuffer string;
+
 private:
     static size_t stringLength(const char* string) noexcept;
 
-    static size_t stringInitialLength(const char* string) noexcept;
-
-    StringBuffer string;
+    static size_t stringInitialLength(size_t bufferLength) noexcept;
 };

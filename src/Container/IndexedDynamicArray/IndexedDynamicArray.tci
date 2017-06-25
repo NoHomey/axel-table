@@ -91,7 +91,7 @@ void IndexedDynamicArray<Element>::setElement(const Element& element, size_t ind
     try {
         elementIndex = findArrayIndexOfElementAtIndex(index);
         IndexedDynamicArray::Base::array[elementIndex].element = element;
-    } catch(::Exception& error) {
+    } catch(const Exception& error) {
         addNewElement(element, index);
     }   
 }

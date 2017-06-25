@@ -36,7 +36,7 @@ const Element& FragmentedDynamicArray<Element>::getElement(size_t index) const {
     }
     try {
         return peripheralElements.getElement(index);
-    } catch(EmptyDynamicArray& error) {
+    } catch(const EmptyDynamicArray& error) {
         if(centeredElements.isEmpty()) {
             throw error;
         } else {
@@ -68,8 +68,8 @@ void FragmentedDynamicArray<Element>::setElement(const Element& element, size_t 
         centeredElements.setElement(element, index);
         try {
             peripheralElements.removeElement(index);
-        } catch(Exception& error) { }
-    } catch(IndexNotFound& error) {
+        } catch(const Exception& error) { }
+    } catch(const IndexNotFound& error) {
         peripheralElements.setElement(element, index);
     }
 }

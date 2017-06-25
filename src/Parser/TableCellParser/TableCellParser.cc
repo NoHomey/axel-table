@@ -21,13 +21,13 @@ const TableCell* TableCellParser::parseString(ConstString& token) {
     StringParser stringParser{token};
     try {
         stringParser.validateType();
-    } catch(StringParser::EmptyString& error) {
+    } catch(const StringParser::EmptyString& error) {
         return new StringCell{std::move(FixedSizeString{0})};
     }
     NumberParser stringNumberParser{ConstString{token, 1, token.length() - 2}};
     try {
         stringNumberParser.validateType();
-    } catch(Exception& error) {
+    } catch(const Exception& error) {
         return new StringCell{std::move(stringParser.parseType())};
     }
     return new StringNumberCell{stringNumberParser.parseType()};
@@ -37,9 +37,9 @@ const TableCell* TableCellParser::parseStrict(ConstString& token) {
     NumberParser numberParser{token};
     try {
         numberParser.validateType();
-    } catch(Empty& error) {
+    } catch(const Empty& error) {
         return EmptyCell::obtainPtr();
-    } catch(InvalidSymbol& error) {
+    } catch(const InvalidSymbol& error) {
         if((error.getSymbol() == '"') && (error.getPosition() == 0)) {
             return parseString(token);
         }
@@ -51,7 +51,7 @@ const TableCell* TableCellParser::parseStrict(ConstString& token) {
 const TableCell* TableCellParser::parse(ConstString& token) {
     try {
         return parseStrict(token);
-    } catch(InvalidSymbol& error) {
+    } catch(const InvalidSymbol& error) {
         if((error.getSymbol() == '#') && (error.getPosition() == 0)) {
             CHECK_FOR_ERROR_CELL(ErrorCell)
             CHECK_FOR_ERROR_CELL(CircRefCell)

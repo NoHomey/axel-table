@@ -90,7 +90,7 @@ void Table::edit(const TableIndex& index, CellPtr cellPtr) {
     const bool isTableCellEmptyCell = isEmptyCell(cellPtr);
     try {
         rowPtr = tableRows[row];
-    } catch(Exception& error) {
+    } catch(const Exception& error) {
         if(isTableCellEmptyCell) {
             return;
         }
@@ -104,7 +104,7 @@ void Table::edit(const TableIndex& index, CellPtr cellPtr) {
     if(clean(rowPtr, column)) {
         try {
             rowPtr->removeElement(column);
-        } catch(OperationNotPermitted& error) {
+        } catch(const OperationNotPermitted& error) {
             rowPtr->setElement(cellPtr, column);
             return;
         }
@@ -116,13 +116,13 @@ const TableCell& Table::operator[](const TableIndex& index) const {
     RowPtr rowPtr;
     try {
         rowPtr = tableRows[index.getRow()];
-    } catch(Exception& error) {
+    } catch(const Exception& error) {
         return EmptyCell::obtainRef();
     }
     CellPtr cellPtr;
     try {
         cellPtr = rowPtr->getElement(index.getColumn());
-    } catch(Exception& error) {
+    } catch(const Exception& error) {
         return EmptyCell::obtainRef();
     }
     return *cellPtr;

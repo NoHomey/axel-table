@@ -62,3 +62,5 @@ const TableCell* TableCellParser::parse(ConstString& token) {
         throw error;
     }
 }
+
+#undef CHECK_FOR_ERROR_CELL

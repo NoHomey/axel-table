@@ -380,6 +380,7 @@ TEST(Table, editingWhenOverwritngNoneEmptyCellsWithEmptyCell) {
     }
 
     table.edit({0, 0}, ErrorCell::obtainPtr());
+    EXPECT_EQ(&(table[{0, 0}]),  ErrorCell::obtainPtr());
     EXPECT_EQ(table.getRowsCount(), 1);
     EXPECT_EQ(table.getColumnsCount(), 1);
     {
@@ -407,5 +408,161 @@ TEST(Table, editingWhenOverwritngNoneEmptyCellsWithEmptyCell) {
         EXPECT_TRUE(emptyChecker.isEmpty());
     }
 
+    {
+        NumberCell* ptr = new NumberCell{42.81};
+        table.edit({0, 0}, ptr);
+        EXPECT_EQ(&(table[{0, 0}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 1);
+    }
 
+    {
+        NumberCell* ptr = new NumberCell{412.181};
+        table.edit({0, 1}, ptr);
+        EXPECT_EQ(&(table[{0, 1}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 2);
+    }
+
+    {
+        StringNumberCell* ptr = new StringNumberCell{13.21};
+        table.edit({0, 2}, ptr);
+        EXPECT_EQ(&(table[{0, 2}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 3);
+    }
+
+
+    table.edit({0, 1}, EmptyCell::obtainPtr());
+    EXPECT_EQ(&(table[{0, 1}]),  EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 3);
+
+    {
+        size_t position = 0;
+        Table::TableIndex indexes[3] = {{0, 0}, {0, 1}, {0, 2}};
+        TableObserver{table}._forEachCellIndexInTable([&position, &indexes](size_t row, size_t col) noexcept {
+            EXPECT_EQ(indexes[position].getRow(), row);
+            EXPECT_EQ(indexes[position].getColumn(), col);
+            ++position;
+        });
+        EXPECT_EQ(position, 3);
+    }
+
+    EXPECT_DOUBLE_EQ((table[{0, 0}]).getValueAsNumber().getReal(), 42.81);
+    EXPECT_EQ(&(table[{0, 1}]),  EmptyCell::obtainPtr());
+    EXPECT_DOUBLE_EQ((table[{0, 2}]).getValueAsNumber().getReal(), 13.21);
+
+    {
+        StringNumberCell* ptr = new StringNumberCell{10000.00234};
+        table.edit({0, 0}, ptr);
+        EXPECT_EQ(&(table[{0, 0}]),  ptr);
+        EXPECT_DOUBLE_EQ((table[{0, 0}]).getValueAsNumber().getReal(), 10000.00234);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 3);
+    }
+
+    table.edit({0, 2},  EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 1);
+    TableObserver{table}._forEachCellIndexInTable([&table](size_t row, size_t col) noexcept {
+        EXPECT_EQ(row, 0);
+        EXPECT_EQ(col, 0);
+        EXPECT_DOUBLE_EQ((table[{0, 0}]).getValueAsNumber().getReal(), 10000.00234);
+        EXPECT_EQ(&(table[{0, 1}]),  EmptyCell::obtainPtr());
+        EXPECT_EQ(&(table[{0, 2}]),  EmptyCell::obtainPtr());
+    });
+
+    table.edit({0, 121},  EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 1);
+
+    table.edit({0, 1210},  EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 1);
+
+    {
+        StringNumberCell* ptr = new StringNumberCell{120.1299};
+        table.edit({0, 120}, ptr);
+        EXPECT_EQ(&(table[{0, 120}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 121);
+    }
+
+    {
+        NumberCell* ptr = new NumberCell{121.99};
+        table.edit({0, 121}, ptr);
+        EXPECT_EQ(&(table[{0, 121}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 122);
+    }
+
+    {
+        NumberCell* ptr = new NumberCell{-1848.23};
+        table.edit({0, 999}, ptr);
+        EXPECT_EQ(&(table[{0, 999}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 1000);
+    }
+
+    {
+        NumberCell* ptr = new NumberCell{1210.0121};
+        table.edit({0, 1210}, ptr);
+        EXPECT_EQ(&(table[{0, 1210}]),  ptr);
+        EXPECT_EQ(table.getRowsCount(), 1);
+        EXPECT_EQ(table.getColumnsCount(), 1211);
+    }
+
+    table.edit({0, 999}, EmptyCell::obtainPtr());
+    table.edit({0, 121}, EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 1211);
+    table.edit({0, 1210}, EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 121);
+
+    {
+        size_t position = 0;
+        Table::TableIndex indexes[2] = {{0, 0}, {0, 120}};
+        TableObserver{table}._forEachCellIndexInTable([&position, &indexes](size_t row, size_t col) noexcept {
+            EXPECT_EQ(indexes[position].getRow(), row);
+            EXPECT_EQ(indexes[position].getColumn(), col);
+            ++position;
+        });
+        EXPECT_EQ(position, 2);
+    }
+
+    for(size_t i = 1; i < 60; ++i) {
+        table.edit({0, i}, ErrorCell::obtainPtr());
+    }
+
+    for(size_t i = 1; i < 59; ++i) {
+        table.edit({0, i}, EmptyCell::obtainPtr());
+    }
+
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 121);
+    table.edit({0, 120}, EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 60);
+
+    {
+        size_t column = 0;
+        TableObserver{table}._forEachCellIndexInTable([&column](size_t row, size_t col) noexcept {
+            EXPECT_EQ(row, 0);
+            EXPECT_EQ(col, column);
+            ++column;
+        });
+        EXPECT_EQ(column, 60);
+    }
+
+    table.edit({0, 59}, EmptyCell::obtainPtr());
+    EXPECT_EQ(table.getRowsCount(), 1);
+    EXPECT_EQ(table.getColumnsCount(), 1);
+
+    TableObserver{table}._forEachCellIndexInTable([&table](size_t row, size_t col) noexcept {
+        EXPECT_EQ(row, 0);
+        EXPECT_EQ(col, 0);
+        EXPECT_DOUBLE_EQ((table[{0, 0}]).getValueAsNumber().getReal(), 10000.00234);
+    });
 }

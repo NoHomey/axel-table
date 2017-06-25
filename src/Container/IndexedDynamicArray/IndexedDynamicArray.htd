@@ -11,6 +11,8 @@ struct IndexedElement {
 template<typename Element>
 class IndexedDynamicArray: public DynamicArray<IndexedElement<Element>> {
 private:
+    const IndexedElement<Element>* data() const noexcept;
+
     void push(const Element& element);
 
     void pop();

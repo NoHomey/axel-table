@@ -36,6 +36,8 @@ public:
 
     const Element& getElement(size_t index) const;
 
+    const Element* data() const noexcept;
+
     void push(const Element& element);
 
     void pop();

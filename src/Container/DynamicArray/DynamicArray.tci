@@ -117,6 +117,11 @@ const Element& DynamicArray<Element>::getElement(size_t index) const {
 }
 
 template<typename Element>
+const Element* DynamicArray<Element>::data() const noexcept {
+    return array;
+}
+
+template<typename Element>
 void DynamicArray<Element>::ensureCapacity() {
     if(isFull()) {
         reserve(arrayCapacity + 2);

@@ -411,20 +411,30 @@ TEST(DynamicArray, setElement) {
     EXPECT_EQ(array.getElement(2), 5);
 }
 
-TEST(DynamicArray, forEach) {
-    IT("makes a function like call to the given function-like passing element and it's index for each element");
+class DynamicArrayElementsTest: public ::testing::Test {
+public:
+    DynamicArrayElementsTest()
+    : array{10} { }
+    
+protected:
+    void SetUp() final {
+        array.push(1);
+        array.push(6);
+        array.push(3);
+        array.push(6);
+        array.push(22);
+        array.push(9549);
+        array.push(-343);
+        array.push(123);
+        array.push(5);
+        array.push(971);
+    }
 
-    TestArray array{10};
-    array.push(1);
-    array.push(6);
-    array.push(3);
-    array.push(6);
-    array.push(22);
-    array.push(9549);
-    array.push(-343);
-    array.push(123);
-    array.push(5);
-    array.push(971);
+    TestArray array;
+};
+
+TEST_F(DynamicArrayElementsTest, forEach) {
+    IT("makes a function like call to the given function-like passing element and it's index for each element");
 
     const int data[10] = {1, 6, 3, 6, 22, 9549, -343, 123, 5, 971};
     const size_t indexes[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -436,4 +446,15 @@ TEST(DynamicArray, forEach) {
         ++position;
     });
     EXPECT_EQ(position, 10);
+}
+
+TEST_F(DynamicArrayElementsTest, data) {
+    IT("returns pointer of constant elements");
+
+    const int expect[10] = {1, 6, 3, 6, 22, 9549, -343, 123, 5, 971};
+    const int* data = array.data();
+
+    for(int i = 0; i < 10; ++i) {
+        EXPECT_EQ(data[i], expect[i]);
+    }
 }

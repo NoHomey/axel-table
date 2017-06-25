@@ -6,13 +6,11 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-#TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
+TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
 FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec\
 Number_spec NumberParser_spec StringParser_spec NumberCell_spec StringNumberCell_spec\
 StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec\
-RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Table_spec TableCellParser_spec
-
-TESTS = InputBuffer_spec
+RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Table_spec TableCellParser_spec Reader_spec
 
 .PHONY: all clean test
 
@@ -43,7 +41,7 @@ AR_GTEST = $(AR) $(ARFLAGS) $@ $^
 
 LCOV_CURR_DIR = lcov --base-directory . --directory .
 
-COMPILE_COMPONENT = $(COMPILER) -c $(USER_DIR)
+COMPILE_COMPONENT = $(COMPILER) -c -D __TEST__ $(USER_DIR)
 
 ownDeps = $(USER_DIR)/$(1)/$(1).h $(USER_DIR)/$(1)/$(1).cc $(USER_DIR)/$(1)/$(1)_spec.cc
 
@@ -67,13 +65,13 @@ $(1)_spec: $(call objDeps,$(1)) gtest_main.a It.o $(2)
 endef
 
 define specInDir
-$(2).o: $(call dirDeps,$(1),$(2)) $(3)
+$(2).o: $(call dirDeps,$(1),$(2)) $(3) $(4)
 	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2).cc $(COVER)
 
-$(2)_spec.o: $(call dirDeps,$(1),$(2)) $(specDeps) $(3)
+$(2)_spec.o: $(call dirDeps,$(1),$(2)) $(specDeps) $(3) $(4)
 	$(COMPILE_COMPONENT)/$(1)/$(2)/$(2)_spec.cc
 
-$(2)_spec: $(call objDeps,$(2)) gtest_main.a It.o $(3)
+$(2)_spec: $(call objDeps,$(2)) gtest_main.a It.o $(3) $(4)
 	$(COMPILER) $(COVER) -lpthread $$^ -o $$@
 endef
 
@@ -162,6 +160,8 @@ $(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o Basi
 $(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o))
 
 $(eval $(call specInDir,Parser,TableCellParser,Number.o BasicString.o ConstString.o TableCell.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o TypeParser.o NumberParser.o StringParser.o ValidationException.o))
+
+$(eval $(call specInDir,IO,Reader,InputBuffer.o BasicString.o ConstString.o))
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

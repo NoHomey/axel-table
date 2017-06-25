@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef __TEST__
+    #define MOCKABLE virtual
+#else
+    #define MOCKABLE
+#endif

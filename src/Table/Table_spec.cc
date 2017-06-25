@@ -1,5 +1,3 @@
-#define __TEST__
-
 #include "Table.h"
 #include "gtest/gtest.h"
 #include "../It/It.h"

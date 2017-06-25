@@ -429,3 +429,97 @@ TEST_F(DynamicStringTest, clear) {
     EXPECT_EQ(str5.capacity(), 0);
     EXPECT_EQ(str5.cString(), nullptr);
 }
+
+TEST_F(DynamicStringTest, assignAddition) {
+    IT("adds the string value of other string to the currnet one");
+
+    EXPECT_FALSE(str1.isEmpty());
+    EXPECT_EQ(str1.length(), 13);
+    EXPECT_EQ(str1.capacity(), 13);
+    EXPECT_NE(str1.cString(), nullptr);
+    EXPECT_TRUE(str.isEmpty());
+    EXPECT_EQ(str.length(), 0);
+    EXPECT_EQ(str.capacity(), 0);
+    EXPECT_EQ(str.cString(), nullptr);
+    str += str1;
+    EXPECT_FALSE(str.isEmpty());
+    EXPECT_EQ(str.length(), 13);
+    EXPECT_EQ(str.capacity(), 13);
+    EXPECT_NE(str.cString(), nullptr);
+    EXPECT_EQ(str, str1);
+    EXPECT_EQ(str1, str);
+    EXPECT_EQ(str, DynamicString{"Hellow world!"});
+    EXPECT_EQ(str, (ConstString{"Hellow world!", 13}));
+    EXPECT_EQ(str1, DynamicString{"Hellow world!"});
+    EXPECT_EQ(str1, (ConstString{"Hellow world!", 13}));
+
+    EXPECT_FALSE(str5.isEmpty());
+    EXPECT_EQ(str5.length(), 68);
+    EXPECT_EQ(str5.capacity(), 68);
+    EXPECT_NE(str5.cString(), nullptr);
+    EXPECT_TRUE(str10.isEmpty());
+    EXPECT_EQ(str10.length(), 0);
+    EXPECT_EQ(str10.capacity(), 0);
+    EXPECT_EQ(str10.cString(), nullptr);
+    str10 += str5;
+    EXPECT_FALSE(str10.isEmpty());
+    EXPECT_EQ(str10.length(), 68);
+    EXPECT_EQ(str10.capacity(), 68);
+    EXPECT_NE(str10.cString(), nullptr);
+    EXPECT_EQ(str5, str10);
+    EXPECT_EQ(str10, str5);
+    EXPECT_EQ(str10, DynamicString{"Git commit, Git push, wait for it ..., save your life! floor is code"});
+    EXPECT_EQ(str10, (ConstString{"Git commit, Git push, wait for it ..., save your life! floor is code", 68}));
+
+    EXPECT_FALSE(str2.isEmpty());
+    EXPECT_EQ(str2.length(), 9);
+    EXPECT_EQ(str2.capacity(), 9);
+    EXPECT_NE(str2.cString(), nullptr);
+    str1 += str2;
+    EXPECT_FALSE(str1.isEmpty());
+    EXPECT_EQ(str1.length(), 22);
+    EXPECT_EQ(str1.capacity(), 22);
+    EXPECT_NE(str1.cString(), nullptr);
+    EXPECT_NE(str1, str2);
+    EXPECT_NE(str2, str1);
+    EXPECT_EQ(str1, DynamicString{"Hellow world!Some text"});
+    EXPECT_EQ(str1, (ConstString{"Hellow world!Some text", 22}));
+
+    EXPECT_EQ(str3, DynamicString{"This Escalated quickly."});
+    EXPECT_EQ(str3, (ConstString{"This Escalated quickly.", 23}));
+    EXPECT_FALSE(str3.isEmpty());
+    EXPECT_EQ(str3.length(), 23);
+    EXPECT_EQ(str3.capacity(), 23);
+    EXPECT_NE(str3.cString(), nullptr);
+    str2 += str3;
+    EXPECT_FALSE(str2.isEmpty());
+    EXPECT_EQ(str2.length(), 32);
+    EXPECT_EQ(str2.capacity(), 32);
+    EXPECT_NE(str2.cString(), nullptr);
+    EXPECT_NE(str3, str2);
+    EXPECT_NE(str2, str3);
+    EXPECT_EQ(str2, DynamicString{"Some textThis Escalated quickly."});
+    EXPECT_EQ(str2, (ConstString{"Some textThis Escalated quickly.", 32}));
+
+    EXPECT_TRUE(str11.isEmpty());
+    EXPECT_EQ(str11.length(), 0);
+    EXPECT_EQ(str11.capacity(), 0);
+    EXPECT_EQ(str11.cString(), nullptr);
+    str11 += ConstString{"#It just works!", 16};
+    EXPECT_FALSE(str11.isEmpty());
+    EXPECT_EQ(str11.length(), 16);
+    EXPECT_EQ(str11.capacity(), 16);
+    EXPECT_NE(str11.cString(), nullptr);
+    EXPECT_EQ(str11, DynamicString{"#It just works!"});
+    EXPECT_EQ(str11, (ConstString{"#It just works!", 16}));
+}
+
+TEST(DynamicString, stringsAddition) {
+    IT("concatenates strings");
+
+    EXPECT_EQ((DynamicString{"This "} + DynamicString{"is supper"} + DynamicString{" cool"}),
+            (ConstString{"This is supper cool", 19}));
+
+    EXPECT_EQ((DynamicString{"#It"} + ConstString{" just ", 6} + DynamicString{"works!"}),
+            (ConstString{"#It just works!", 16}));
+}

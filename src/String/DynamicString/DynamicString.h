@@ -40,6 +40,10 @@ public:
 
     bool operator>(const ImmutableString& other) const noexcept;
 
+    DynamicString operator+(const ImmutableString& other) const;
+
+    DynamicString& operator+=(const ImmutableString& other);
+
     void reserve(size_t size);
     
     void shrinkToFit();

@@ -90,3 +90,23 @@ void DynamicString::shrinkToFit() {
 void DynamicString::clear() noexcept {
     string.clear();
 }
+
+DynamicString DynamicString::operator+(const ImmutableString& other) const {
+    DynamicString copy{*this};
+    copy += other;
+    return copy;
+}
+
+DynamicString& DynamicString::operator+=(const ImmutableString& other) {
+    if(!other.isEmpty()) {
+        const size_t copyIndex = other.length() + 1;
+        reserve(copyIndex - 1);
+        if(!isEmpty()) {
+            string.pop();
+        }
+        for(size_t index = 0; index < copyIndex; ++index) {
+            string.push(other[index]);
+        }
+    }
+    return *this;
+}

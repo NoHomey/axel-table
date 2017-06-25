@@ -177,3 +177,71 @@ TEST(TableCellParser, parseIntegerStringNumberCell) {
         delete ptr;
     }
 }
+
+TEST(TableCellParser, parseStringCell) {
+    IT("parses valid string to FixedSizeString");
+
+    struct Test {
+        const char* string;
+        const size_t stringLength;
+        size_t outputLength;
+    };
+
+    Test test[] = {
+        {"\"some text\"", 11, 9},
+        {"\"@#$%\"", 6, 4},
+        {"\"Hello world!\"", 14, 12},
+        {"\"\\\\\"", 4, 1},
+        {"\"\\\"\"", 4, 1},
+        {"\"a\\\\b\"", 6, 3},
+        {"\"c\\\"d\"", 6, 3},
+        {"\"\\\\\\\"\"", 6, 2},
+        {"\"\\\"\\\\\"", 6, 2},
+        {"\"\\\\12\\\"34\"", 10, 6},
+        {"\"|\\\\\\\"\\\"\\\"|\"", 12, 6},
+        {"\"C:\\\\temp\\\\\"", 12, 8},
+        {"\"\\\"quote\\\"\"", 11, 7},
+        {"\"e\\\\\\\"s\\\\c\\\"ape\\\\\\\\\\\\it!\"", 25, 16}
+    };
+
+    for(size_t i = 0; i < 14; ++i) {
+        ConstString str = {test[i].string, test[i].stringLength};
+        const TableCell* ptr = TableCellParser::parse(str); 
+        EXPECT_EQ(ptr->getValueAsNumber().getInteger(), 0);
+        EXPECT_EQ(ptr->calculateOutputLength(), test[i].outputLength) ;
+        EXPECT_EQ(ptr->calculateSerializedLength(), test[i].stringLength);
+        EXPECT_TRUE(ptr->isDeletable());
+        delete ptr;
+    }
+}
+
+TEST(TableCellParser, parseThrowsInvalidSymbol) {
+    IT("throws InvalidSymbol if the passed string starts with # but dose not match any know type of error cells");
+    struct Test {
+        const char* string;
+        const size_t stringLength;
+    };
+
+    Test test[] = {
+        {"#Error", 6},
+        {"#Empty", 6},
+        {"#DivByZero", 6},
+        {"##0^0", 5},
+        {"#0^0", 4},
+        {"#infinity", 9},
+        {"#infty", 6},
+        {"#hashtag", 8},
+        {"#test", 5}
+    };
+
+    for(size_t i = 0; i < 9; ++i) {
+        ConstString str = {test[i].string, test[i].stringLength};
+        EXPECT_THROW(TableCellParser::parse(str), InvalidSymbol); 
+        try {
+            TableCellParser::parse(str);
+        } catch(const InvalidSymbol& error) {
+            EXPECT_EQ(error.getPosition(), 0);
+            EXPECT_EQ(error.getSymbol(), '#');
+        }
+    }
+}

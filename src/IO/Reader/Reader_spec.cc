@@ -9,8 +9,8 @@ TEST(Reader, readNewlineTerminatedBlock) {
 
     FILE* fd = std::fopen("./../IO/Reader/test.txt", "r");
     std::cout << "opened: " << (fd == nullptr ? "No" : "Yes") << std::endl;
-    std::cout << "Chunks ------------------------------------------------" << std::endl;
     Reader reader{fd};
+    std::cout << "Chunks ------------------------------------------------" << std::endl;
     for(int i  = 0; i < 3; ++i) {
         Reader::NewlineBlock block = reader.readNewlineTerminatedBlock();
         const char* data = block.data();

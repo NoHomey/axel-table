@@ -16,13 +16,13 @@ public:
 
     ~DynamicString() noexcept = default;
 
-    DynamicString(const DynamicString&) = default;
+    DynamicString(const DynamicString& other);
 
-    DynamicString(DynamicString&&) = default;
+    DynamicString(DynamicString&& other) noexcept;
 
-    DynamicString& operator=(const DynamicString&) = default;
+    DynamicString& operator=(const DynamicString& other);
 
-    DynamicString& operator=(DynamicString&&) = default;
+    DynamicString& operator=(DynamicString&& other) noexcept;
 
     bool isEmpty() const noexcept;
 

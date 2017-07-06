@@ -10,7 +10,7 @@ TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArra
 FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec\
 Number_spec NumberParser_spec StringParser_spec NumberCell_spec StringNumberCell_spec\
 StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec\
-RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Table_spec TableCellParser_spec Reader_spec
+RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Table_spec TableCellParser_spec# Reader_spec
 
 .PHONY: all clean test
 

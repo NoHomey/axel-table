@@ -21,7 +21,27 @@ size_t DynamicString::stringInitialLength(size_t bufferSize) noexcept {
 }
 
 DynamicString::DynamicString(size_t bufferSize)
-: string{stringInitialLength(bufferSize)} { }
+: ImmutableString{}, string{stringInitialLength(bufferSize)} { }
+
+DynamicString::DynamicString(const DynamicString& other)
+: ImmutableString{}, string{other.string} { }
+
+DynamicString::DynamicString(DynamicString&& other) noexcept
+: ImmutableString{}, string{std::move(other.string)} { }
+
+DynamicString& DynamicString::operator=(const DynamicString& other) {
+    if(this != &other) {
+        string = other.string;
+    }
+    return *this;
+}
+
+DynamicString& DynamicString::operator=(DynamicString&& other) noexcept {
+    if(this != &other) {
+        string = std::move(other.string);
+    }
+    return *this;
+}
 
 DynamicString::DynamicString(const char* str)
 : DynamicString{stringLength(str)} {

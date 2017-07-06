@@ -1,6 +1,6 @@
 {
-    "C_Cpp.clang_format_path": "/usr/bin/clang-3.8",
-    "clang.executable": "/usr/bin/clang-3.8",
+    "C_Cpp.clang_format_path": "/usr/bin/clang",
+    "clang.executable": "/usr/bin/clang",
     "clang.cxxflags": [
         "-std=c++14"
     ],

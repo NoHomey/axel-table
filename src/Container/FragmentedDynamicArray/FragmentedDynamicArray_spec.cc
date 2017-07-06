@@ -754,9 +754,9 @@ TEST(FragmentedDynamicArray, forEach) {
     array.setElement(357, 4);
     array.setElement(16, 5);
 
-    size_t position;
-        const int data[16] = {-1, 0, 111, 325, 357, 16, 3, 6, 123, 22, 1, 9549, 5, 6, -343, 971};
-        const size_t indexes[16] = {0, 1, 2, 3, 4, 5, 6, 13, 17, 42, 45, 53, 81, 454, 678, 9999};
+    size_t position = 0;
+    const int data[16] = {-1, 0, 111, 325, 357, 16, 3, 6, 123, 22, 1, 9549, 5, 6, -343, 971};
+    const size_t indexes[16] = {0, 1, 2, 3, 4, 5, 6, 13, 17, 42, 45, 53, 81, 454, 678, 9999};
 
     array.forEach([&data, &indexes, &position](int element, size_t index) {
         EXPECT_EQ(element, data[position]);

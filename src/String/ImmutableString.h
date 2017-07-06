@@ -8,13 +8,13 @@ public:
 
     virtual ~ImmutableString() noexcept = default;
 
-    ImmutableString(const ImmutableString&) = default;
+    ImmutableString(const ImmutableString&) = delete;
 
-    ImmutableString(ImmutableString&&) = default;
+    ImmutableString(ImmutableString&&) = delete;
 
-    ImmutableString& operator=(const ImmutableString&) = default;
+    ImmutableString& operator=(const ImmutableString&) = delete;
 
-    ImmutableString& operator=(ImmutableString&&) = default;
+    ImmutableString& operator=(ImmutableString&&) = delete;
 
     virtual bool isEmpty() const noexcept = 0;
 

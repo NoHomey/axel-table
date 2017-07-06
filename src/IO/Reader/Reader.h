@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../MOCKABLE.mcrs"
 #include "../InputBuffer/InputBuffer.h"
-#include <cstdio>
+#include "../InputStream/InputStream.h"
 
 class Reader {
 public:
@@ -21,14 +20,12 @@ public:
         size_t blockSize;
     };
 
-    Reader(FILE* fileObject) noexcept;
-
-    MOCKABLE bool isEndOfFileReached() const noexcept;
+    Reader(InputStream& iStream) noexcept;
 
     MOCKABLE NewlineBlock readNewlineTerminatedBlock();
 
 protected:
-    FILE* filePtr;
+    InputStream& inputStream;
     InputBuffer inputBuffer;
 
 private:

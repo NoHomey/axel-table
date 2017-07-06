@@ -9,12 +9,16 @@ TEST(Reader, readNewlineTerminatedBlock) {
 
     FILE* fd = std::fopen("./../IO/Reader/test.txt", "r");
     std::cout << "opened: " << (fd == nullptr ? "No" : "Yes") << std::endl;
-    Reader reader{fd};
+    InputStream inputStream{fd};
+    Reader reader{inputStream};
     std::cout << "Chunks ------------------------------------------------" << std::endl;
-    for(int i  = 0; i < 3; ++i) {
+    while(true) {
         Reader::NewlineBlock block = reader.readNewlineTerminatedBlock();
-        const char* data = block.data();
         const size_t size = block.size();
+        if(size == 0) {
+            break;
+        }
+        const char* data = block.data();
         for(size_t i = 0; i < size; ++i) {
             std::cout << data[i];
         }

@@ -11,12 +11,8 @@ size_t Reader::NewlineBlock::size() const noexcept {
     return blockSize;
 }
 
-Reader::Reader(FILE* fileObject) noexcept
-: filePtr{fileObject}, inputBuffer{initialSize} { }
-
-bool Reader::isEndOfFileReached() const noexcept {
-    return std::feof(filePtr) != 0;
-}
+Reader::Reader(InputStream& iStream) noexcept
+: inputStream{iStream}, inputBuffer{initialSize} { }
 
 void Reader::restoreState() noexcept {
     const size_t size = inputBuffer.size();
@@ -33,7 +29,7 @@ void Reader::restoreState() noexcept {
 
 Reader::NewlineBlock Reader::readNewlineTerminatedBlock() {
     restoreState();
-    if(!isEndOfFileReached()) {
+    if(!inputStream.isEndOfFileReached()) {
         size_t readBytes;
         size_t currentSize;
         size_t indexOfLastNewline;
@@ -41,9 +37,9 @@ Reader::NewlineBlock Reader::readNewlineTerminatedBlock() {
         size_t notFilledMemorySize = inputBuffer.capacity() - offset;
         char* buffer = inputBuffer.obtainBufferForInput();
         while(true) {
-            readBytes = std::fread(buffer + offset, sizeof(char), notFilledMemorySize, filePtr);
+            readBytes = inputStream.read(buffer + offset, notFilledMemorySize);
             if(readBytes < notFilledMemorySize) {
-                if(isEndOfFileReached()) {
+                if(inputStream.isEndOfFileReached()) {
                     buffer[offset + readBytes] = '\n';
                     ++readBytes;
                 } else {

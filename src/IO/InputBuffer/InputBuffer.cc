@@ -14,14 +14,17 @@ void InputBuffer::syncSize(size_t size) noexcept {
 
 size_t InputBuffer::getIndexOfLastNewline() const noexcept {
     const size_t count = size();
-    size_t index = count - 1;
-    while(true) {
-        if(array[index] == '\n') {
-            return index;
+    if(count > 0) {
+        size_t index = count - 1;
+        while(true) {
+            if(array[index] == '\n') {
+                return index;
+            }
+            if(index == 0) {
+                return count;
+            }
+            --index;
         }
-        if(index == 0) {
-            return count;
-        }
-        --index;
     }
+    return 0;
 }

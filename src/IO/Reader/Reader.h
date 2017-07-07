@@ -22,6 +22,8 @@ public:
 
     Reader(InputStream& iStream) noexcept;
 
+    MOCKABLE ~Reader() noexcept = default;
+
     MOCKABLE NewlineBlock readNewlineTerminatedBlock();
 
 protected:
@@ -31,7 +33,7 @@ protected:
 private:
     void restoreState() noexcept;
 
-    static const size_t initialSize = 4096;
+    static const size_t initialSize = 512;
 
     static const size_t chunkSize = 256;
 };

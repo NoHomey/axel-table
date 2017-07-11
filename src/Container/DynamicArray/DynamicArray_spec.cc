@@ -445,7 +445,15 @@ TEST_F(DynamicArrayElementsTest, forEach) {
         EXPECT_EQ(index, indexes[position]);
         ++position;
     });
+
     EXPECT_EQ(position, 10);
+
+    int sum = 0;
+    array.forEach([&sum](int element, size_t) {
+        sum += element;
+    });
+
+    EXPECT_EQ(sum, 10343);
 }
 
 TEST_F(DynamicArrayElementsTest, data) {

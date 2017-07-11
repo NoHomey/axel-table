@@ -2,22 +2,22 @@
 
 template<typename Element>
 IndexedDynamicArray<Element>::IndexedDynamicArray(size_t size)
-: IndexedDynamicArray::Base{size} { }
+: Base{size} { }
 
 template<typename Element>
-const Element& IndexedDynamicArray<Element>::operator[](size_t index) const {
-    if(IndexedDynamicArray::Base::isEmpty()) {
+size_t IndexedDynamicArray<Element>::findArrayIndexOfElementAtIndex(size_t index) const {
+    if(Base::isEmpty()) {
         throw EmptyDynamicArray{};
     }
     size_t leftSide = 0;
-    size_t rightSide = IndexedDynamicArray::Base::arraySize - 1;
+    size_t rightSide = Base::arraySize - 1;
     size_t center = 0;
     while(leftSide <= rightSide) {
         center = (rightSide + leftSide) / 2;
-        if(IndexedDynamicArray::Base::array[center].index == index) {
-            return IndexedDynamicArray::Base::array[center].element;
+        if(Base::array[center].index == index) {
+            return center;
         }
-        if(IndexedDynamicArray::Base::array[center].index < index) {
+        if(Base::array[center].index < index) {
             leftSide = center + 1;
         } else {
             if(center > 0) {
@@ -31,13 +31,14 @@ const Element& IndexedDynamicArray<Element>::operator[](size_t index) const {
 }
 
 template<typename Element>
+const Element& IndexedDynamicArray<Element>::operator[](size_t index) const {
+    return getElement(index);
+}
+
+template<typename Element>
 const Element& IndexedDynamicArray<Element>::getElement(size_t index) const {
-    if(!IndexedDynamicArray::Base::isEmpty()) {
-        const size_t elementIndex = findArrayIndexOfElementAtIndex(index);
-        return IndexedDynamicArray::Base::array[elementIndex].element;
-    } else {
-        throw EmptyDynamicArray{};
-    }
+    const size_t elementIndex = findArrayIndexOfElementAtIndex(index);
+    return Base::array[elementIndex].element;
 }
 
 template<typename Element>
@@ -58,61 +59,41 @@ size_t IndexedDynamicArray<Element>::getLastElementIndex() const {
 
 template<typename Element>
 void IndexedDynamicArray<Element>::sort() noexcept {
-    size_t i = 0;
-    size_t j = 0;
-    size_t minIndex = 0;
-    const size_t last = IndexedDynamicArray::Base::arraySize - 1;
+    size_t insertedIndex = Base::arraySize - 1;
+    size_t checkedIndex = insertedIndex - 1;
     IndexedElement<Element> temp;
-    for(; i < last; ++i) {
-        minIndex = i;
-        for(j = i + 1; j < IndexedDynamicArray::Base::arraySize; ++j) {
-            if(IndexedDynamicArray::Base::array[j].index < IndexedDynamicArray::Base::array[minIndex].index) {
-                minIndex = j;
-            }
-        }
-
-        if(minIndex != i) {
-            temp = IndexedDynamicArray::Base::array[minIndex];
-            IndexedDynamicArray::Base::array[minIndex] = IndexedDynamicArray::Base::array[i];
-            IndexedDynamicArray::Base::array[i] = temp;
-        }
+    while((insertedIndex > 0) && (Base::array[checkedIndex].index > Base::array[insertedIndex].index)) {
+        temp = Base::array[checkedIndex];
+        Base::array[checkedIndex] = Base::array[insertedIndex];
+        Base::array[insertedIndex] = temp;
+        --checkedIndex;
+        --insertedIndex;
     }
 }
 
 template<typename Element>
 void IndexedDynamicArray<Element>::addNewElement(const Element& element, size_t index) {
-    IndexedDynamicArray::Base::push({index, element});
+    Base::push({index, element});
     sort();
 }
 
 template<typename Element>
 void IndexedDynamicArray<Element>::setElement(const Element& element, size_t index) {
-    size_t elementIndex;
     try {
-        elementIndex = findArrayIndexOfElementAtIndex(index);
-        IndexedDynamicArray::Base::array[elementIndex].element = element;
+        const size_t elementIndex = findArrayIndexOfElementAtIndex(index);
+        Base::array[elementIndex].element = element;
     } catch(const Exception& error) {
         addNewElement(element, index);
     }   
 }
 
 template<typename Element>
-size_t IndexedDynamicArray<Element>::findArrayIndexOfElementAtIndex(size_t index) const {
-    for(size_t i = 0; i < IndexedDynamicArray::Base::arraySize; ++i) {
-        if(IndexedDynamicArray::Base::array[i].index == index) {
-            return i;
-        }
-    }
-    throw IndexNotFound{};
-}
-
-template<typename Element>
 void IndexedDynamicArray<Element>::removeElement(size_t index) {
-    if(!IndexedDynamicArray::Base::isEmpty()) {
-        for(size_t i = findArrayIndexOfElementAtIndex(index) + 1; i < IndexedDynamicArray::Base::arraySize; ++i) {
-            IndexedDynamicArray::Base::array[i - 1] = IndexedDynamicArray::Base::array[i];
+    if(!Base::isEmpty()) {
+        for(size_t arrayIndex = findArrayIndexOfElementAtIndex(index) + 1; arrayIndex < Base::arraySize; ++arrayIndex) {
+            Base::array[arrayIndex - 1] = Base::array[arrayIndex];
         }
-        --IndexedDynamicArray::Base::arraySize;
+        --Base::arraySize;
     } else {
         throw EmptyDynamicArray{};
     }
@@ -121,11 +102,9 @@ void IndexedDynamicArray<Element>::removeElement(size_t index) {
 template<typename Element>
 template<typename ForEachInDynamicArrayFunction>
 void IndexedDynamicArray<Element>::forEachElement(ForEachInDynamicArrayFunction function) const noexcept {
-    IndexedElement<Element> entry;
-    for(size_t index = 0; index < IndexedDynamicArray::Base::arraySize; ++index) {
-        entry = IndexedDynamicArray::Base::array[index];
+    Base::forEach([&function](const IndexedElement<Element>& entry, size_t) {
         function(entry.element, entry.index);
-    }
+    });
 }
 
 template<typename Element>

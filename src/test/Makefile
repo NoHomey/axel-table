@@ -6,8 +6,10 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
-FragmentedDynamicArray_spec ConstString_spec FixedSizeString_spec ValidationException_spec\
+TESTS = DynamicArray_spec IndexedDynamicArray_spec# Table_spec
+
+#InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
+ConstString_spec FixedSizeString_spec ValidationException_spec\
 Number_spec NumberParser_spec StringParser_spec NumberCell_spec StringNumberCell_spec\
 StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec\
 RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Table_spec TableCellParser_spec Reader_spec
@@ -118,8 +120,6 @@ TableCell.o: $(USER_DIR)/TableCell/TableCell.h $(USER_DIR)/TableCell/TableCell.c
 $(eval $(call templateInDir,Container,DynamicArray))
 
 $(eval $(call templateInDir,Container,IndexedDynamicArray))
-
-$(eval $(call templateInDir,Container,FragmentedDynamicArray))
 
 $(eval $(call spec,Number))
 

@@ -242,6 +242,7 @@ TEST(IndexedDynamicArray, setElement) {
     EXPECT_NO_THROW(array.getElement(4));
     EXPECT_NO_THROW(array.getElement(6));
     EXPECT_EQ(array.getElement(6), 1);
+    EXPECT_EQ(array.getElement(4), 5);
     array.setElement(9, 6);
     EXPECT_EQ(array.getElement(6), 9);
     EXPECT_EQ(array.getElement(4), 5);
@@ -447,5 +448,13 @@ TEST(IndexedDynamicArray, forEach) {
         EXPECT_EQ(index, indexes[position]);
         ++position;
     });
+
     EXPECT_EQ(position, 10);
+
+    int sum = 0;
+    array.forEach([&sum](int element, size_t) {
+        sum += element;
+    });
+
+    EXPECT_EQ(sum, 10343);
 }

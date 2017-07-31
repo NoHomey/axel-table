@@ -99,9 +99,9 @@ bool DynamicString::operator>(const ImmutableString& other) const noexcept {
     return other < *this;
 }
 
-void DynamicString::reserve(size_t size) {
+void DynamicString::extend(size_t size) {
     if(size > 0) {
-        string.reserve(size + (string.capacity() == 0));
+        string.extend(size + (string.capacity() == 0));
     }
 }
     
@@ -122,7 +122,7 @@ DynamicString DynamicString::operator+(const ImmutableString& other) const {
 DynamicString& DynamicString::operator+=(const ImmutableString& other) {
     if(!other.isEmpty()) {
         const size_t copyIndex = other.length() + 1;
-        reserve(copyIndex - 1);
+        extend(copyIndex - 1);
         if(!isEmpty()) {
             string.pop();
         }

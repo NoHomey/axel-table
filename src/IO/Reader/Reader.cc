@@ -52,7 +52,7 @@ Reader::NewlineBlock Reader::readNewlineTerminatedBlock() {
             if(indexOfLastNewline < currentSize) {
                 return NewlineBlock{inputBuffer.obtainBufferForInput(), indexOfLastNewline};
             }
-            inputBuffer.reserve(chunkSize);
+            inputBuffer.extend(chunkSize);
             notFilledMemorySize = chunkSize;
             offset = currentSize;
             buffer = inputBuffer.obtainBufferForInput();

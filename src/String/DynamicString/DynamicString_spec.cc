@@ -271,18 +271,18 @@ TEST(DynamicString, greaterThanOperator) {
     EXPECT_TRUE((DynamicString{"tyxt"}) > (ConstString{"txt", 3}));
 }
 
-TEST_F(DynamicStringTest, reserve) {
-    IT("reserves storage");
+TEST_F(DynamicStringTest, extend) {
+    IT("extends storage");
 
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 0);
-    str.reserve(10);
+    str.extend(10);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 10);
-    str.reserve(22);
+    str.extend(22);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 32);
-    str.reserve(0);
+    str.extend(0);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 32);
 
@@ -297,13 +297,13 @@ TEST_F(DynamicStringTest, reserve) {
 
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 68);
-    str5.reserve(7);
+    str5.extend(7);
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 75);
-    str5.reserve(13);
+    str5.extend(13);
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 88);
-    str5.reserve(0);
+    str5.extend(0);
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 88);
 
@@ -321,19 +321,19 @@ TEST_F(DynamicStringTest, shrinkToFit) {
     EXPECT_EQ(str.capacity(), 0);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 0);
-    str.reserve(10);
+    str.extend(10);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 10);
     str.shrinkToFit();
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 0);
-    str.reserve(22);
+    str.extend(22);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 22);
     str.shrinkToFit();
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 0);
-    str.reserve(0);
+    str.extend(0);
     EXPECT_EQ(str.length(), 0);
     EXPECT_EQ(str.capacity(), 0);
 
@@ -352,19 +352,19 @@ TEST_F(DynamicStringTest, shrinkToFit) {
     str5.shrinkToFit();
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 68);
-    str5.reserve(7);
+    str5.extend(7);
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 75);
     str5.shrinkToFit();
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 68);
-    str5.reserve(13);
+    str5.extend(13);
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 81);
     str5.shrinkToFit();
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 68);
-    str5.reserve(0);
+    str5.extend(0);
     EXPECT_EQ(str5.length(), 68);
     EXPECT_EQ(str5.capacity(), 68);
     str5.shrinkToFit();

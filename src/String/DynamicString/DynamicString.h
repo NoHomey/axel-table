@@ -46,7 +46,7 @@ public:
 
     DynamicString& operator+=(const ImmutableString& other);
 
-    void reserve(size_t size);
+    void extend(size_t size);
     
     void shrinkToFit();
 

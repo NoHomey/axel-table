@@ -44,7 +44,7 @@ public:
 
     void setElement(const Element& element, size_t index);
 
-    void reserve(size_t size);
+    void extend(size_t size);
     
     void shrinkToFit();
 

@@ -124,7 +124,7 @@ const Element* DynamicArray<Element>::data() const noexcept {
 template<typename Element>
 void DynamicArray<Element>::ensureCapacity() {
     if(isFull()) {
-        reserve(arrayCapacity + 2);
+        extend(arrayCapacity + 2);
     }
 }
 
@@ -158,7 +158,7 @@ void DynamicArray<Element>::setElement(const Element& element, size_t index) {
 }
 
 template<typename Element>
-void DynamicArray<Element>::reserve(size_t size) {
+void DynamicArray<Element>::extend(size_t size) {
     if(size > 0) {
         DynamicArray temp{arrayCapacity + size};
         temp.copyOtherArrayElements(*this);

@@ -147,17 +147,17 @@ TEST(IndexedDynamicArray, clear) {
     EXPECT_TRUE(array.isFull());
 }
 
-TEST(IndexedDynamicArray, reserve) {
-    IT("reserves capacity for elements by making a reallocation");
+TEST(IndexedDynamicArray, extend) {
+    IT("extends capacity for elements by making a reallocation");
     TestArray array;
     EXPECT_EQ(array.capacity(), 0);
-    array.reserve(7);
+    array.extend(7);
     EXPECT_EQ(array.capacity(), 7);
-    array.reserve(0);
+    array.extend(0);
     EXPECT_EQ(array.capacity(), 7);
     array.clear();
     EXPECT_EQ(array.capacity(), 0);
-    array.reserve(6);
+    array.extend(6);
     EXPECT_EQ(array.capacity(), 6);
 }
 

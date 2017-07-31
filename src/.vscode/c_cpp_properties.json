@@ -21,12 +21,14 @@
                     "/usr/lib/clang/3.8.0/include",
                     "/usr/include/x86_64-linux-gnu",
                     "/usr/include",
-                    "~/axel-table/googletest/include"
+                    "~/axel-table/googletest/include",
+                    "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
             },
             "intelliSenseMode": "clang-x64"
         }
-    ]
+    ],
+    "version": 2
 }

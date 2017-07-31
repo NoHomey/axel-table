@@ -6,7 +6,7 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-TESTS = DynamicArray_spec IndexedDynamicArray_spec# Table_spec
+TESTS = Reader_spec
 
 #TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
 ConstString_spec FixedSizeString_spec ValidationException_spec\

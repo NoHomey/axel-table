@@ -24,7 +24,25 @@ public:
 
     MOCKABLE ~Reader() noexcept = default;
 
-    MOCKABLE NewlineBlock readNewlineTerminatedBlock();
+    MOCKABLE NewlineBlock readNewlineBlock();
+
+#ifdef __TEST__
+
+    static void setInitialSize(size_t initialSize) noexcept {
+        Reader::initialSize = initialSize;
+    }
+
+    static void setChunkSize(size_t chunkSize) noexcept {
+        Reader::chunkSize = chunkSize;
+    }
+
+    static void restoreSizes() noexcept {
+        Reader::initialSize = 512;
+
+        Reader::chunkSize = 256;
+    }
+    
+#endif
 
 protected:
     InputStream& inputStream;
@@ -33,7 +51,7 @@ protected:
 private:
     void restoreState() noexcept;
 
-    static const size_t initialSize = 512;
+    static MOCKABLE_CONST size_t initialSize;
 
-    static const size_t chunkSize = 256;
+    static MOCKABLE_CONST size_t chunkSize;
 };

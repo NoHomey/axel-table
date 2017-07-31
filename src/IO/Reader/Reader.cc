@@ -11,6 +11,10 @@ size_t Reader::NewlineBlock::size() const noexcept {
     return blockSize;
 }
 
+MOCKABLE_CONST size_t Reader::initialSize = 512;
+
+MOCKABLE_CONST size_t Reader::chunkSize = 256;
+
 Reader::Reader(InputStream& iStream) noexcept
 : inputStream{iStream}, inputBuffer{initialSize} { }
 
@@ -24,39 +28,37 @@ void Reader::restoreState() noexcept {
             buffer[index] = buffer[firstAfterLastNewline + index];
         }
         inputBuffer.syncSize(difference);
-    }   
+    } else {
+        inputBuffer.syncSize(0);
+    }  
 }
 
-Reader::NewlineBlock Reader::readNewlineTerminatedBlock() {
-    restoreState();
-    if(!inputStream.isEndOfFileReached()) {
-        size_t readBytes;
-        size_t currentSize;
-        size_t indexOfLastNewline;
-        size_t offset = inputBuffer.size();
-        size_t notFilledMemorySize = inputBuffer.capacity() - offset;
-        char* buffer = inputBuffer.obtainBufferForInput();
-        while(true) {
-            readBytes = inputStream.read(buffer + offset, notFilledMemorySize);
-            if(readBytes < notFilledMemorySize) {
-                if(inputStream.isEndOfFileReached()) {
-                    buffer[offset + readBytes] = '\n';
-                    ++readBytes;
-                } else {
-                    throw ReaderIOException{};
-                }
-            }
-            currentSize = offset + readBytes;
-            inputBuffer.syncSize(currentSize);
-            indexOfLastNewline = inputBuffer.getIndexOfLastNewline();
-            if(indexOfLastNewline < currentSize) {
-                return NewlineBlock{inputBuffer.obtainBufferForInput(), indexOfLastNewline};
-            }
-            inputBuffer.extend(chunkSize);
-            notFilledMemorySize = chunkSize;
-            offset = currentSize;
-            buffer = inputBuffer.obtainBufferForInput();
-        }
+Reader::NewlineBlock Reader::readNewlineBlock() {
+    if(inputStream.isEndOfFileReached()) {
+        return NewlineBlock{nullptr, 0};
     }
-    return NewlineBlock{nullptr, 0};
+    restoreState();
+    size_t readBytes;
+    size_t indexOfLastNewline;
+    size_t size = inputBuffer.size();
+    size_t notFilledMemorySize = inputBuffer.capacity() - size;
+    char* buffer = inputBuffer.obtainBufferForInput();
+    while(true) {
+        readBytes = inputStream.read(buffer + size, notFilledMemorySize);
+        size += readBytes;
+        if(inputStream.isEndOfFileReached()) {
+            return NewlineBlock{buffer, size};
+        }
+        if(readBytes < notFilledMemorySize) {
+            throw ReaderIOException{};
+        }
+        inputBuffer.syncSize(size);
+        indexOfLastNewline = inputBuffer.getIndexOfLastNewline();
+        if(indexOfLastNewline < size) {
+            return NewlineBlock{buffer, indexOfLastNewline};
+        }
+        inputBuffer.extend(chunkSize);
+        notFilledMemorySize = chunkSize;
+        buffer = inputBuffer.obtainBufferForInput();
+    }
 }

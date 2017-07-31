@@ -49,6 +49,7 @@
         "cfenv": "cpp",
         "*.htd": "cpp",
         "*.tci": "cpp",
-        "*.mcrs": "cpp"
+        "*.mcrs": "cpp",
+        "cstring": "cpp"
     }
 }

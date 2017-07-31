@@ -2,6 +2,10 @@
 
 #ifdef __TEST__
     #define MOCKABLE virtual
+
+    #define MOCKABLE_CONST
 #else
     #define MOCKABLE
+
+    #define MOCKABLE_CONST const
 #endif

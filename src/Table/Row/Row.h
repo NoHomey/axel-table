@@ -5,7 +5,17 @@
 
 class Row {
 public:
+    Row() = default;
+
     ~Row() noexcept;
+
+    Row(const Row& other) = default;
+
+    Row(Row&& other) noexcept = default;
+
+    Row& operator=(const Row& other) = default;
+
+    Row& operator=(Row&& other) noexcept = default;
 
     size_t length() const noexcept;
 

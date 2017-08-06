@@ -6,9 +6,9 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-#TESTS = DynamicArray_spec IndexedDynamicArray_spec Row_spec Table_spec TableCell_spec
+TESTS = TableParser_spec
 
-TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
+#TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
 ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
 StringParser_spec NumberCell_spec StringNumberCell_spec TableCell_spec NumberCell_spec StringNumberCell_spec\
 StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec\
@@ -160,11 +160,13 @@ $(eval $(call specInDir,Table,Row,TableCell.o Number.o BasicString.o ConstString
 
 $(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o Row.o))
 
-$(eval $(call specInDir,Parser,TableCellParser,Number.o BasicString.o ConstString.o TableCell.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o TypeParser.o NumberParser.o StringParser.o ValidationException.o))
+$(eval $(call specInDir,Parser,TableCellParser,Number.o BasicString.o ConstString.o TableCell.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o TypeParser.o NumberParser.o StringParser.o ValidationException.o))
 
 $(eval $(call specInDir,IO,InputStream))
 
 $(eval $(call specInDir,IO,Reader,InputStream.o InputBuffer.o BasicString.o ConstString.o))
+
+$(eval $(call specInDir,Parser,TableParser,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o Row.o Table.o TypeParser.o NumberParser.o StringParser.o ValidationException.o TableCellParser.o Reader.o InputStream.o InputBuffer.o))
 
 test: all
 	$(LCOV_CURR_DIR) --zerocounters

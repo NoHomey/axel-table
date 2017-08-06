@@ -23,6 +23,14 @@ public:
 
     ~Table() noexcept;
 
+    Table(const Table& other) = default;
+
+    Table(Table&& other) noexcept = default;
+
+    Table& operator=(const Table& other) = default;
+
+    Table& operator=(Table&& other) noexcept = default;
+
     size_t getRowsCount() const noexcept;
 
     size_t getColumnsCount() const noexcept;

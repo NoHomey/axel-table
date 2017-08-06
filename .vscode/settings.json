@@ -36,6 +36,8 @@
         "utility": "cpp",
         "*.htd": "cpp",
         "*.tci": "cpp",
-        "*.mcrs": "cpp"
+        "*.mcrs": "cpp",
+        "cfenv": "cpp",
+        "cstring": "cpp"
     }
 }

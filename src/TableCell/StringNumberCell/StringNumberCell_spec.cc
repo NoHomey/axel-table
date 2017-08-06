@@ -1,6 +1,7 @@
 #include "StringNumberCell.h"
 #include "gtest/gtest.h"
 #include "../../It/It.h"
+#include "../EmptyCell/EmptyCell.h"
 
 TEST(StringNumberCell, Dynamics) {
     const NumberCell* ptr = new StringNumberCell{12.3431};
@@ -113,5 +114,14 @@ TEST(StringNumberCell, isDeletable) {
             StringNumberCell cell = {values[i]};
             EXPECT_TRUE(cell.isDeletable());
         }
+    }
+}
+
+TEST(StringNumberCell, EmptyCellisEmptyCell) {
+    IT("returns false");
+
+    for(size_t i = 0; i < 10; ++i) {
+        StringNumberCell cell = {(long long) i};
+        EXPECT_FALSE(EmptyCell::isEmptyCell(&cell));
     }
 }

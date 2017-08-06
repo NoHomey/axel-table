@@ -1,6 +1,7 @@
 #include "StringCell.h"
 #include "gtest/gtest.h"
 #include "../../It/It.h"
+#include "../EmptyCell/EmptyCell.h"
 
 class StringCellTest: public ::testing::Test {
 public:
@@ -133,4 +134,18 @@ TEST_F(StringCellTest, isDeletable) {
     EXPECT_TRUE(cell7.isDeletable());
     EXPECT_TRUE(cell8.isDeletable());
     EXPECT_TRUE(cell9.isDeletable());
+}
+
+TEST_F(StringCellTest, EmptyCellisEmptyCell) {
+    IT("returns false");
+
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell1));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell2));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell3));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell4));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell5));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell6));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell7));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell8));
+    EXPECT_FALSE(EmptyCell::isEmptyCell(&cell9));
 }

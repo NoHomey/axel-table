@@ -19,3 +19,11 @@ TEST(EmptyCell, isDeletable) {
         EXPECT_FALSE(EmptyCell::obtainRef().isDeletable());
     }
 }
+
+TEST(EmptyCell, isEmptyCell) {
+    IT("returns true");
+
+    for(size_t i = 0; i < 10; ++i) {
+        EXPECT_TRUE(EmptyCell::isEmptyCell(EmptyCell::obtainPtr()));
+    }
+}

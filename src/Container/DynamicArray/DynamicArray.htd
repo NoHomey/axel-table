@@ -3,10 +3,6 @@
 #include <cstddef>
 #include "../../Exception.h"
 
-class EmptyDynamicArray: public Exception { };
-
-class IndexNotFound: public Exception { };
-
 template<typename Element>
 class DynamicArray {
 public:
@@ -32,17 +28,19 @@ public:
 
     bool isFull() const noexcept;
 
+    bool hasElementAt(size_t index) const noexcept;
+
     const Element& operator[](size_t index) const noexcept;
 
-    const Element& getElement(size_t index) const;
+    const Element& getElement(size_t index) const noexcept;
 
     const Element* data() const noexcept;
 
     void push(const Element& element);
 
-    void pop();
+    void pop() noexcept;
 
-    void setElement(const Element& element, size_t index);
+    void setElement(size_t index, const Element& element);
 
     void extend(size_t size);
     

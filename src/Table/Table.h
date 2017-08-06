@@ -1,15 +1,10 @@
 #pragma once
 
-#include "../Container/FragmentedDynamicArray/FragmentedDynamicArray.htd"
+#include "../Container/IndexedDynamicArray/IndexedDynamicArray.htd"
+#include "./Row/Row.h"
 #include "../TableCell/TableCell.h"
 
 class Table {
-using Cell = const TableCell;
-using CellPtr = Cell*;
-using Row = FragmentedDynamicArray<CellPtr>;
-using RowPtr = Row*;
-using Rows = FragmentedDynamicArray<RowPtr>;
-
 public:
     class TableIndex {
     public:
@@ -32,24 +27,16 @@ public:
 
     size_t getColumnsCount() const noexcept;
 
-    void edit(const TableIndex& index, CellPtr cellPtr);
+    void edit(const TableIndex& index, const TableCell* cellPtr);
 
-    const TableCell& operator[](const TableIndex& index) const;
+    const TableCell* operator[](const TableIndex& index) const;
 
 #ifdef __TEST__
-    const Rows& getRows() const noexcept {
+    const IndexedDynamicArray<Row*>& getRows() const noexcept {
         return tableRows;
     }
 #endif
 
 private:
-    static void deleteIfDeletable(CellPtr cellPtr) noexcept;
-
-    static bool isEmptyCell(CellPtr cellPtr) noexcept;
-
-    static bool clean(const RowPtr rowPtr, size_t index) noexcept;
-
-    static void removeEmptyCells(const RowPtr rowPtr) noexcept;
-
-    Rows tableRows;
+    IndexedDynamicArray<Row*> tableRows;
 };

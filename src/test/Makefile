@@ -6,13 +6,13 @@ FPCONV_DIR = $(DEPS_DIR)/fpconv/src
 
 USER_DIR = ..
 
-TESTS = Reader_spec
+#TESTS = DynamicArray_spec IndexedDynamicArray_spec Row_spec Table_spec TableCell_spec
 
-#TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
-ConstString_spec FixedSizeString_spec ValidationException_spec\
-Number_spec NumberParser_spec StringParser_spec NumberCell_spec StringNumberCell_spec\
+TESTS = InputBuffer_spec DynamicString_spec DynamicArray_spec IndexedDynamicArray_spec\
+ConstString_spec FixedSizeString_spec ValidationException_spec Number_spec NumberParser_spec\
+StringParser_spec NumberCell_spec StringNumberCell_spec TableCell_spec NumberCell_spec StringNumberCell_spec\
 StringCell_spec EmptyCell_spec ErrorCell_spec CircRefCell_spec DivByZeroCell_spec\
-RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Table_spec TableCellParser_spec Reader_spec
+RootOfNegNumCell_spec ZeroRaisedOnZeroCell_spec Row_spec Table_spec TableCellParser_spec Reader_spec
 
 .PHONY: all clean test chrome-open-coverage
 
@@ -114,9 +114,6 @@ It.o: $(USER_DIR)/It/It.h $(USER_DIR)/It/It.cc
 BasicString.o: $(USER_DIR)/String/ImmutableString.h $(USER_DIR)/String/BasicString/BasicString.h $(USER_DIR)/String/BasicString/BasicString.cc $(specDeps)
 	$(COMPILE_COMPONENT)/String/BasicString/BasicString.cc $(COVER)
 
-TableCell.o: $(USER_DIR)/TableCell/TableCell.h $(USER_DIR)/TableCell/TableCell.cc
-	$(COMPILE_COMPONENT)/TableCell/TableCell.cc
-
 $(eval $(call templateInDir,Container,DynamicArray))
 
 $(eval $(call templateInDir,Container,IndexedDynamicArray))
@@ -139,25 +136,29 @@ $(eval $(call specInDir,Parser,StringParser,BasicString.o ConstString.o FixedSiz
 
 $(eval $(call specInDir,Parser,ValidationException))
 
+$(eval $(call spec,TableCell,Number.o))
+
 $(eval $(call specInDir,TableCell,EmptyCell,TableCell.o Number.o))
 
-$(eval $(call specInDir,TableCell,NumberCell,TableCell.o Number.o fpconv.o))
+$(eval $(call specInDir,TableCell,NumberCell,TableCell.o Number.o fpconv.o EmptyCell.o))
 
-$(eval $(call specInDir,TableCell,StringNumberCell,TableCell.o NumberCell.o Number.o fpconv.o))
+$(eval $(call specInDir,TableCell,StringNumberCell,TableCell.o NumberCell.o Number.o fpconv.o EmptyCell.o))
 
-$(eval $(call specInDir,TableCell,StringCell,TableCell.o Number.o BasicString.o ConstString.o FixedSizeString.o))	
+$(eval $(call specInDir,TableCell,StringCell,TableCell.o Number.o BasicString.o ConstString.o FixedSizeString.o EmptyCell.o))	
 
-$(eval $(call specInDir,TableCell,ErrorCell,TableCell.o Number.o BasicString.o ConstString.o))
+$(eval $(call specInDir,TableCell,ErrorCell,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o))
 
-$(eval $(call specInDir,TableCell,CircRefCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,CircRefCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o EmptyCell.o))
 
-$(eval $(call specInDir,TableCell,DivByZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,DivByZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o EmptyCell.o))
 
-$(eval $(call specInDir,TableCell,RootOfNegNumCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,RootOfNegNumCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o EmptyCell.o))
 
-$(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o))
+$(eval $(call specInDir,TableCell,ZeroRaisedOnZeroCell,TableCell.o Number.o BasicString.o ConstString.o ErrorCell.o EmptyCell.o))
 
-$(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o))
+$(eval $(call specInDir,Table,Row,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o))
+
+$(eval $(call spec,Table,TableCell.o Number.o BasicString.o ConstString.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o Row.o))
 
 $(eval $(call specInDir,Parser,TableCellParser,Number.o BasicString.o ConstString.o TableCell.o EmptyCell.o NumberCell.o fpconv.o StringNumberCell.o StringCell.o BasicString.o ConstString.o ErrorCell.o FixedSizeString.o CircRefCell.o DivByZeroCell.o RootOfNegNumCell.o ZeroRaisedOnZeroCell.o TypeParser.o NumberParser.o StringParser.o ValidationException.o))
 

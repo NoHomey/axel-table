@@ -8,6 +8,14 @@ struct IndexedElement {
     Element element;
 };
 
+struct FindIndexResult {
+    size_t index;
+    bool found;
+
+    FindIndexResult(size_t elementIndex = 0, bool isFound = false) noexcept
+    : index{elementIndex}, found{isFound} { }
+};
+
 template<typename Element>
 class IndexedDynamicArray: public DynamicArray<IndexedElement<Element>> {
 private:
@@ -16,17 +24,6 @@ private:
     void push(const Element& element);
 
     void pop();
-
-    void sort() noexcept;
-
-    size_t findArrayIndexOfElementAtIndex(size_t index) const;
-
-    void addNewElement(const Element& element, size_t index);
-
-    using Base = DynamicArray<IndexedElement<Element>>;
-
-    template<typename ForEachInDynamicArrayFunction>
-    void forEachElement(ForEachInDynamicArrayFunction function) const noexcept;
 
 public:
     IndexedDynamicArray() noexcept = default;
@@ -43,23 +40,45 @@ public:
 
     IndexedDynamicArray& operator=(IndexedDynamicArray&& other) noexcept = default;
 
-    const Element& operator[](size_t index) const;
+    bool hasElementAt(size_t index) const noexcept;
 
-    const Element& getElement(size_t index) const;
+    const Element& operator[](size_t index) const noexcept;
 
-    size_t getFirstElementIndex() const;
+    const Element& getElement(size_t index) const noexcept;
 
-    size_t getLastElementIndex() const;
+    size_t getFirstElementIndex() const noexcept;
 
-    void setElement(const Element& element, size_t index);
+    size_t getLastElementIndex() const noexcept;
 
-    void removeElement(size_t index);
+    void setElement(size_t index, const Element& element);
+
+    void removeElement(size_t index) noexcept;
+
+    void clear() noexcept;
 
     template<typename ForEachInDynamicArrayFunction>
     void forEach(ForEachInDynamicArrayFunction& function) const noexcept;
 
     template<typename ForEachInDynamicArrayFunction>
     void forEach(const ForEachInDynamicArrayFunction& function) const noexcept;
+
+private:
+    void sort() noexcept;
+
+    FindIndexResult findArrayIndexOfElementAtIndex(size_t index) const;
+
+    void addNewElement(const Element& element, size_t index);
+
+    using Base = DynamicArray<IndexedElement<Element>>;
+
+    template<typename ForEachInDynamicArrayFunction>
+    void forEachElement(ForEachInDynamicArrayFunction function) const noexcept;
+
+    mutable bool catched;
+
+    mutable size_t catchedIndex;
+
+    mutable size_t catchedArrayIndex;
 };
 
 #include "IndexedDynamicArray.tci"

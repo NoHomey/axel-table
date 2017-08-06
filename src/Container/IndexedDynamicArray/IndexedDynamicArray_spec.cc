@@ -13,27 +13,46 @@ TEST(IndexedDynamicArray, DefaultConstructor) {
     EXPECT_TRUE(array.isFull());
 }
 
-TEST(IndexedDynamicArray, indexOperator) {
-    IT("checks if it can find element with the given index it it dose it returns it else throws exception");
+TEST(DynamicArray, hasElementAt) {
+    IT("returns true if there is element at the given index");
     TestArray array;
-    array.setElement(9, 1800);
-    EXPECT_EQ(array[1800], 9);
-    array.setElement(19, 283);
-    EXPECT_EQ(array[283], 19);
-    EXPECT_EQ(array[1800], 9);
-    EXPECT_THROW(array[0], ::IndexNotFound);
-    EXPECT_THROW(array[1], ::IndexNotFound);
-    EXPECT_THROW(array[2], ::IndexNotFound);
-    array.setElement(33, 0);
-    EXPECT_EQ(array[0], 33);
-    EXPECT_THROW(array[1], ::IndexNotFound);
-    array.setElement(42, 1);
-    EXPECT_NO_THROW(array[1]);
-    EXPECT_EQ(array[1], 42);
-    EXPECT_THROW(array[2], ::IndexNotFound);
+    array.setElement(1800, 9);
+    EXPECT_TRUE(array.hasElementAt(1800));
+    array.setElement(283, 19);
+    EXPECT_TRUE(array.hasElementAt(283));
+    EXPECT_TRUE(array.hasElementAt(1800));
+    EXPECT_FALSE(array.hasElementAt(0));
+    EXPECT_FALSE(array.hasElementAt(1));
+    EXPECT_FALSE(array.hasElementAt(2));
+    array.setElement(0, 33);
+    EXPECT_TRUE(array.hasElementAt(0));
+    EXPECT_FALSE(array.hasElementAt(1));
+    array.setElement(1, 42);
+    EXPECT_TRUE(array.hasElementAt(1));
+    EXPECT_FALSE(array.hasElementAt(2));
     array.clear();
     EXPECT_TRUE(array.isEmpty());
-    EXPECT_THROW(array[1], ::EmptyDynamicArray);
+    EXPECT_FALSE(array.hasElementAt(0));
+    for(int i = 0; i < 30; ++i) {
+        array.setElement(i * i + i, i * i);
+        EXPECT_TRUE(array.hasElementAt(i * i + i));
+    }
+}
+
+TEST(IndexedDynamicArray, indexOperator) {
+    IT("returns element at the given index");
+    TestArray array;
+    array.setElement(1800, 9);
+    EXPECT_TRUE(array.hasElementAt(1800));
+    array.setElement(283, 19);
+    EXPECT_EQ(array[283], 19);
+    EXPECT_EQ(array[1800], 9);
+    array.setElement(0, 33);
+    EXPECT_EQ(array[0], 33);
+    array.setElement(1, 42);
+    EXPECT_EQ(array[1], 42);
+    array.clear();
+    EXPECT_TRUE(array.isEmpty());
 }
 
 TEST(IndexedDynamicArray, removeElement) {
@@ -43,8 +62,7 @@ TEST(IndexedDynamicArray, removeElement) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    EXPECT_THROW(array.removeElement(0), ::EmptyDynamicArray);
-    array.setElement(19, 6);
+    array.setElement(6, 19);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 1);
     EXPECT_EQ(array.capacity(), 2);
@@ -54,14 +72,14 @@ TEST(IndexedDynamicArray, removeElement) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 2);
     EXPECT_FALSE(array.isFull());
-    array.setElement(7, 2);
+    array.setElement(2, 7);
     array.setElement(3, 3);
-    EXPECT_THROW(array[0], ::IndexNotFound);
-    EXPECT_THROW(array[1], ::IndexNotFound);
+    EXPECT_FALSE(array.hasElementAt(0));
+    EXPECT_FALSE(array.hasElementAt(1));
     array.removeElement(2);
-    EXPECT_THROW(array.removeElement(2), ::IndexNotFound);
+    EXPECT_FALSE(array.hasElementAt(2));
     array.removeElement(3);
-    EXPECT_THROW(array.removeElement(3), ::EmptyDynamicArray);
+    EXPECT_FALSE(array.hasElementAt(3));
 }
 
 TEST(IndexedDynamicArray, SizeConstructor) {
@@ -71,12 +89,12 @@ TEST(IndexedDynamicArray, SizeConstructor) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 9);
     EXPECT_FALSE(array.isFull());
-    EXPECT_THROW(array.removeElement(0), ::EmptyDynamicArray);
+    EXPECT_FALSE(array.hasElementAt(0));
     TestArray empty{0};
     EXPECT_EQ(empty.size(), 0);
     EXPECT_EQ(empty.capacity(), 0);
     EXPECT_TRUE(empty.isFull());
-    EXPECT_THROW(empty.removeElement(2), ::EmptyDynamicArray);
+    EXPECT_FALSE(array.hasElementAt(2));
 }
 
 TEST(IndexedDynamicArray, shrinkToFit) {
@@ -89,16 +107,16 @@ TEST(IndexedDynamicArray, shrinkToFit) {
     array.shrinkToFit();
     EXPECT_EQ(array.size(), 1);
     EXPECT_EQ(array.capacity(), 1);
-    array.setElement(4, 44);
-    array.setElement(2, 32);
-    array.setElement(1, 111);
+    array.setElement(44, 4);
+    array.setElement(32, 2);
+    array.setElement(111, 1);
     EXPECT_EQ(array.capacity(), 4);
     EXPECT_EQ(array.size(), 4);
     array.shrinkToFit();
     EXPECT_EQ(array.size(), 4);
     EXPECT_EQ(array.capacity(), 4);
     for(size_t i = 0; i < 9; ++i) {
-        array.setElement(i, 10 * i * i + i);
+        array.setElement(10 * i * i + i, i);
     }
     EXPECT_EQ(array.capacity(), 22);
     EXPECT_EQ(array.size(), 13);
@@ -111,7 +129,7 @@ TEST(IndexedDynamicArray, clear) {
     IT("clears IndexedDynamicArray content and resets size and capacity");
     TestArray array;
     EXPECT_TRUE(array.isEmpty());
-    array.setElement(9, 11);
+    array.setElement(11, 9);
     EXPECT_EQ(array.capacity(), 2);
     EXPECT_EQ(array.size(), 1);
     EXPECT_FALSE(array.isEmpty());
@@ -121,9 +139,9 @@ TEST(IndexedDynamicArray, clear) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.setElement(4, 33);
+    array.setElement(33, 4);
     array.setElement(2, 2);
-    array.setElement(1, 29);
+    array.setElement(29, 1);
     EXPECT_EQ(array.capacity(), 6);
     EXPECT_EQ(array.size(), 3);
     EXPECT_FALSE(array.isEmpty());
@@ -134,7 +152,7 @@ TEST(IndexedDynamicArray, clear) {
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
     for(size_t i = 0; i < 9; ++i) {
-        array.setElement(i, 1000 * i);
+        array.setElement(1000 * i, i);
     }
     EXPECT_EQ(array.capacity(), 14);
     EXPECT_EQ(array.size(), 9);
@@ -164,39 +182,37 @@ TEST(IndexedDynamicArray, extend) {
 TEST(IndexedDynamicArray, getElement) {
     IT("returns element at given index, checks for emptiness and invalid index");
     TestArray array;
-    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
-    array.setElement(9,7);
-    EXPECT_THROW(array.getElement(0), ::IndexNotFound);
+    EXPECT_FALSE(array.hasElementAt(0));
+    array.setElement(7, 9);
+    EXPECT_FALSE(array.hasElementAt(0));;
     EXPECT_EQ(array.getElement(7), 9);
-    EXPECT_THROW(array.getElement(1), ::IndexNotFound);
-    EXPECT_THROW(array.getElement(9), ::IndexNotFound);
-    EXPECT_THROW(array.getElement(2), ::IndexNotFound);
+    EXPECT_FALSE(array.hasElementAt(1));
+    EXPECT_FALSE(array.hasElementAt(9));
+    EXPECT_TRUE(array.hasElementAt(7));
     array.clear();
-    EXPECT_THROW(array.getElement(0), ::EmptyDynamicArray);
-    array.setElement(9,7623);
+    EXPECT_FALSE(array.hasElementAt(0));
+    array.setElement(7623, 9);
     EXPECT_EQ(array.getElement(7623), 9);
-    EXPECT_THROW(array.getElement(7621), ::IndexNotFound);
-    EXPECT_THROW(array.getElement(7622), ::IndexNotFound);
-    EXPECT_THROW(array.getElement(7624), ::IndexNotFound);
+    EXPECT_FALSE(array.hasElementAt(76223));
+    EXPECT_FALSE(array.hasElementAt(48389));
+    EXPECT_FALSE(array.hasElementAt(1405));
 }
 
 TEST(IndexedDynamicArray, getFirstElementIndex) {
     IT("returns the first element index if IndexDynamicArray is not empty else throws proper exception");
     TestArray array;
-    EXPECT_THROW(array.getFirstElementIndex(), ::EmptyDynamicArray);
     array.setElement(9, 9);
     EXPECT_EQ(array.getFirstElementIndex(), 9);
-    array.setElement(-9, 9991);
+    array.setElement(9991, 9);
     EXPECT_EQ(array.getFirstElementIndex(), 9);
     array.removeElement(9991);
     EXPECT_EQ(array.getFirstElementIndex(), 9);
     array.removeElement(9);
-    EXPECT_THROW(array.getFirstElementIndex(), ::EmptyDynamicArray);
-    array.setElement(3, 2);
+    array.setElement(2, 3);
     EXPECT_EQ(array.getFirstElementIndex(), 2);
-    array.setElement(9, 3);
+    array.setElement(3, 9);
     EXPECT_EQ(array.getFirstElementIndex(), 2);
-    array.setElement(1, 1001);
+    array.setElement(1001, 1);
     EXPECT_EQ(array.getFirstElementIndex(), 2);
     array.removeElement(2);
     EXPECT_EQ(array.getFirstElementIndex(), 3);
@@ -207,27 +223,25 @@ TEST(IndexedDynamicArray, getFirstElementIndex) {
 TEST(IndexedDynamicArray, getLastElementIndex) {
     IT("returns the last element index if IndexDynamicArray is not empty else throws proper exception");
     TestArray array;
-    EXPECT_THROW(array.getLastElementIndex(), ::EmptyDynamicArray);
     array.setElement(9, 9);
     EXPECT_EQ(array.getLastElementIndex(), 9);
-    array.setElement(-9, 9991);
+    array.setElement(9991, -9);
     EXPECT_EQ(array.getLastElementIndex(), 9991);
-    array.setElement(9001, 9990);
+    array.setElement(9990, 99);
     EXPECT_EQ(array.getLastElementIndex(), 9991);
     array.removeElement(9991);
     EXPECT_EQ(array.getLastElementIndex(), 9990);
     array.removeElement(9);
     array.removeElement(9990);
-    EXPECT_THROW(array.getLastElementIndex(), ::EmptyDynamicArray);
-    array.setElement(3, 2);
+    array.setElement(2, 3);
     EXPECT_EQ(array.getLastElementIndex(), 2);
-    array.setElement(9, 3);
+    array.setElement(3, 9);
     EXPECT_EQ(array.getLastElementIndex(), 3);
-    array.setElement(1, 1001);
+    array.setElement(1001, 1);
     EXPECT_EQ(array.getLastElementIndex(), 1001);
     array.setElement(0, 0);
     EXPECT_EQ(array.getLastElementIndex(), 1001);
-    array.setElement(0, 1002);
+    array.setElement(1002, 0);
     EXPECT_EQ(array.getLastElementIndex(), 1002);
 }
 
@@ -235,18 +249,18 @@ TEST(IndexedDynamicArray, setElement) {
     IT("sets element at given index if index is found element is replaced else new element is added and array is sorted by element's index");
     TestArray array;
     array.setElement(2, 2);
-    EXPECT_NO_THROW(array.getElement(2));
+    EXPECT_TRUE(array.hasElementAt(2));
     EXPECT_EQ(array.getElement(2), 2);
-    array.setElement(5, 4);
-    array.setElement(1, 6);
-    EXPECT_NO_THROW(array.getElement(4));
-    EXPECT_NO_THROW(array.getElement(6));
+    array.setElement(4, 5);
+    array.setElement(6, 1);
+    EXPECT_TRUE(array.hasElementAt(4));
+    EXPECT_TRUE(array.hasElementAt(6));
     EXPECT_EQ(array.getElement(6), 1);
     EXPECT_EQ(array.getElement(4), 5);
-    array.setElement(9, 6);
+    array.setElement(6, 9);
     EXPECT_EQ(array.getElement(6), 9);
     EXPECT_EQ(array.getElement(4), 5);
-    array.setElement(2, 4);
+    array.setElement(4, 2);
     EXPECT_EQ(array.getElement(4), 2);
 }
 
@@ -254,7 +268,7 @@ TEST(IndexedDynamicArray, isEmpty) {
     IT("returns true if IndexedDynamicArray's size is equal to 0");
     TestArray array;
     EXPECT_TRUE(array.isEmpty());
-    array.setElement(9, 100);
+    array.setElement(100, 9);
     EXPECT_FALSE(array.isEmpty());
 }
 
@@ -262,7 +276,7 @@ TEST(IndexedDynamicArray, isFull) {
     IT("returns true if IndexedDynamicArray's size is equal to it's capacity");
     TestArray array;
     EXPECT_TRUE(array.isFull());
-    array.setElement(9, 100);
+    array.setElement(100, 9);
     EXPECT_FALSE(array.isFull());
     EXPECT_EQ(array.size(), 1);
     EXPECT_EQ(array.capacity(), 2);
@@ -270,7 +284,7 @@ TEST(IndexedDynamicArray, isFull) {
     EXPECT_TRUE(array.isFull());
     EXPECT_EQ(array.size(), 2);
     EXPECT_EQ(array.capacity(), 2);
-    array.setElement(-100, 9999);
+    array.setElement(9999, -100);
     EXPECT_FALSE(array.isFull());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -280,13 +294,13 @@ TEST(IndexedDynamicArray, size) {
     IT("returns the count of elements in the IndxedDynamicArray");
     TestArray array;
     EXPECT_EQ(array.size(), 0);
-    array.setElement(9, 3);
+    array.setElement(3, 9);
     EXPECT_EQ(array.size(), 1);
-    array.setElement(4, 100);
+    array.setElement(100, 4);
     array.setElement(22, 231);
     EXPECT_EQ(array.size(), 3);
     for(size_t i = 0; i < 11; ++i) {
-        array.setElement(i, 2 * i);
+        array.setElement(2 * i, i);
     }
     EXPECT_EQ(array.size(), 14);
 }
@@ -295,18 +309,18 @@ TEST(IndexedDynamicArray, capacity) {
     IT("returns the size of dynamically allocated memory for the IndexedDynamicArray's elements");
     TestArray array;
     EXPECT_EQ(array.size(), 0);
-    array.setElement(9, 3);
+    array.setElement(3, 9);
     EXPECT_EQ(array.capacity(), 2);
-    array.setElement(4, 100);
-    array.setElement(22, 231);
+    array.setElement(100, 4);
+    array.setElement(231, 22);
     EXPECT_EQ(array.capacity(), 6);
     for(size_t i = 0; i < 11; ++i) {
-        array.setElement(i, 2 * i);
+        array.setElement(2 * i, i);
     }
     EXPECT_EQ(array.size(), 14);
     EXPECT_EQ(array.capacity(), 14);
     EXPECT_TRUE(array.isFull());
-    array.setElement(-342, 43583);
+    array.setElement(43583, -342);
     EXPECT_EQ(array.size(), 15);
     EXPECT_EQ(array.capacity(), 30);
     EXPECT_FALSE(array.isFull());
@@ -320,9 +334,9 @@ TEST(IndexedDynamicArray, CopyConstructor) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.setElement(-222, 222);
-    array.setElement(9, 13);
-    array.setElement(7, 96);
+    array.setElement(222, -222);
+    array.setElement(13, 9);
+    array.setElement(96, 7);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -335,7 +349,7 @@ TEST(IndexedDynamicArray, CopyConstructor) {
     EXPECT_EQ(copy[222], -222);
     EXPECT_EQ(copy[13], 9);
     EXPECT_EQ(copy[96], 7);
-    copy.setElement(-111, 19348);
+    copy.setElement(19348, -111);
     EXPECT_FALSE(copy.isEmpty());
     EXPECT_EQ(copy.size(), 4);
     EXPECT_EQ(copy.capacity(), 8);
@@ -350,9 +364,9 @@ TEST(IndexedDynamicArray, MoveConstructor) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.setElement(-222, 222);
-    array.setElement(9, 13);
-    array.setElement(7, 96);
+    array.setElement(222, -222);
+    array.setElement(13, 9);
+    array.setElement(96, 7);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -376,9 +390,9 @@ TEST(IndexedDynamicArray, AssignOperator) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.setElement(-222, 222);
-    array.setElement(9, 13);
-    array.setElement(7, 96);
+    array.setElement(222, -222);
+    array.setElement(13, 9);
+    array.setElement(96, 7);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -391,7 +405,7 @@ TEST(IndexedDynamicArray, AssignOperator) {
     EXPECT_EQ(copy[222], -222);
     EXPECT_EQ(copy[13], 9);
     EXPECT_EQ(copy[96], 7);
-    copy.setElement(-111, 19348);
+    copy.setElement(19348, -111);
     EXPECT_FALSE(copy.isEmpty());
     EXPECT_EQ(copy.size(), 4);
     EXPECT_EQ(copy.capacity(), 8);
@@ -407,9 +421,9 @@ TEST(IndexedDynamicArray, MoveAssignOperator) {
     EXPECT_EQ(array.size(), 0);
     EXPECT_EQ(array.capacity(), 0);
     EXPECT_TRUE(array.isFull());
-    array.setElement(-222, 222);
-    array.setElement(9, 13);
-    array.setElement(7, 96);
+    array.setElement(222, -222);
+    array.setElement(13, 9);
+    array.setElement(96, 7);
     EXPECT_FALSE(array.isEmpty());
     EXPECT_EQ(array.size(), 3);
     EXPECT_EQ(array.capacity(), 6);
@@ -428,16 +442,16 @@ TEST(IndexedDynamicArray, forEach) {
     IT("makes a function like call to the given function-like passing element and it's index for each element");
 
     TestArray array{10};
-    array.setElement(1, 45);
-    array.setElement(6, 454);
-    array.setElement(3, 2);
-    array.setElement(6, 13);
-    array.setElement(22, 42);
-    array.setElement(9549, 53);
-    array.setElement(-343, 678);
-    array.setElement(123, 17);
-    array.setElement(5, 81);
-    array.setElement(971, 9999);
+    array.setElement(45, 1);
+    array.setElement(454, 6);
+    array.setElement(2, 3);
+    array.setElement(13, 6);
+    array.setElement(42, 22);
+    array.setElement(53, 9549);
+    array.setElement(678, -343);
+    array.setElement(17, 123);
+    array.setElement(81, 5);
+    array.setElement(9999, 971);
 
     size_t position = 0;
     const int data[10] = {3, 6, 123, 22, 1, 9549, 5, 6, -343, 971};

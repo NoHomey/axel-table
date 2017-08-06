@@ -5,6 +5,8 @@
 
 class TableCell {
 public:
+    static void deleteIfDeletable(const TableCell* cellPtr) noexcept;
+
     TableCell() noexcept = default;
 
     virtual ~TableCell() noexcept = default; 

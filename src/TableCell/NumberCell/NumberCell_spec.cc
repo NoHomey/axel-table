@@ -1,6 +1,7 @@
 #include "NumberCell.h"
 #include "gtest/gtest.h"
 #include "../../It/It.h"
+#include "../EmptyCell/EmptyCell.h"
 
 TEST(NumberCell, Dynamics) {
     const TableCell* ptr = new NumberCell{12.3431};
@@ -113,5 +114,14 @@ TEST(NumberCell, isDeletable) {
             NumberCell cell = {values[i]};
             EXPECT_TRUE(cell.isDeletable());
         }
+    }
+}
+
+TEST(NumberCell, EmptyCellisEmptyCell) {
+    IT("returns false");
+
+    for(size_t i = 0; i < 10; ++i) {
+        NumberCell cell = {(long long) i};
+        EXPECT_FALSE(EmptyCell::isEmptyCell(&cell));
     }
 }

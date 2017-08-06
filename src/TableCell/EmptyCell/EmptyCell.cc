@@ -6,6 +6,10 @@ SINGLETON_CELL_DEFINITION(EmptyCell);
 EmptyCell::EmptyCell() noexcept
 : TableCell{} {}
 
+bool EmptyCell::isEmptyCell(const TableCell* cellPtr) noexcept {
+    return cellPtr == obtainPtr();
+}
+
 const Number& EmptyCell::getValueAsNumber() const noexcept {
     return Number::getAdditionNeutralElement();
 }

@@ -101,19 +101,18 @@ bool DynamicArray<Element>::isFull() const noexcept {
 }
 
 template<typename Element>
+bool DynamicArray<Element>::hasElementAt(size_t index) const noexcept {
+    return index < arraySize;
+}
+
+template<typename Element>
 const Element& DynamicArray<Element>::operator[](size_t index) const noexcept {
     return array[index];
 }
 
 template<typename Element>
-const Element& DynamicArray<Element>::getElement(size_t index) const {
-    if(index < arraySize) {
-        return array[index];
-    }
-    if(isEmpty()) {
-        throw EmptyDynamicArray{};
-    }
-    throw IndexNotFound{};
+const Element& DynamicArray<Element>::getElement(size_t index) const noexcept {
+    return operator[](index);
 }
 
 template<typename Element>
@@ -136,24 +135,18 @@ void DynamicArray<Element>::push(const Element& element) {
 }
 
 template<typename Element>
-void DynamicArray<Element>::pop() {
+void DynamicArray<Element>::pop() noexcept {
     if(!isEmpty()) {
         --arraySize;
-    } else {
-        throw EmptyDynamicArray{};
     }
 }
 
 template<typename Element>
-void DynamicArray<Element>::setElement(const Element& element, size_t index) {
-    if(index < arraySize) {
+void DynamicArray<Element>::setElement(size_t index, const Element& element) {
+    if(hasElementAt(index)) {
         array[index] = element;
-    } else {
-        if(index == arraySize) {
-            push(element);
-        } else {
-            throw IndexNotFound{};
-        }
+    } else if(index == arraySize) {
+        push(element);
     }
 }
 
@@ -183,7 +176,7 @@ void DynamicArray<Element>::clear() noexcept {
 template<typename Element>
 template<typename ForEachInDynamicArrayFunction>
 void DynamicArray<Element>::forEachElement(ForEachInDynamicArrayFunction function) const noexcept {
-    for(size_t index = 0; index < arraySize; ++index) {
+    for(size_t index = 0; hasElementAt(index); ++index) {
         function(array[index], index);
     }
 }
